@@ -31,6 +31,7 @@ func init(input : String) -> Lexer:
 
 	return self
 
+
 func get_all() -> Array[Token]:
 	var tokens : Array[Token]= []
 	while _position < _length:

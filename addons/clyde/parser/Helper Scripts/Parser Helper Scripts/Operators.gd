@@ -28,7 +28,6 @@ const _assignment_operators = {
 	Syntax.TOKEN_ASSIGN_POW: 'assign_pow',
 	Syntax.TOKEN_ASSIGN_MOD: 'assign_mod',
 }
-
 const operator_labels = {
 	Syntax.TOKEN_PLUS: 'add',
 	Syntax.TOKEN_MINUS: 'sub',
