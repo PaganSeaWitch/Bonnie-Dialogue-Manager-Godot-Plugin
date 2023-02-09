@@ -1,11 +1,13 @@
-extends Reference
+class_name ClydeLogicInterpreter
+extends RefCounted
 
-const SPECIAL_VARIABLE_NAMES = [ 'OPTIONS_COUNT' ];
 
-var _mem
+#internal memory object
+var memory : MemoryInterface
 
-func init(mem):
-	_mem = mem
+
+func init(mem : MemoryInterface) -> void:
+	memory = mem
 
 
 func handle_assignment(assignment):
@@ -19,19 +21,19 @@ func handle_assignment(assignment):
 func _handle_assignment_operation(assignment, var_name, value):
 	match assignment.operation:
 		"assign":
-			return _mem.set_variable(var_name, value)
+			return memory.set_variable(var_name, value)
 		"assign_sum":
-			return _mem.set_variable(var_name, _mem.get_variable(var_name) + value)
+			return memory.set_variable(var_name, memory.get_variable(var_name) + value)
 		"assign_sub":
-			return _mem.set_variable(var_name, _mem.get_variable(var_name) - value)
+			return memory.set_variable(var_name, memory.get_variable(var_name) - value)
 		"assign_mult":
-			return _mem.set_variable(var_name, _mem.get_variable(var_name) * value)
+			return memory.set_variable(var_name, memory.get_variable(var_name) * value)
 		"assign_div":
-			return _mem.set_variable(var_name, _mem.get_variable(var_name) / value)
+			return memory.set_variable(var_name, memory.get_variable(var_name) / value)
 		"assign_pow":
-			return _mem.set_variable(var_name, pow(_mem.get_variable(var_name), value))
+			return memory.set_variable(var_name, pow(memory.get_variable(var_name), value))
 		"assign_mod":
-			return _mem.set_variable(var_name, _mem.get_variable(var_name) % value)
+			return memory.set_variable(var_name, memory.get_variable(var_name) % value)
 		_:
 			printerr("Unknown operation %s" % assignment.operation)
 
@@ -41,7 +43,7 @@ func _get_node_value(node):
 		"literal":
 			return node.value
 		"variable":
-			return _mem.get_variable(node.name)
+			return memory.get_variable(node.name)
 		"assignment":
 			return handle_assignment(node)
 		"expression":
@@ -56,7 +58,7 @@ func check_condition(condition):
 		"expression":
 			return check_expression(condition)
 		"variable":
-			return _mem.get_variable(condition.name)
+			return memory.get_variable(condition.name)
 
 	printerr("Unknown condition type %s" % condition.type)
 

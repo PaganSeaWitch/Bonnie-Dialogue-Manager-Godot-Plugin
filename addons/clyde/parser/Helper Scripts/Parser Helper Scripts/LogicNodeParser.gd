@@ -2,6 +2,9 @@ class_name LogicNodeParser
 extends RefCounted
 
 var nodeFactory : NodeFactory = NodeFactory.new()
+var miscNodeParser : MiscNodeParser = MiscNodeParser.new()
+var dialogueNodeParser : DialogueNodeParser = DialogueNodeParser.new()
+
 
 func _logic_element(tokenWalker : TokenWalker):
 	if tokenWalker.peek(TokenArray.set):
@@ -78,11 +81,11 @@ func _conditional_line(tokenWalker : TokenWalker):
 	var content
 
 	if tokenWalker.peek(TokenArray.divert):
-		content = _divert(tokenWalker)
+		content = miscNodeParser._divert(tokenWalker)
 	elif tokenWalker.peek(TokenArray.lineBreak):
 		tokenWalker.consume(TokenArray.lineBreak)
 		tokenWalker.consume(TokenArray.indent)
-		content = _lines(tokenWalker)
+		content = dialogueNodeParser._lines(tokenWalker)
 		tokenWalker.consume(TokenArray.end)
 	elif tokenWalker.peek(TokenArray.braceOpen):
 		tokenWalker.consume(TokenArray.braceOpen)
