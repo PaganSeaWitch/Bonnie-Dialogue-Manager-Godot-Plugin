@@ -3,10 +3,10 @@ extends RefCounted
 signal variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
-const Memory = preload("./Memory.gd")
-const LogicInterpreter = preload("./LogicInterpreter.gd")
+var memory : MemoryInterface = MemoryInterface.new()
+var LogicInterpreter : ClydeLogicInterpreter = ClydeLogicInterpreter.new()
 
-var _mem
+
 var _logic
 var _doc
 var _stack = []
@@ -17,10 +17,10 @@ var _config
 func init(document, interpreter_options = {}):
 	_doc = document
 	_doc._index = 1
-	_mem = Memory.new()
-	_mem.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
+	memory = MemoryInterface.new()
+	memory.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
 	_logic = LogicInterpreter.new()
-	_logic.init(_mem)
+	_logic.init(memory)
 
 	_config = {
 		"id_suffix_lookup_separator": interpreter_options.get("id_suffix_lookup_separator", "&"),
@@ -44,8 +44,8 @@ func choose(option_index):
 			printerr("Index %s not available." % option_index)
 			return
 
-		_mem.set_as_accessed(content[option_index]._index)
-		_mem.set_internal_variable('OPTIONS_COUNT', _get_visible_options(node.current.content).size())
+		memory.set_as_accessed(content[option_index]._index)
+		memory.set_internal_variable('OPTIONS_COUNT', _get_visible_options(node.current.content).size())
 		content[option_index].content._index = content[option_index]._index;
 
 		if content[option_index].type == 'action_content':
@@ -68,23 +68,23 @@ func select_block(block_name = null):
 
 
 func get_variable(name):
-	return _mem.get_variable(name)
+	return memory.get_variable(name)
 
 
 func set_variable(name, value):
-	return _mem.set_variable(name, value)
+	return memory.set_variable(name, value)
 
 
 func get_data():
-	return _mem.get_all()
+	return memory.get_all()
 
 
 func load_data(data):
-	return _mem.load_data(data)
+	return memory.load_data(data)
 
 
 func clear_data():
-	return _mem.clear()
+	return memory.clear()
 
 
 func _initialise_stack(root):
@@ -122,18 +122,18 @@ func _generate_index():
 
 func _initialize_handlers():
 	_handlers = {
-		"document": funcref(self, "_handle_document_node"),
-		"content": funcref(self, "_handle_content_node"),
-		"line": funcref(self, "_handle_line_node"),
-		"options": funcref(self, "_handle_options_node"),
-		"option": funcref(self, "_handle_option_node"),
-		"action_content": funcref(self, "_handle_action_content_node"),
-		"conditional_content": funcref(self, "_handle_conditional_content_node"),
-		"variations": funcref(self, "_handle_variations_node"),
-		"block": funcref(self, "_handle_block_node"),
-		"divert": funcref(self, "_handle_divert_node"),
-		"assignments": funcref(self, "_handle_assignments_node"),
-		"events": funcref(self, "_handle_events_node"),
+		"document": Callable(self, "_handle_document_node"),
+		"content": Callable(self, "_handle_content_node"),
+		"line": Callable(self, "_handle_line_node"),
+		"options": Callable(self, "_handle_options_node"),
+		"option": Callable(self, "_handle_option_node"),
+		"action_content": Callable(self, "_handle_action_content_node"),
+		"conditional_content": Callable(self, "_handle_conditional_content_node"),
+		"variations": Callable(self, "_handle_variations_node"),
+		"block": Callable(self, "_handle_block_node"),
+		"divert": Callable(self, "_handle_divert_node"),
+		"assignments": Callable(self, "_handle_assignments_node"),
+		"events": Callable(self, "_handle_events_node"),
 	}
 
 
@@ -175,11 +175,11 @@ func _handle_line_node(line_node):
 func _handle_options_node(options_node):
 	if not options_node.get("_index"):
 		options_node["_index"] = _generate_index()
-		_mem.set_internal_variable('OPTIONS_COUNT', options_node.content.size())
+		memory.set_internal_variable('OPTIONS_COUNT', options_node.content.size())
 	_add_to_stack(options_node)
 
 	var options = _get_visible_options(options_node.content)
-	_mem.set_internal_variable('OPTIONS_COUNT', options.size())
+	memory.set_internal_variable('OPTIONS_COUNT', options.size())
 
 	if options.size() == 0:
 		_stack_pop()
@@ -195,15 +195,15 @@ func _handle_options_node(options_node):
 		"id": options_node.get("id"),
 		"tags": options_node.get("tags"),
 		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
-		"options": _map(funcref(self, "_map_option"), options),
+		"options": _map(Callable(self, "_map_option"), options),
 	}
 
 
 func _get_visible_options(options):
 	return _filter(
-		funcref(self, "_check_if_option_not_accessed"),
+		Callable(self, "_check_if_option_not_accessed"),
 		_map(
-			funcref(self, "_prepare_option"),
+			Callable(self, "_prepare_option"),
 			options
 		)
 	)
@@ -230,7 +230,7 @@ func _prepare_option(option, index):
 
 
 func _check_if_option_not_accessed(option):
-	return option and not (option.mode == 'once' and _mem.was_already_accessed(option._index))
+	return option and not (option.mode == 'once' and memory.was_already_accessed(option._index))
 
 
 func _map_option(option, _index):
@@ -344,7 +344,7 @@ func _translate_text(key, text, id_suffixes = null):
 	if id_suffixes:
 		var lookup_key = key
 		for ids in id_suffixes:
-			var value = _mem.get_variable(ids)
+			var value = memory.get_variable(ids)
 			if value:
 				lookup_key += "%s%s" % [_config.id_suffix_lookup_separator, value]
 		var position = tr(lookup_key)
@@ -364,7 +364,7 @@ func _replace_variables(text):
 	var regex = RegEx.new()
 	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
 	for result in regex.search_all(text):
-		var value = _mem.get_variable(result.get_string("variable"))
+		var value = memory.get_variable(result.get_string("variable"))
 		text = text.replace(result.get_string(), value if value else "")
 
 	return text
@@ -390,31 +390,31 @@ func _handle_variation_mode(variations):
 
 
 func _handle_cycle_variation(variations):
-	var current = _mem.get_internal_variable(variations._index, -1);
+	var current = memory.get_internal_variable(variations._index, -1);
 	if current < variations.content.size() - 1:
 		current += 1;
 	else:
 		current = 0
 
-	_mem.set_internal_variable(variations._index, current)
+	memory.set_internal_variable(variations._index, current)
 	return current;
 
 
 func _handle_once_variation(variations):
-	var current = _mem.get_internal_variable(variations._index, -1);
+	var current = memory.get_internal_variable(variations._index, -1);
 	var index = current + 1;
 	if index <= variations.content.size() - 1:
-		_mem.set_internal_variable(variations._index, index)
+		memory.set_internal_variable(variations._index, index)
 		return index
 
 	return -1;
 
 
 func _handle_sequence_variation(variations):
-	var current = _mem.get_internal_variable(variations._index, -1)
+	var current = memory.get_internal_variable(variations._index, -1)
 	if current < variations.content.size() - 1:
 		current += 1;
-		_mem.set_internal_variable(variations._index, current)
+		memory.set_internal_variable(variations._index, current)
 
 	return current;
 
@@ -422,7 +422,7 @@ func _handle_sequence_variation(variations):
 func _handle_shuffle_variation(variations, mode = 'cycle'):
 	var SHUFFLE_VISITED_KEY = "%s_shuffle_visited" % variations._index;
 	var LAST_VISITED_KEY = "%s_last_index" % variations._index;
-	var visited_items = _mem.get_internal_variable(SHUFFLE_VISITED_KEY, []);
+	var visited_items = memory.get_internal_variable(SHUFFLE_VISITED_KEY, []);
 	var remaining_options = []
 	for o in variations.content:
 		if not visited_items.has(o._index):
@@ -433,9 +433,9 @@ func _handle_shuffle_variation(variations, mode = 'cycle'):
 			return -1
 
 		if mode == 'cycle':
-			_mem.set_internal_variable(SHUFFLE_VISITED_KEY, []);
+			memory.set_internal_variable(SHUFFLE_VISITED_KEY, []);
 			return _handle_shuffle_variation(variations, mode)
-		return _mem.get_internal_variable(LAST_VISITED_KEY, -1);
+		return memory.get_internal_variable(LAST_VISITED_KEY, -1);
 
 	randomize()
 	var random = randi() % remaining_options.size()
@@ -443,8 +443,8 @@ func _handle_shuffle_variation(variations, mode = 'cycle'):
 
 	visited_items.push_back(remaining_options[random]._index);
 
-	_mem.set_internal_variable(LAST_VISITED_KEY, index);
-	_mem.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items);
+	memory.set_internal_variable(LAST_VISITED_KEY, index);
+	memory.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items);
 
 	return index;
 
@@ -453,7 +453,7 @@ func _map(function: Callable, array: Array) -> Array:
 	var output = []
 	var index = 0
 	for item in array:
-		output.append(function.call_func(item, index))
+		output.append(function.call(item, index))
 		index += 1
 	return output
 
@@ -461,7 +461,7 @@ func _map(function: Callable, array: Array) -> Array:
 func _filter(function: Callable, array: Array) -> Array:
 	var output = []
 	for item in array:
-		if function.call_func(item):
+		if function.call(item):
 			output.append(item)
 	return output
 
