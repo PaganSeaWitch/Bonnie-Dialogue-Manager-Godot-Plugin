@@ -2,7 +2,7 @@ class_name LineHandler
 extends RefCounted
 
 
-static func _handle_comments(lexer : Lexer) -> Array[Token]:
+func _handle_comments(lexer : Lexer) -> Array[Token]:
 	while MiscLexerFunctions._is_valid_position(lexer._input, lexer._position) && lexer._input[lexer._position] != '\n':
 		MiscLexerFunctions._increase_lexer_position(lexer, 1, 0)
 
@@ -10,7 +10,7 @@ static func _handle_comments(lexer : Lexer) -> Array[Token]:
 	return []
 
 
-static func _handle_text(lexer : Lexer) -> Array[Token]:
+func _handle_text(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 
 	while lexer._position < lexer._input.length():
@@ -35,7 +35,7 @@ static func _handle_text(lexer : Lexer) -> Array[Token]:
 	return [Token.init(Syntax.TOKEN_TEXT, setupDict["initial_line"], setupDict["initial_column"], MiscLexerFunctions._array_join(setupDict["values"]).strip_edges())]
 
 
-static func _handle_line_id(lexer : Lexer) -> Array[Token]:
+func _handle_line_id(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	
@@ -52,15 +52,15 @@ static func _handle_line_id(lexer : Lexer) -> Array[Token]:
 	return tokens
 
 
-static func _handle_tag(lexer : Lexer) -> Array[Token]:
+func _handle_tag(lexer : Lexer) -> Array[Token]:
 	return _handle_tag_or_id_suffix(lexer, Syntax.TOKEN_TAG)
 
 
-static func _handle_id_suffix(lexer : Lexer)-> Array[Token]:
+func _handle_id_suffix(lexer : Lexer)-> Array[Token]:
 	return _handle_tag_or_id_suffix(lexer, Syntax.TOKEN_ID_SUFFIX)
 
 
-static func _handle_tag_or_id_suffix(lexer : Lexer, token : String) -> Array[Token]:
+func _handle_tag_or_id_suffix(lexer : Lexer, token : String) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	
@@ -71,7 +71,7 @@ static func _handle_tag_or_id_suffix(lexer : Lexer, token : String) -> Array[Tok
 	return [Token.init(token, lexer._line, setupDict["initial_column"], setupDict["values"])]
 
 
-static func _handle_qtext(lexer : Lexer) -> Array[Token]:
+func _handle_qtext(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary= MiscLexerFunctions._internal_setup(lexer)
 
 	while lexer._position < lexer._input.length():
@@ -95,7 +95,7 @@ static func _handle_qtext(lexer : Lexer) -> Array[Token]:
 	return [Token.init(Syntax.TOKEN_TEXT, setupDict["initial_line"], setupDict["initial_column"], setupDict["values"].strip_edges())]
 
 
-static func _handle_quote(lexer : Lexer) -> Array[Token]:
+func _handle_quote(lexer : Lexer) -> Array[Token]:
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	if lexer._is_current_mode(Syntax.MODE_QSTRING):
 		lexer._current_quote = ""
@@ -106,7 +106,7 @@ static func _handle_quote(lexer : Lexer) -> Array[Token]:
 	return []
 
 
-static func _handle_options(lexer : Lexer) -> Array[Token]:
+func _handle_options(lexer : Lexer) -> Array[Token]:
 	var tokenName : String
 	match lexer._input[lexer._position]:
 		'*':
@@ -121,7 +121,7 @@ static func _handle_options(lexer : Lexer) -> Array[Token]:
 	return [Token.init(tokenName, lexer._line, setupDict["initial_column"])]
 
 
-static func _handle_option_display_char(lexer : Lexer) -> Array[Token]:
+func _handle_option_display_char(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	return [Token.init(Syntax.TOKEN_ASSIGN, lexer._line, setupDict["initial_column"])]

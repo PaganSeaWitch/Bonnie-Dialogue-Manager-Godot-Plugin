@@ -31,7 +31,7 @@ static func _get_leading_line_break(_input : String, _line : int, _position :  i
 	return null
 
 
-static func _array_join(arr : Array[String], separator = ""):
+static func _array_join(arr : Array, separator = ""):
 	var output = "";
 	for s in arr:
 		output += str(s) + separator

@@ -2,7 +2,7 @@ class_name NonLineHandler
 extends RefCounted
 
 
-static func _handle_line_breaks(lexer : Lexer) -> Array[Token]:
+func _handle_line_breaks(lexer : Lexer) -> Array[Token]:
 	while MiscLexerFunctions._is_valid_position(lexer._input, lexer._position) and lexer._input[lexer._position] == '\n':
 		lexer._line += 1
 		MiscLexerFunctions._increase_lexer_position(lexer, 1, 0)
@@ -11,20 +11,20 @@ static func _handle_line_breaks(lexer : Lexer) -> Array[Token]:
 	return []
 
 
-static func _handle_space(lexer : Lexer) -> Array[Token]:
+func _handle_space(lexer : Lexer) -> Array[Token]:
 	while lexer._input[lexer._position] == ' ':
 		MiscLexerFunctions._increase_lexer_position(lexer)
 	return []
 
 
-static func _handle_rogue_tab(lexer : Lexer):
+func _handle_rogue_tab(lexer : Lexer):
 	var tab : RegEx = RegEx.new()
 	tab.compile("[\t]")
 	while tab.search(lexer._input[lexer._position]) != null:
 		MiscLexerFunctions._increase_lexer_position(lexer)
 
 
-static func _handle_indent(lexer : Lexer) -> Array[Token]:
+func _handle_indent(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 
 	var indentation = 0
@@ -50,7 +50,7 @@ static func _handle_indent(lexer : Lexer) -> Array[Token]:
 	return tokens
 
 
-static func _handle_block(lexer : Lexer) -> Array[Token]:
+func _handle_block(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer,2,2)
 
@@ -60,7 +60,7 @@ static func _handle_block(lexer : Lexer) -> Array[Token]:
 	return [Token.init(Syntax.TOKEN_BLOCK, lexer._line, setupDict["initial_column"],setupDict["values"].strip_edges())]
 
 
-static func _handle_divert(lexer : Lexer) -> Array[Token]:
+func _handle_divert(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer,2,2)
 
@@ -77,7 +77,7 @@ static func _handle_divert(lexer : Lexer) -> Array[Token]:
 	return [token]
 
 
-static func _handle_divert_parent(lexer : Lexer) -> Array[Token]:
+func _handle_divert_parent(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer, 2, 2)
 
@@ -90,7 +90,7 @@ static func _handle_divert_parent(lexer : Lexer) -> Array[Token]:
 	return [token]
 
 
-static func _handle_start_variations(lexer : Lexer) -> Array[Token]:
+func _handle_start_variations(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	lexer._stack_mode(Syntax.MODE_VARIATIONS)
@@ -114,14 +114,14 @@ static func _handle_start_variations(lexer : Lexer) -> Array[Token]:
 	return tokens
 
 
-static func _handle_stop_variations(lexer : Lexer) -> Array[Token]:
+func _handle_stop_variations(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	lexer._pop_mode()
 	return Token.init(Syntax.TOKEN_BRACKET_CLOSE, lexer._line, setupDict["initial_column"])
 
 
-static func _handle_variation_item(lexer : Lexer):
+func _handle_variation_item(lexer : Lexer):
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	return Token.init(Syntax.TOKEN_MINUS, lexer._line, setupDict["initial_column"])

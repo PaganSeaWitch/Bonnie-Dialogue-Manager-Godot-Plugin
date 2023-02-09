@@ -73,19 +73,19 @@ func _is_current_mode(mode):
 
 func _get_next_tokens() -> Array[Token]:
 	if not _is_current_mode(Syntax.MODE_QSTRING) and _input[_position] == '-' and _input[_position + 1] == '-':
-		return LineHandler._handle_comments(self)
+		return lineHandler._handle_comments(self)
 
 	if not _is_current_mode(Syntax.MODE_QSTRING) and _input[_position] == '\n':
-		return NonLineHandler._handle_line_breaks(self)
+		return nonLineHandler._handle_line_breaks(self)
 
 	if not _is_current_mode(Syntax.MODE_LOGIC) and ((_column == 0 and MiscLexerFunctions._is_tab_char(_input[_position])) or (_column == 0 and _indent.size() > 1)):
-		return NonLineHandler._handle_indent(self)
+		return nonLineHandler._handle_indent(self)
 
 	if not _is_current_mode(Syntax.MODE_QSTRING) and _input[_position] == '{':
-		return LogicHandler._handle_logic_block_start(self)
+		return logicHandler._handle_logic_block_start(self)
 
 	if _is_current_mode(Syntax.MODE_LOGIC):
-		var response = LogicHandler._handle_logic_block(self)
+		var response = logicHandler._handle_logic_block(self)
 
 		if response:
 			return response
@@ -99,42 +99,42 @@ func _get_next_tokens() -> Array[Token]:
 			return NonLineHandler._handle_quote()
 
 	if _is_current_mode(Syntax.MODE_QSTRING):
-		return LineHandler._handle_qtext(self)
+		return lineHandler._handle_qtext(self)
 
 	if _input[_position] == ' ':
-		return NonLineHandler._handle_space(self)
+		return nonLineHandler._handle_space(self)
 
 	if MiscLexerFunctions._is_tab_char(_input[_position]):
-		return NonLineHandler._handle_rogue_tab(self)
+		return nonLineHandler._handle_rogue_tab(self)
 
 	if _input[_position] == '(':
-		return NonLineHandler._handle_start_variations(self)
+		return nonLineHandler._handle_start_variations(self)
 
 	if _input[_position] == ')':
-		return NonLineHandler._handle_stop_variations(self)
+		return nonLineHandler._handle_stop_variations(self)
 
 	if _column == 0 and _input[_position] == '=' and _input[_position + 1] == '=':
-		return NonLineHandler._handle_block(self)
+		return nonLineHandler._handle_block(self)
 
 	if _input[_position] == '-' and _input[_position + 1] == '>':
-		return NonLineHandler._handle_divert(self)
+		return nonLineHandler._handle_divert(self)
 
 	if _input[_position] == '<' and _input[_position + 1] == '-':
-		return NonLineHandler._handle_divert_parent(self)
+		return nonLineHandler._handle_divert_parent(self)
 
 	if _is_current_mode(Syntax.MODE_VARIATIONS) and _input[_position] == '-':
-		return NonLineHandler._handle_variation_item(self)
+		return nonLineHandler._handle_variation_item(self)
 
 	if _input[_position] == '*' or _input[_position] == '+' or _input[_position] == '>':
-		return LineHandler._handle_options(self)
+		return lineHandler._handle_options(self)
 
 	if _is_current_mode(Syntax.MODE_OPTION) and _input[_position] == '=':
-		return LineHandler._handle_option_display_char(self)
+		return lineHandler._handle_option_display_char(self)
 
 	if _input[_position] == '$':
-		return LineHandler._handle_line_id(self)
+		return lineHandler._handle_line_id(self)
 
 	if _input[_position] == '#':
-		return LineHandler._handle_tag(self)
+		return lineHandler._handle_tag(self)
 
-	return LineHandler._handle_text(self)
+	return lineHandler._handle_text(self)
