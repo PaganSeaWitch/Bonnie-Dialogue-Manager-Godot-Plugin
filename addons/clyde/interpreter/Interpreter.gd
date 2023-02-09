@@ -1,4 +1,4 @@
-extends Reference
+extends RefCounted
 
 signal variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
@@ -18,7 +18,7 @@ func init(document, interpreter_options = {}):
 	_doc = document
 	_doc._index = 1
 	_mem = Memory.new()
-	_mem.connect("variable_changed", self, "_trigger_variable_changed")
+	_mem.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
 	_logic = LogicInterpreter.new()
 	_logic.init(_mem)
 
@@ -246,7 +246,7 @@ func _map_option(option, _index):
 func _handle_option_node(_option_node):
 	# this is called when the contents inside the option
 	# were read. option list default behavior is to quit
-	# so we need to remove both option and option list from the stack.
+	# so we need to remove_at both option and option list from the stack.
 	_stack_pop()
 	_stack_pop()
 	return _handle_next_node(_stack_head().current);
@@ -347,15 +347,15 @@ func _translate_text(key, text, id_suffixes = null):
 			var value = _mem.get_variable(ids)
 			if value:
 				lookup_key += "%s%s" % [_config.id_suffix_lookup_separator, value]
-		var translation = tr(lookup_key)
+		var position = tr(lookup_key)
 
-		if translation != lookup_key:
-			return translation
+		if position != lookup_key:
+			return position
 
-	var translation = tr(key)
-	if translation == key:
+	var position = tr(key)
+	if position == key:
 		return text
-	return translation
+	return position
 
 
 func _replace_variables(text):
@@ -449,7 +449,7 @@ func _handle_shuffle_variation(variations, mode = 'cycle'):
 	return index;
 
 
-func _map(function: FuncRef, array: Array) -> Array:
+func _map(function: Callable, array: Array) -> Array:
 	var output = []
 	var index = 0
 	for item in array:
@@ -458,7 +458,7 @@ func _map(function: FuncRef, array: Array) -> Array:
 	return output
 
 
-func _filter(function: FuncRef, array: Array) -> Array:
+func _filter(function: Callable, array: Array) -> Array:
 	var output = []
 	for item in array:
 		if function.call_func(item):

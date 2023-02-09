@@ -1,8 +1,8 @@
-extends Reference
+class_name ClydeDialogue
+extends RefCounted
 
 const Interpreter = preload('./interpreter/Interpreter.gd')
 
-class_name ClydeDialogue
 
 signal variable_changed(name, value, previous_value)
 signal event_triggered(name)
@@ -25,8 +25,8 @@ func load_dialogue(file_name, block = null):
 	_interpreter.init(file, {
 		"id_suffix_lookup_separator": _config_id_suffix_lookup_separator(),
 	})
-	_interpreter.connect("variable_changed", self, "_trigger_variable_changed")
-	_interpreter.connect("event_triggered", self, "_trigger_event_triggered")
+	_interpreter.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
+	_interpreter.connect("event_triggered",Callable(self,"_trigger_event_triggered"))
 	if block:
 		_interpreter.select_block(block)
 
@@ -82,7 +82,9 @@ func _load_file(path) -> Dictionary:
 
 	var f := File.new()
 	f.open(path, File.READ)
-	var result := JSON.parse(f.get_as_text())
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(f.get_as_text())
+	var result := test_json_conv.get_data()
 	f.close()
 	if result.error:
 		printerr("Failed to parse file: ", f.get_error())
@@ -93,7 +95,9 @@ func _load_file(path) -> Dictionary:
 
 func _load_clyde_file(path):
 	var data = load(path).__data__.get_string_from_utf8()
-	var parsed_json = JSON.parse(data)
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(data)
+	var parsed_json = test_json_conv.get_data()
 
 	if OK != parsed_json.error:
 		var format = [parsed_json.error_line, parsed_json.error_string]

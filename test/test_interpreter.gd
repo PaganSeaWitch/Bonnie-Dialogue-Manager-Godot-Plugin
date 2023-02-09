@@ -419,11 +419,13 @@ func test_persisted_data_control_options():
 	content = _get_next_options_content(dialogue)
 	assert_eq(content.options.size(), 2)
 
-	var stringified_data = to_json(dialogue.get_data())
+	var stringified_data = JSON.new().stringify(dialogue.get_data())
 
 	var dialogue2 = ClydeDialogue.new()
 	dialogue2.load_dialogue('options')
-	dialogue2.load_data(parse_json(stringified_data))
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(stringified_data))
+	dialogue2.load_data(test_json_conv.get_data()
 
 	var content2 = _get_next_options_content(dialogue)
 	assert_eq(content2.options.size(), 2)
@@ -441,9 +443,11 @@ func test_persisted_data_control_variations():
 	var dialogue2 = ClydeDialogue.new()
 	dialogue2.load_dialogue('variations')
 
-	var stringified_data = to_json(dialogue.get_data())
+	var stringified_data = JSON.new().stringify(dialogue.get_data())
 
-	dialogue2.load_data(parse_json(stringified_data))
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(stringified_data))
+	dialogue2.load_data(test_json_conv.get_data()
 	assert_eq_deep(dialogue2.get_content().text, "Hey")
 
 
@@ -452,8 +456,8 @@ var pending_events = []
 func test_events():
 	var dialogue = ClydeDialogue.new()
 	dialogue.load_dialogue('variables')
-	dialogue.connect("event_triggered", self, "_on_event_triggered")
-	dialogue.connect("variable_changed", self, "_on_variable_changed")
+	dialogue.connect("event_triggered",Callable(self,"_on_event_triggered"))
+	dialogue.connect("variable_changed",Callable(self,"_on_variable_changed"))
 
 	pending_events.push_back({ "type": "variable", "name": "xx", "value": true })
 	pending_events.push_back({ "type": "variable", "name": "first_time", "value": 2.0 })
