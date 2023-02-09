@@ -80,8 +80,7 @@ func _load_file(path) -> Dictionary:
 		var container = _load_clyde_file(path)
 		return container as Dictionary
 
-	var f := File.new()
-	f.open(path, File.READ)
+	var f : FileAccess = FileAccess.open(path, FileAccess.READ)
 	var test_json_conv = JSON.new()
 	test_json_conv.parse(f.get_as_text())
 	var result := test_json_conv.get_data()
