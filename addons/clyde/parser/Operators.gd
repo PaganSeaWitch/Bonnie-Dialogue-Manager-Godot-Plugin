@@ -2,7 +2,7 @@ class_name ParserOperators
 extends RefCounted
 
 
-const operators = {
+const operators : Dictionary = {
 	Syntax.TOKEN_AND: { "precedence": 1, "associative": 'LEFT' },
 	Syntax.TOKEN_OR: { "precedence": 1, "associative": 'LEFT' },
 	Syntax.TOKEN_EQUAL: { "precedence": 2, "associative": 'LEFT' },
@@ -19,7 +19,7 @@ const operators = {
 	Syntax.TOKEN_POWER: { "precedence": 7, "associative": 'RIGHT' },
 }
 
-const _assignment_operators = {
+const _assignment_operators : Dictionary = {
 	Syntax.TOKEN_ASSIGN: 'assign',
 	Syntax.TOKEN_ASSIGN_SUM: 'assign_sum',
 	Syntax.TOKEN_ASSIGN_SUB: 'assign_sub',
@@ -28,7 +28,7 @@ const _assignment_operators = {
 	Syntax.TOKEN_ASSIGN_POW: 'assign_pow',
 	Syntax.TOKEN_ASSIGN_MOD: 'assign_mod',
 }
-const operator_labels = {
+const operator_labels : Dictionary = {
 	Syntax.TOKEN_PLUS: 'add',
 	Syntax.TOKEN_MINUS: 'sub',
 	Syntax.TOKEN_MULT: 'mult',
@@ -45,11 +45,4 @@ const operator_labels = {
 	Syntax.TOKEN_LE: 'less_or_equal',
 }
 
-const operator_literals = [
-		Syntax.TOKEN_IDENTIFIER,
-		Syntax.TOKEN_NOT,
-		Syntax.TOKEN_NUMBER_LITERAL,
-		Syntax.TOKEN_STRING_LITERAL,
-		Syntax.TOKEN_BOOLEAN_LITERAL,
-		Syntax.TOKEN_NULL_TOKEN
-	]
+
