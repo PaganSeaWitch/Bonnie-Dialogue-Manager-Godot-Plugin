@@ -36,11 +36,11 @@ func get_all() -> Array[Token]:
 	var tokens : Array[Token]= []
 	while _position < _length:
 		var new_tokens : Array[Token] = _get_next_tokens()
-		tokens = tokens + new_tokens
+		tokens.append_array(new_tokens)
 
 
 	_position += 1
-	tokens.push_back(Token.init(Syntax.TOKEN_EOF, _line, _column))
+	tokens.push_back(Token.new(Syntax.TOKEN_EOF, _line, _column))
 
 	return tokens
 
@@ -56,7 +56,7 @@ func next() -> Token:
 			return _pending_tokens.pop_front()
 
 	_position += 1
-	return Token.init(Syntax.TOKEN_EOF, _line, _column)
+	return Token.new(Syntax.TOKEN_EOF, _line, _column)
 
 
 func _stack_mode(mode):
@@ -94,10 +94,10 @@ func _get_next_tokens() -> Array[Token]:
 	if _input[_position] == '"' or _input[_position] == "'":
 		if _current_quote:
 			if _input[_position] == _current_quote:
-				return NonLineHandler._handle_quote()
+				return lineHandler._handle_quote(self)
 		else:
 			_current_quote = _input[_position]
-			return NonLineHandler._handle_quote()
+			return lineHandler._handle_quote(self)
 
 	if _is_current_mode(Syntax.MODE_QSTRING):
 		return lineHandler._handle_qtext(self)
