@@ -6,7 +6,8 @@ func _handle_comments(lexer : Lexer) -> Array[Token]:
 	while MiscLexerFunctions._is_valid_position(lexer._input, lexer._position) && lexer._input[lexer._position] != '\n':
 		MiscLexerFunctions._increase_lexer_position(lexer, 1, 0)
 
-	MiscLexerFunctions._increase_lexer_position(lexer)
+	MiscLexerFunctions._increase_lexer_position(lexer, 1, 0)
+	lexer._line += 1
 	return []
 
 
@@ -20,19 +21,19 @@ func _handle_text(lexer : Lexer) -> Array[Token]:
 			break
 
 		if current_char == "\\" and lexer._input[lexer._position + 1] != 'n':
-			setupDict["values"].push_back(lexer._input[lexer._position + 1])
+			setupDict["values"]+= lexer._input[lexer._position + 1]
 			MiscLexerFunctions._increase_lexer_position(lexer, 2, 2)
 			continue
 
 		if current_char == ':':
 			MiscLexerFunctions._increase_lexer_position(lexer)
-			return [Token.init(Syntax.TOKEN_SPEAKER, setupDict["initial_line"], setupDict["initial_column"], MiscLexerFunctions._array_join(setupDict["values"]).strip_edges())]
+			return [Token.new(Syntax.TOKEN_SPEAKER, setupDict["initial_line"], setupDict["initial_column"], setupDict["values"].strip_edges())]
 
-		setupDict["values"].push_back(current_char)
+		setupDict["values"] += current_char
 
 		MiscLexerFunctions._increase_lexer_position(lexer)
 
-	return [Token.init(Syntax.TOKEN_TEXT, setupDict["initial_line"], setupDict["initial_column"], MiscLexerFunctions._array_join(setupDict["values"]).strip_edges())]
+	return [Token.new(Syntax.TOKEN_TEXT, setupDict["initial_line"], setupDict["initial_column"], setupDict["values"].strip_edges())]
 
 
 func _handle_line_id(lexer : Lexer) -> Array[Token]:
@@ -43,11 +44,11 @@ func _handle_line_id(lexer : Lexer) -> Array[Token]:
 		setupDict["values"] += lexer._input[lexer._position]
 		MiscLexerFunctions._increase_lexer_position(lexer)
 
-	var token : Token = Token.init(Syntax.TOKEN_LINE_ID, lexer._line, setupDict["initial_column"], setupDict["values"])
-	var tokens = [token]
+	var token : Token = Token.new(Syntax.TOKEN_LINE_ID, lexer._line, setupDict["initial_column"], setupDict["values"])
+	var tokens : Array[Token]= [token]
 
 	while MiscLexerFunctions._is_valid_position(lexer._input, lexer._position) &&  lexer._input[lexer._position] == '&':
-		tokens.push_back(_handle_id_suffix(lexer))
+		tokens.append_array(_handle_id_suffix(lexer))
 
 	return tokens
 
@@ -62,13 +63,16 @@ func _handle_id_suffix(lexer : Lexer)-> Array[Token]:
 
 func _handle_tag_or_id_suffix(lexer : Lexer, token : String) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
+	
+	# Move past tag/id identifier character
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	
+	# Get tag/id
 	while MiscLexerFunctions._is_valid_position(lexer._input, lexer._position) and MiscLexerFunctions._is_identifier(lexer._input[lexer._position]):
 		setupDict["values"] += lexer._input[lexer._position]
 		MiscLexerFunctions._increase_lexer_position(lexer)
 
-	return [Token.init(token, lexer._line, setupDict["initial_column"], setupDict["values"])]
+	return [Token.new(token, lexer._line, setupDict["initial_column"], setupDict["values"])]
 
 
 func _handle_qtext(lexer : Lexer) -> Array[Token]:
@@ -92,7 +96,7 @@ func _handle_qtext(lexer : Lexer) -> Array[Token]:
 
 		MiscLexerFunctions._increase_lexer_position(lexer)
 
-	return [Token.init(Syntax.TOKEN_TEXT, setupDict["initial_line"], setupDict["initial_column"], setupDict["values"].strip_edges())]
+	return [Token.new(Syntax.TOKEN_TEXT, setupDict["initial_line"], setupDict["initial_column"], setupDict["values"].strip_edges())]
 
 
 func _handle_quote(lexer : Lexer) -> Array[Token]:
@@ -118,10 +122,10 @@ func _handle_options(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer)
 	lexer._stack_mode(Syntax.MODE_OPTION)
-	return [Token.init(tokenName, lexer._line, setupDict["initial_column"])]
+	return [Token.new(tokenName, lexer._line, setupDict["initial_column"])]
 
 
 func _handle_option_display_char(lexer : Lexer) -> Array[Token]:
 	var setupDict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
 	MiscLexerFunctions._increase_lexer_position(lexer)
-	return [Token.init(Syntax.TOKEN_ASSIGN, lexer._line, setupDict["initial_column"])]
+	return [Token.new(Syntax.TOKEN_ASSIGN, lexer._line, setupDict["initial_column"])]
