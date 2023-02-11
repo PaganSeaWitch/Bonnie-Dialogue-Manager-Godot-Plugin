@@ -5,7 +5,7 @@ extends RefCounted
 static func _create_simple_token(lexer : Lexer,tokenName : String, length = 1) -> Token:
 	var setupDict : Dictionary = _internal_setup(lexer)
 	_increase_lexer_position(lexer, length)
-	return Token.init(tokenName, lexer._line, setupDict["initial_column"])
+	return Token.new(tokenName, lexer._line, setupDict["initial_column"])
 
 
 static func _get_following_line_break(_input : String,_line : int, _column: int, _position : int) -> Token:
@@ -16,8 +16,9 @@ static func _get_following_line_break(_input : String,_line : int, _column: int,
 		lookup_position += 1
 		lookup_column += 1
 
+
 	if  _is_valid_position(_input, _position) and _input[lookup_position] == '\n':
-		return Token.init(Syntax.TOKEN_LINE_BREAK, _line, lookup_column)
+		return Token.new(Syntax.TOKEN_LINE_BREAK, _line, lookup_column)
 	return null
 
 
@@ -26,8 +27,9 @@ static func _get_leading_line_break(_input : String, _line : int, _position :  i
 	while _is_tab_char(_input[lookup_position]):
 		lookup_position -= 1
 
+
 	if _input[lookup_position] == '\n':
-		return Token.init(Syntax.TOKEN_LINE_BREAK, _line, 0)
+		return Token.new(Syntax.TOKEN_LINE_BREAK, _line, 0)
 	return null
 
 
