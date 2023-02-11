@@ -33,18 +33,20 @@ var NodeFactoryDictionary : Dictionary = {
 func CreateNode(type : NODE_TYPES, args : Dictionary) -> ClydeNode:
 	var node = NodeFactoryDictionary.get(type).new();
 	
+	var properties = node.get_property_list()
 	for property in node.get_property_list():
-		node[property] = args[property]
-	
-	match(node.type):
-		DivertNode:
-			return Divert(node)
-		NumberNode:
-			return NumberLiteral(node)
-		BooleanNode:
-			return BooleanLiteral(node)
-		_:
-			return node
+		if(args.has(property.name)):
+			var value = args.get(property.name , node[property.name])
+			node[property.name] = value
+
+
+	if(node is DivertNode):
+		return Divert(node)
+	if(node is NumberNode):
+		return NumberLiteral(node)
+	if(node is	BooleanNode):
+		return BooleanLiteral(node)
+	return node
 
 
 func Divert(divertNode: DivertNode) -> DivertNode:
