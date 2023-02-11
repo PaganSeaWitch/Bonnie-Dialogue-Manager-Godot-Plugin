@@ -1,7 +1,6 @@
 @tool
 extends EditorPlugin
 
-const ImportPlugin = preload("import_plugin.gd")
 
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"
 const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
@@ -9,10 +8,14 @@ const DEFAULT_SOURCE_FOLDER := "res://dialogues/"
 const SETTING_ID_SUFFIX_LOOKUP_SEPARATOR := "dialogue/id_suffix_lookup_separator"
 const DEFAULT_ID_SUFFIX_LOOKUP_SEPARATOR := "&"
 
+const ImportPlugin = preload("import_plugin.gd")
+
 var _import_plugin
+
 
 func _enter_tree():
 	_import_plugin = ImportPlugin.new()
+
 	add_import_plugin(_import_plugin)
 	_setup_project_settings()
 
