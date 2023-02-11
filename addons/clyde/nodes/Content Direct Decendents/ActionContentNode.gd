@@ -1,5 +1,5 @@
 class_name ActionContentNode
 extends ContentNode
 
-var action
+var action : Array
 

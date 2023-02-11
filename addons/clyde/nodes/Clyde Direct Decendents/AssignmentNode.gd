@@ -1,8 +1,8 @@
 class_name AssignmentNode
 extends ClydeNode
 
-var variable
+var variable : VariableNode
 
 var operation
 
-var value
+var value : ClydeNode

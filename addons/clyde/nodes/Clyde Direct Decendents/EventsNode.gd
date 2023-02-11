@@ -1,5 +1,5 @@
 class_name EventsNode
 extends ClydeNode
 
-var events
+var events : Array
 

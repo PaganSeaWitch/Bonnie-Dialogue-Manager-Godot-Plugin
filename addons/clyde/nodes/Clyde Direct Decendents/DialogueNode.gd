@@ -1,7 +1,7 @@
 class_name DialogueNode
 extends ClydeNode
 
-var id
+var id : String
 
 var speaker : String
 

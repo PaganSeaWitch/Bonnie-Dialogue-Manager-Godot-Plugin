@@ -9,7 +9,7 @@ var line : int
 
 var column : int
 
-func _init(_token, _line, _column, _value = null):
+func _init(_token, _line, _column, _value = ""):
 	token = _token
 	value = _value
 	line = _line
