@@ -1,7 +1,7 @@
 class_name TokenArray
 extends RefCounted
 
-const expected = [
+const expected  : Array[String] = [
 	Syntax.TOKEN_EOF,
 	Syntax.TOKEN_SPEAKER,
 	Syntax.TOKEN_TEXT,
@@ -16,7 +16,7 @@ const expected = [
 	Syntax.TOKEN_BLOCK
 ]
 
-const acceptable_next = [
+const acceptable_next : Array[String] = [
 	Syntax.TOKEN_SPEAKER,
 	Syntax.TOKEN_TEXT,
 	Syntax.TOKEN_OPTION,
@@ -28,55 +28,104 @@ const acceptable_next = [
 	Syntax.TOKEN_BRACE_OPEN,
 	Syntax.TOKEN_LINE_BREAK,
 ]
-const optionsAcceptableNext = [Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT, Syntax.TOKEN_INDENT, Syntax.TOKEN_ASSIGN, Syntax.TOKEN_BRACE_OPEN]
-const block = [Syntax.TOKEN_BLOCK]
+const optionsAcceptableNext  : Array[String] = [Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT, Syntax.TOKEN_INDENT, Syntax.TOKEN_ASSIGN, Syntax.TOKEN_BRACE_OPEN]
+const block  : Array[String] = [Syntax.TOKEN_BLOCK]
 
-const braceOpen = [Syntax.TOKEN_BRACE_OPEN]
+const braceOpen  : Array[String] = [Syntax.TOKEN_BRACE_OPEN]
 
-const bracketOpen = [Syntax.TOKEN_BRACKET_OPEN]
+const bracketOpen : Array[String]  = [Syntax.TOKEN_BRACKET_OPEN]
 
-const bracketClose = [Syntax.TOKEN_BRACKET_CLOSE]
+const bracketClose  : Array[String] = [Syntax.TOKEN_BRACKET_CLOSE]
 
-const dialogue = [Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT]
+const operatorsAndBracketClose  : Array[String] = [
+	Syntax.TOKEN_BRACKET_CLOSE,
+	Syntax.TOKEN_ASSIGN,
+	Syntax.TOKEN_ASSIGN_SUM,
+	Syntax.TOKEN_ASSIGN_SUB,
+	Syntax.TOKEN_ASSIGN_MULT,
+	Syntax.TOKEN_ASSIGN_DIV,
+	Syntax.TOKEN_ASSIGN_POW,
+	Syntax.TOKEN_ASSIGN_MOD
+]
 
-const setTrigger = [Syntax.TOKEN_KEYWORD_SET, Syntax.TOKEN_KEYWORD_TRIGGER]
+const operator_literals : Array[String]= [
+		Syntax.TOKEN_IDENTIFIER,
+		Syntax.TOKEN_NOT,
+		Syntax.TOKEN_NUMBER_LITERAL,
+		Syntax.TOKEN_STRING_LITERAL,
+		Syntax.TOKEN_BOOLEAN_LITERAL,
+		Syntax.TOKEN_NULL_TOKEN
+	]
 
-const when = [Syntax.TOKEN_KEYWORD_WHEN]
 
-const lineBreak = [Syntax.TOKEN_LINE_BREAK]
+const operator_assignments : Array[String] =[
+		Syntax.TOKEN_ASSIGN,
+	Syntax.TOKEN_ASSIGN_SUM,
+	Syntax.TOKEN_ASSIGN_SUB,
+	Syntax.TOKEN_ASSIGN_MULT,
+	Syntax.TOKEN_ASSIGN_DIV,
+	Syntax.TOKEN_ASSIGN_POW,
+	Syntax.TOKEN_ASSIGN_MOD,
+]
 
-const text = [Syntax.TOKEN_TEXT]
 
-const tagAndId = [Syntax.TOKEN_LINE_ID, Syntax.TOKEN_TAG]
+const operator_mathamatic_symbols : Array[String] =[
+		Syntax.TOKEN_AND,
+	Syntax.TOKEN_OR,
+	Syntax.TOKEN_EQUAL,
+	Syntax.TOKEN_NOT_EQUAL,
+	Syntax.TOKEN_GREATER,
+	Syntax.TOKEN_LESS,
+	Syntax.TOKEN_GE,
+	Syntax.TOKEN_LE,
+	Syntax.TOKEN_PLUS,
+	Syntax.TOKEN_MINUS,
+	Syntax.TOKEN_MOD,
+	Syntax.TOKEN_MULT,
+	Syntax.TOKEN_DIV,
+	Syntax.TOKEN_POWER,
+]
 
-const indent = [Syntax.TOKEN_INDENT]
+const dialogue : Array[String]  = [Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT]
 
-const options = [Syntax.TOKEN_OPTION, Syntax.TOKEN_STICKY_OPTION, Syntax.TOKEN_FALLBACK_OPTION]
+const setTrigger : Array[String]  = [Syntax.TOKEN_KEYWORD_SET, Syntax.TOKEN_KEYWORD_TRIGGER]
 
-const end = [Syntax.TOKEN_DEDENT, Syntax.TOKEN_EOF]
+const when  : Array[String] = [Syntax.TOKEN_KEYWORD_WHEN]
 
-const tag = [Syntax.TOKEN_TAG]
+const lineBreak  : Array[String] = [Syntax.TOKEN_LINE_BREAK]
 
-const idSuffixes = [Syntax.TOKEN_ID_SUFFIX]
+const text  : Array[String] = [Syntax.TOKEN_TEXT]
 
-const dedent = [Syntax.TOKEN_DEDENT]
+const tagAndId  : Array[String] = [Syntax.TOKEN_LINE_ID, Syntax.TOKEN_TAG]
 
-const divert = [Syntax.TOKEN_DIVERT, Syntax.TOKEN_DIVERT_PARENT]
+const indent  : Array[String] = [Syntax.TOKEN_INDENT]
 
-const eof = [Syntax.TOKEN_EOF]
+const options  : Array[String] = [Syntax.TOKEN_OPTION, Syntax.TOKEN_STICKY_OPTION, Syntax.TOKEN_FALLBACK_OPTION]
 
-const variations = [Syntax.TOKEN_VARIATIONS_MODE]
+const end : Array[String]  = [Syntax.TOKEN_DEDENT, Syntax.TOKEN_EOF]
 
-const indentMinus = [Syntax.TOKEN_INDENT, Syntax.TOKEN_MINUS]
+const tag : Array[String]  = [Syntax.TOKEN_TAG]
 
-const minus = [Syntax.TOKEN_MINUS]
+const idSuffixes : Array[String]  = [Syntax.TOKEN_ID_SUFFIX]
 
-const set = [Syntax.TOKEN_KEYWORD_SET]
+const dedent : Array[String]  = [Syntax.TOKEN_DEDENT]
 
-const trigger = [Syntax.TOKEN_KEYWORD_TRIGGER]
+const divert : Array[String]  = [Syntax.TOKEN_DIVERT, Syntax.TOKEN_DIVERT_PARENT]
 
-const comma = [Syntax.TOKEN_COMMA]
+const eof : Array[String]  = [Syntax.TOKEN_EOF]
 
-const braceClose = [Syntax.TOKEN_BRACE_CLOSE]
+const variations : Array[String]  = [Syntax.TOKEN_VARIATIONS_MODE]
 
-const identifier = [Syntax.TOKEN_IDENTIFIER]
+const indentMinus  : Array[String] = [Syntax.TOKEN_INDENT, Syntax.TOKEN_MINUS]
+
+const minus  : Array[String] = [Syntax.TOKEN_MINUS]
+
+const set : Array[String]  = [Syntax.TOKEN_KEYWORD_SET]
+
+const trigger : Array[String]  = [Syntax.TOKEN_KEYWORD_TRIGGER]
+
+const comma : Array[String]  = [Syntax.TOKEN_COMMA]
+
+const braceClose : Array[String]  = [Syntax.TOKEN_BRACE_CLOSE]
+
+const identifier : Array[String]  = [Syntax.TOKEN_IDENTIFIER]
