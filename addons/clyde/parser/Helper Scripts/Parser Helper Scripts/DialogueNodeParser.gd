@@ -2,8 +2,7 @@ class_name DialogueNodeParser
 extends RefCounted
 
 var nodeFactory : NodeFactory = NodeFactory.new()
-var logicNodeParser : LogicNodeParser = LogicNodeParser.new()
-var dialogueNodeParser : DialogueNodeParser = DialogueNodeParser.new()
+
 
 var option_types = {
 	Syntax.TOKEN_OPTION: 'once',
@@ -32,7 +31,7 @@ func _line_with_speaker(tokenWalker : TokenWalker) -> DialogueNode:
 func _text_line(tokenWalker : TokenWalker) -> DialogueNode:
 	var value = tokenWalker.current_token.value
 	var next = tokenWalker.peek(TokenArray.tagAndId)
-	var line : LineNode =  LineNode.new()
+	var line : DialogueNode =  DialogueNode.new()
 
 	if next:
 		tokenWalker.consume(TokenArray.tagAndId)
@@ -80,7 +79,7 @@ func _line_with_metadata(tokenWalker : TokenWalker) -> LineNode:
 
 func _line_with_id(tokenWalker : TokenWalker) -> LineNode:
 	var tokenValue = tokenWalker.current_token.value
-	var suffixes
+	var suffixes : Array[String] = []
 
 	if tokenWalker.peek(TokenArray.idSuffixes):
 		suffixes = _id_suffixes(tokenWalker)
@@ -93,13 +92,13 @@ func _line_with_id(tokenWalker : TokenWalker) -> LineNode:
 		line.id_suffixes = suffixes
 		return line
 
-	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.LINE, {"value" =null, "speaker" = null, "id" =tokenValue, "tags"= null,"id_suffixes"= suffixes}) as LineNode
+	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.LINE, {"id" =tokenValue,"id_suffixes"= suffixes}) as LineNode
 
 
-func _id_suffixes(tokenWalker : TokenWalker) -> Array:
-	var suffixes : Array = []
+func _id_suffixes(tokenWalker : TokenWalker) -> Array[String]:
+	var suffixes : Array[String] = []
 	while tokenWalker.peek(TokenArray.idSuffixes):
-		var token = tokenWalker.consume(TokenArray.idSuffixes)
+		var token : Token = tokenWalker.consume(TokenArray.idSuffixes)
 		suffixes.push_back(token.value)
 	return suffixes
 
@@ -110,17 +109,15 @@ func _line_with_tags(tokenWalker : TokenWalker) -> LineNode:
 	if next:
 		tokenWalker.consume(TokenArray.tagAndId)
 		var line = _line_with_metadata(tokenWalker)
-		if not line.tags:
-			line.tags = []
 
 		line.tags.push_front(value)
 		return line
 
-	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.LINE,{"value" =null, "speaker" = null, "tags"=null, "id_suffixes"=[value]})
+	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.LINE,{"tags"=[value]})
 
 
-func _options(tokenWalker : TokenWalker) -> OptionNode:
-	var options = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.OPTIONS, {"content" : []})
+func _options(tokenWalker : TokenWalker) -> OptionsNode:
+	var options = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.OPTIONS, {})
 
 	while tokenWalker.peek(TokenArray.options):
 		options.content.push_back(_option(tokenWalker))
@@ -131,44 +128,43 @@ func _options(tokenWalker : TokenWalker) -> OptionNode:
 	return options
 
 
-func _option(tokenWalker : TokenWalker) -> OptionNode:
+func _option(tokenWalker : TokenWalker) -> ClydeNode:
 	tokenWalker.consume(TokenArray.options)
 	var type = option_types[tokenWalker.current_token.token]
 	var acceptable_next = TokenArray.optionsAcceptableNext
 	var lines = []
-	var main_item
+	var main_item : LineNode = LineNode.new()
 	var include_label_as_content = false
 	var root
 	var wrapper
 
 	tokenWalker.consume(acceptable_next)
-	match(tokenWalker.current_token.token):
-		Syntax.TOKEN_ASSIGN:
-			include_label_as_content = true
-			tokenWalker.consume(acceptable_next)
+	if tokenWalker.current_token.token == Syntax.TOKEN_ASSIGN:
+		include_label_as_content = true
+		tokenWalker.consume(acceptable_next)
 		
-		Syntax.TOKEN_BRACE_OPEN:
-			var block = logicNodeParser._nested_logic_block(tokenWalker)
-			root = block.root
-			wrapper = block.wrapper
-			tokenWalker.consume(acceptable_next)
+	if tokenWalker.current_token.token == Syntax.TOKEN_BRACE_OPEN:
+		var block = LogicNodeParser.new()._nested_logic_block(tokenWalker)
+		root = block.root
+		wrapper = block.wrapper
+		tokenWalker.consume(acceptable_next)
 
-		Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT:
-			tokenWalker._is_multiline_enabled = false
-			main_item = dialogueNodeParser._dialogue_line(tokenWalker)
-			tokenWalker._is_multiline_enabled = true
-			if include_label_as_content:
-				lines.push_back(main_item)
+	if tokenWalker.current_token.token == Syntax.TOKEN_SPEAKER or tokenWalker.current_token.token == Syntax.TOKEN_TEXT:
+		tokenWalker._is_multiline_enabled = false
+		main_item = DialogueNodeParser.new()._dialogue_line(tokenWalker)
+		tokenWalker._is_multiline_enabled = true
+		if include_label_as_content:
+			lines.push_back(main_item)
 
 	if tokenWalker.peek(TokenArray.braceOpen):
 		tokenWalker.consume(TokenArray.braceOpen)
-		var block = logicNodeParser._nested_logic_block(tokenWalker)
+		var block = LogicNodeParser.new()._nested_logic_block(tokenWalker)
 
 		if not root:
 			root = block.root
 			wrapper = block.wrapper
 		else:
-			wrapper.content = block.wrapper
+			wrapper.content = [block.wrapper]
 			wrapper = block.wrapper
 
 		tokenWalker.consume(TokenArray.lineBreak)
@@ -178,7 +174,7 @@ func _option(tokenWalker : TokenWalker) -> OptionNode:
 		if tokenWalker.current_token.token != Syntax.TOKEN_INDENT:
 			tokenWalker.consume(TokenArray.indent)
 
-		lines = lines + dialogueNodeParser._lines(tokenWalker)
+		lines.append_array(MiscNodeParser.new()._lines(tokenWalker))
 		if !main_item:
 			main_item = lines[0]
 
@@ -192,11 +188,10 @@ func _option(tokenWalker : TokenWalker) -> OptionNode:
 		"id" = main_item.id,
 		"speaker" = main_item.speaker,
 		"tags" = main_item.tags,
-		"_id_suffixes" = main_item.id_suffixes}
-	)
+		"id_suffixes" = main_item.id_suffixes})
 
 	if root:
-		wrapper.content = node
+		wrapper.content = [node]
 		return root
 
 	return node

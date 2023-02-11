@@ -2,10 +2,10 @@ class_name MiscNodeParser
 extends RefCounted
 
 var nodeFactory : NodeFactory = NodeFactory.new()
-var dialogueNodeParser : DialogueNodeParser = DialogueNodeParser.new()
-var logicNodeParser : LogicNodeParser = LogicNodeParser.new()
+
 
 const _variations_modes = ['sequence', 'once', 'cycle', 'shuffle', 'shuffle sequence', 'shuffle once', 'shuffle cycle' ]
+
 
 func _document(tokenWalker : TokenWalker) -> DocumentNode:
 
@@ -34,7 +34,7 @@ func _blocks(tokenWalker : TokenWalker) -> Array[BlockNode]:
 		nodeFactory.CreateNode(nodeFactory.NODE_TYPES.BLOCK, {"blockName" =tokenWalker.current_token.value, "content"= _lines(tokenWalker)}) as BlockNode]
 
 	while tokenWalker.peek(TokenArray.block):
-		blocks = blocks + _blocks(tokenWalker)
+		blocks.append_array(_blocks(tokenWalker))
 
 	return blocks
 
@@ -50,15 +50,15 @@ func _lines(tokenWalker : TokenWalker) -> Array[ClydeNode]:
 	match(tk.token):
 		Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT:
 			tokenWalker.consume(TokenArray.dialogue)
-			var line = dialogueNodeParser._dialogue_line(tokenWalker)
+			var line = DialogueNodeParser.new()._dialogue_line(tokenWalker)
 			if tokenWalker.peek(TokenArray.braceOpen):
 				tokenWalker.consume(TokenArray.braceOpen)
-				lines = [logicNodeParser._line_with_action(line)]
+				lines = [LogicNodeParser.new()._line_with_action(tokenWalker, line)]
 			else:
 				lines = [line]
 				
 		Syntax.TOKEN_OPTION, Syntax.TOKEN_STICKY_OPTION, Syntax.TOKEN_FALLBACK_OPTION:
-			lines = [logicNodeParser._options(tokenWalker)]
+			lines = [DialogueNodeParser.new()._options(tokenWalker)]
 			
 		Syntax.TOKEN_DIVERT, Syntax.TOKEN_DIVERT_PARENT:
 			lines = [_divert(tokenWalker)]
@@ -74,29 +74,29 @@ func _lines(tokenWalker : TokenWalker) -> Array[ClydeNode]:
 			tokenWalker.consume(TokenArray.braceOpen)
 	
 			if tokenWalker.peek(TokenArray.setTrigger):
-				lines = [logicNodeParser._line_with_action(tokenWalker)]
+				lines = [LogicNodeParser.new()._line_with_action(tokenWalker)]
 				
 			else:
 				if tokenWalker.peek(TokenArray.when):
 					tokenWalker.consume(TokenArray.when)
-				lines = [logicNodeParser._conditional_line(tokenWalker)]
+				lines = [LogicNodeParser.new()._conditional_line(tokenWalker)]
 
 	if tokenWalker.peek(TokenArray.acceptable_next):
-		lines = lines + _lines(tokenWalker)
+		lines.append_array(_lines(tokenWalker))
 
 	return lines
 
 
-func _divert(tokenWalker : TokenWalker) -> DivertNode:
+func _divert(tokenWalker : TokenWalker) -> ClydeNode:
 	tokenWalker.consume(TokenArray.divert)
 	var divert = tokenWalker.current_token
 
-	var token : DivertNode
+	var token : ClydeNode
 	match divert.token:
 		Syntax.TOKEN_DIVERT:
-			token = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.DIVERT, {"value" = divert.value})
+			token = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.DIVERT, {"target" = divert.value})
 		Syntax.TOKEN_DIVERT_PARENT:
-			token = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.DIVERT, {"value" = '<parent>'})
+			token = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.DIVERT, {"target" = '<parent>'})
 
 	if tokenWalker.peek(TokenArray.lineBreak):
 		tokenWalker.consume(TokenArray.lineBreak)
@@ -107,7 +107,7 @@ func _divert(tokenWalker : TokenWalker) -> DivertNode:
 
 	if tokenWalker.peek(TokenArray.braceOpen):
 		tokenWalker.consume(TokenArray.braceOpen)
-		token = logicNodeParser._line_with_action(tokenWalker,token)
+		token = LogicNodeParser.new()._line_with_action(tokenWalker,token)
 
 	return token
 
@@ -141,11 +141,11 @@ func _variations(tokenWalker : TokenWalker) -> VariationsNode:
 			starts_next_line = true
 
 
-		variations.content.push_back(_lines(tokenWalker))
+		variations.content.append(NodeFactory.new().CreateNode(NodeFactory.NODE_TYPES.CONTENT, {"content" = _lines(tokenWalker)}))
 		if starts_next_line:
 			var lastVariation = variations.content[variations.content.size() - 1].content
 			var lastContent = lastVariation[lastVariation.size() - 1]
-			if lastContent.type != 'options':
+			if !(lastContent is OptionsNode):
 				tokenWalker.consume(TokenArray.dedent)
 
 		if tokenWalker.peek(TokenArray.dedent):
