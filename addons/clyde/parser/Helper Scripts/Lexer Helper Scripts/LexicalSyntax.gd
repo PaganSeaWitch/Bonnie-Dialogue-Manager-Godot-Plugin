@@ -61,6 +61,15 @@ const MODE_LOGIC = "LOGIC"
 const MODE_VARIATIONS = "VARIATIONS"
 
 
+const VARIATIONS_MODE_SEQUENCE = "sequence"
+const VARIATIONS_MODE_SHUFFLE = "shuffle"
+const VARIATIONS_MODE_ONCE = "once"
+const VARIATIONS_MODE_CYCLE = "cycle"
+const VARIATIONS_MODE_SHUFFLE_SEQUENCE = "shuffle sequence"
+const VARIATIONS_MODE_SHUFFLE_ONCE = "shuffle once"
+const VARIATIONS_MODE_SHUFFLE_CYCLE = "shuffle cycle"
+
+
 const _token_hints = {
 	TOKEN_TEXT: 'text',
 	TOKEN_INDENT: 'INDENT',
@@ -96,3 +105,8 @@ const _keywords = [
 	'is', 'isnt', 'or', 'and', 'not', 'true', 'false', 'null',
 	'set', 'trigger', 'when'
 ]
+
+const _variations_modes = [VARIATIONS_MODE_SEQUENCE, VARIATIONS_MODE_ONCE, 
+	VARIATIONS_MODE_CYCLE, VARIATIONS_MODE_SHUFFLE, 
+	VARIATIONS_MODE_SHUFFLE_SEQUENCE,
+	VARIATIONS_MODE_SHUFFLE_ONCE, VARIATIONS_MODE_SHUFFLE_CYCLE ]
