@@ -16,12 +16,12 @@ func consume(expected : Array[String] = [] ) -> Token:
 	if !_lookadhedlexer.size():
 		_lookadhedlexer.push_back(lexer.next())
 
-	var lookahead : Token = _lookadhedlexer.pop_front()
+	var lookaheadToken : Token = _lookadhedlexer.pop_front()
 
-	if expected.is_empty() == false && (!lookahead || !expected.has(lookahead.token)):
-		_wrong_token_error(lookahead, expected)
+	if expected.is_empty() == false && (!lookaheadToken || !expected.has(lookaheadToken.name)):
+		_wrong_token_error(lookaheadToken, expected)
 
-	current_token = lookahead;
+	current_token = lookaheadToken;
 	return current_token
 
 
@@ -33,10 +33,10 @@ func peek(expected : Array[String] = [], offset : int = 0) -> Token:
 		else:
 			break
 
-	var lookahead : Token = _lookadhedlexer[offset] if _lookadhedlexer.size() > offset else null
+	var lookaheadToken : Token = _lookadhedlexer[offset] if _lookadhedlexer.size() > offset else null
 
-	if expected.is_empty() || (lookahead != null && expected.has(lookahead.token)):
-		return lookahead
+	if expected.is_empty() || (lookaheadToken != null && expected.has(lookaheadToken.name)):
+		return lookaheadToken
 	
 	return null
 

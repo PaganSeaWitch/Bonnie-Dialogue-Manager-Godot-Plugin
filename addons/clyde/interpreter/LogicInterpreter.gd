@@ -10,130 +10,130 @@ func init(mem : MemoryInterface) -> void:
 	memory = mem
 
 
-func handle_assignment(assignment):
-	var variable = assignment.variable;
-	var source = assignment.value;
+func handle_assignment(assignment : AssignmentNode):
+	var variable : VariableNode = assignment.variable;
+	var source : ClydeNode = assignment.value;
 	var value = _get_node_value(source);
 
 	return _handle_assignment_operation(assignment, variable.name, value)
 
 
-func _handle_assignment_operation(assignment, var_name, value):
+func _handle_assignment_operation(assignment : AssignmentNode, var_name : String, value):
 	match assignment.operation:
-		"assign":
+		Syntax.TOKEN_ASSIGN:
 			return memory.set_variable(var_name, value)
-		"assign_sum":
+		Syntax.TOKEN_ASSIGN_SUM:
 			return memory.set_variable(var_name, memory.get_variable(var_name) + value)
-		"assign_sub":
+		Syntax.TOKEN_ASSIGN_SUB:
 			return memory.set_variable(var_name, memory.get_variable(var_name) - value)
-		"assign_mult":
+		Syntax.TOKEN_ASSIGN_MULT:
 			return memory.set_variable(var_name, memory.get_variable(var_name) * value)
-		"assign_div":
+		Syntax.TOKEN_ASSIGN_DIV:
 			return memory.set_variable(var_name, memory.get_variable(var_name) / value)
-		"assign_pow":
+		Syntax.TOKEN_ASSIGN_POW:
 			return memory.set_variable(var_name, pow(memory.get_variable(var_name), value))
-		"assign_mod":
+		Syntax.TOKEN_ASSIGN_MOD:
 			return memory.set_variable(var_name, memory.get_variable(var_name) % value)
 		_:
 			printerr("Unknown operation %s" % assignment.operation)
 
 
-func _get_node_value(node):
-	match node.type:
-		"literal":
+func _get_node_value(node : ClydeNode):
+	match node.get_node_class():
+		"LiteralNode","NumberNode", "BooleanNode":
 			return node.value
-		"variable":
+		"VariableNode":
 			return memory.get_variable(node.name)
-		"assignment":
+		"AssignmentNode":
 			return handle_assignment(node)
-		"expression":
+		"ExpressionNode":
 			return check_expression(node)
-		"null":
+		"NullTokenNode":
 			return null
 	printerr("Unknown node in expression %s" % node.type)
 
 
-func check_condition(condition):
-	match condition.type:
-		"expression":
+func check_condition(condition : NamedNode):
+	match condition.get_node_class():
+		"ExpressionNode":
 			return check_expression(condition)
-		"variable":
+		"VariableNode":
 			return memory.get_variable(condition.name)
 
 	printerr("Unknown condition type %s" % condition.type)
 
 
-func check_expression(node):
+func check_expression(node : ExpressionNode):
 	match node.name:
-		"equal":
+		Syntax.TOKEN_EQUAL:
 			return _get_node_value(node.elements[0]) == _get_node_value(node.elements[1])
-		"not_equal":
+		Syntax.TOKEN_NOT_EQUAL:
 			return _get_node_value(node.elements[0]) != _get_node_value(node.elements[1])
-		"greater_than":
+		Syntax.TOKEN_GREATER:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return false
 			return a > b
-		"greater_or_equal":
+		Syntax.TOKEN_GE:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return false
 			return a >= b
-		"less_than":
+		Syntax.TOKEN_LESS:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return false
 			return a < b
-		"less_or_equal":
+		Syntax.TOKEN_LE:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return false
 			return a <= b
-		"and":
+		Syntax.TOKEN_AND:
 			return check_condition(node.elements[0]) && check_condition(node.elements[1])
-		"or":
+		Syntax.TOKEN_OR:
 			return check_condition(node.elements[0]) || check_condition(node.elements[1])
-		"not":
+		Syntax.TOKEN_NOT:
 			return not check_condition(node.elements[0])
-		"mult":
+		Syntax.TOKEN_MULT:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a * b
-		"div":
+		Syntax.TOKEN_DIV:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a / b
-		"sub":
+		Syntax.TOKEN_MINUS:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a - b
-		"add":
+		Syntax.TOKEN_PLUS:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a + b
-		"pow":
+		Syntax.TOKEN_MULT:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return pow(a, b)
-		"mod":
+		Syntax.TOKEN_MOD:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):
 				return null
 			return a % b
 
-	printerr("Unknown expression %s" % node.type)
+	printerr("Unknown expression %s" % node.name)

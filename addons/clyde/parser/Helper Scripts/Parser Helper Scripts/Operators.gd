@@ -18,31 +18,3 @@ const operators : Dictionary = {
 	Syntax.TOKEN_DIV: { "precedence": 5, "associative": 'LEFT' },
 	Syntax.TOKEN_POWER: { "precedence": 7, "associative": 'RIGHT' },
 }
-
-const _assignment_operators : Dictionary = {
-	Syntax.TOKEN_ASSIGN: 'assign',
-	Syntax.TOKEN_ASSIGN_SUM: 'assign_sum',
-	Syntax.TOKEN_ASSIGN_SUB: 'assign_sub',
-	Syntax.TOKEN_ASSIGN_MULT: 'assign_mult',
-	Syntax.TOKEN_ASSIGN_DIV: 'assign_div',
-	Syntax.TOKEN_ASSIGN_POW: 'assign_pow',
-	Syntax.TOKEN_ASSIGN_MOD: 'assign_mod',
-}
-const operator_labels : Dictionary = {
-	Syntax.TOKEN_PLUS: 'add',
-	Syntax.TOKEN_MINUS: 'sub',
-	Syntax.TOKEN_MULT: 'mult',
-	Syntax.TOKEN_DIV: 'div',
-	Syntax.TOKEN_MOD: 'mod',
-	Syntax.TOKEN_POWER: 'pow',
-	Syntax.TOKEN_AND: 'and',
-	Syntax.TOKEN_OR: 'or',
-	Syntax.TOKEN_EQUAL: 'equal',
-	Syntax.TOKEN_NOT_EQUAL: 'not_equal',
-	Syntax.TOKEN_GREATER: 'greater_than',
-	Syntax.TOKEN_LESS: 'less_than',
-	Syntax.TOKEN_GE: 'greater_or_equal',
-	Syntax.TOKEN_LE: 'less_or_equal',
-}
-
-

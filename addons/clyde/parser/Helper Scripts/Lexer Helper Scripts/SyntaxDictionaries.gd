@@ -17,6 +17,7 @@ const logicDescriptiveTokens = {
 
 const MAX_VALUE_LENGTH : int = 2
 
+
 const logicSymbolTokensOperatorsWithSideEffects = {
 	'==':{"token" :Syntax.TOKEN_EQUAL, "length" : 2},
 	'!=':{"token" :Syntax.TOKEN_NOT_EQUAL, "length" : 2},
