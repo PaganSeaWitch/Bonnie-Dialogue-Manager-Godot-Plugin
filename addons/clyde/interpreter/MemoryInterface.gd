@@ -1,10 +1,16 @@
 class_name MemoryInterface
 extends RefCounted
 
+class InternalMemory:
+	var access    : Dictionary = {}
+	var	variables : Dictionary =  {}
+	var	internal  : Dictionary = {}
+
+
 # signal to emit when a variable has changed
 signal variable_changed(name, value, previous_value)
 
-const SPECIAL_VARIABLE_NAMES = [ 'OPTIONS_COUNT' ];
+const SPECIAL_VARIABLE_NAMES : Array[String]= [ 'OPTIONS_COUNT' ];
 
 var internalMemory : InternalMemory = InternalMemory.new()
 
@@ -50,7 +56,7 @@ func set_internal_variable(id, value):
 
 #gets an internal value, if null return a default value
 func get_internal_variable(id, default_value):
-	return internalMemory.internal.get(str(id));
+	return internalMemory.internal.get(str(id)) if internalMemory.internal.get(str(id)) != null else default_value
 
 
 #Returns memory object
