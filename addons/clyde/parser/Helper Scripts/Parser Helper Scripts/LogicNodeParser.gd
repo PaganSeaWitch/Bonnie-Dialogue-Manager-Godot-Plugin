@@ -24,7 +24,7 @@ func _logic_element(tokenWalker : TokenWalker):
 func _nested_logic_block(tokenWalker : TokenWalker):
 	var root
 	var wrapper
-	while tokenWalker.current_token.token == Syntax.TOKEN_BRACE_OPEN:
+	while tokenWalker.current_token.name == Syntax.TOKEN_BRACE_OPEN:
 		if not root:
 			root = _logic_block(tokenWalker)
 			wrapper = root
@@ -122,15 +122,15 @@ func _assignments(tokenWalker : TokenWalker):
 
 	tokenWalker.consume(TokenArray.braceClose)
 	if(typeof(assignments) == TYPE_ARRAY):
-		return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ACTION_CONTENT,{"action"= assignments})
-	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ACTION_CONTENT,{"action"= [assignments]})
+		return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ASSIGNMENTS,{"assignments"= assignments})
+	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ASSIGNMENTS,{"assignments"= [assignments]})
 
 func _assignment_expression(tokenWalker : TokenWalker):
 	var assignment = _assignment_expression_internal(tokenWalker)
 
-	if assignment is NodeFactory.new().NodeFactoryDictionary[NodeFactory.NODE_TYPES.VARIABLE]:
+	if assignment is VariableNode:
 		return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ASSIGNMENT, {"variable" = assignment, 
-		"operation"= ParserOperators._assignment_operators[Syntax.TOKEN_ASSIGN], 
+		"operation"= Syntax.TOKEN_ASSIGN, 
 		"value" = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.BOOLEANLITERAL,{"value"= 'true'})})
 	else:
 		return assignment
@@ -148,14 +148,12 @@ func _assignment_expression_internal(tokenWalker : TokenWalker):
 
 	if tokenWalker.peek(TokenArray.identifier) && tokenWalker.peek(TokenArray.operatorsAndBracketClose, 1):
 		return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ASSIGNMENT, 
-			{"variable" = variable,"operation"= ParserOperators._assignment_operators[tokenWalker.current_token.token],"value" = _assignment_expression_internal(tokenWalker)})
+			{"variable" = variable,"operation"= tokenWalker.current_token.name,"value" = _assignment_expression_internal(tokenWalker)})
 	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ASSIGNMENT, 
-		{"variable" = variable,"operation"= ParserOperators._assignment_operators[tokenWalker.current_token.token],"value" = _expression(tokenWalker)})
+		{"variable" = variable,"operation"= tokenWalker.current_token.name,"value" = _expression(tokenWalker)})
 
 
 func _expression(tokenWalker : TokenWalker,min_precedence = 1):
-
-
 	var lhs = _operand(tokenWalker)
 
 	if !tokenWalker.peek(TokenArray.operator_mathamatic_symbols):
@@ -164,13 +162,12 @@ func _expression(tokenWalker : TokenWalker,min_precedence = 1):
 	tokenWalker.consume(TokenArray.operator_mathamatic_symbols)
 
 	while true:
-		if !TokenArray.operator_mathamatic_symbols.has(tokenWalker.current_token.token):
+		if !TokenArray.operator_mathamatic_symbols.has(tokenWalker.current_token.name):
 			break
 
-		var operator = tokenWalker.current_token.token
-
-		var precedence = ParserOperators.operators[tokenWalker.current_token.token].precedence
-		var associative = ParserOperators.operators[tokenWalker.current_token.token].associative
+		var operator = tokenWalker.current_token.name
+		var precedence = ParserOperators.operators[tokenWalker.current_token.name].precedence
+		var associative = ParserOperators.operators[tokenWalker.current_token.name].associative
 
 		if precedence < min_precedence:
 			break
@@ -185,9 +182,9 @@ func _expression(tokenWalker : TokenWalker,min_precedence = 1):
 func _operand(tokenWalker : TokenWalker):
 	tokenWalker.consume(TokenArray.operator_literals)
 
-	match tokenWalker.current_token.token:
+	match tokenWalker.current_token.name:
 		Syntax.TOKEN_NOT:
-			return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.EXPRESSION,{"name"='not',"elements"= [_operand(tokenWalker)]})
+			return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.EXPRESSION,{"name"=tokenWalker.current_token.value,"elements"= [_operand(tokenWalker)]})
 		Syntax.TOKEN_IDENTIFIER:
 			return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.VARIABLE, {"name" = tokenWalker.current_token.value})
 		Syntax.TOKEN_NUMBER_LITERAL:
@@ -201,7 +198,7 @@ func _operand(tokenWalker : TokenWalker):
 
 
 func _operator(operator, lhs, rhs):
-	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.EXPRESSION,{"name"= ParserOperators.operator_labels[operator],"elements"= [lhs, rhs] })
+	return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.EXPRESSION,{"name"= operator,"elements"= [lhs, rhs] })
 
 
 func _line_with_action(tokenWalker: TokenWalker, line = null):
@@ -215,33 +212,26 @@ func _line_with_action(tokenWalker: TokenWalker, line = null):
 			tokenWalker.consume(TokenArray.braceOpen)
 			content = _line_with_action(tokenWalker, line)
 
-
 		if tokenWalker.peek(TokenArray.lineBreak):
 			tokenWalker.consume(TokenArray.lineBreak)
 
-
-		if !token || token.token == Syntax.TOKEN_KEYWORD_WHEN:
+		if !token || token.name == Syntax.TOKEN_KEYWORD_WHEN:
 			return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, {"conditions" = expression, "content" = [content]})
 
 		return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ACTION_CONTENT,{"action"= [expression], "content"= [content]})
-
 
 	if tokenWalker.peek(TokenArray.lineBreak):
 		tokenWalker.consume(TokenArray.lineBreak)
 		return expression
 
-
 	if tokenWalker.peek(TokenArray.eof):
 		return  expression
-
 
 	if tokenWalker.peek(TokenArray.braceOpen):
 		tokenWalker.consume(TokenArray.braceOpen)
 		if !token:
 			return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, {"conditions" = expression, "content" = [_line_with_action(tokenWalker)]})
 		return nodeFactory.CreateNode(NodeFactory.NODE_TYPES.ACTION_CONTENT,{"action"= [expression], "content"= [_line_with_action(tokenWalker)]})
-
-
 
 	tokenWalker.consume(TokenArray.dialogue)
 

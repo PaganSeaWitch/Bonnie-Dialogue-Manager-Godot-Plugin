@@ -12,7 +12,7 @@ var option_types = {
 
 
 func _dialogue_line(tokenWalker : TokenWalker) -> DialogueNode:
-	match tokenWalker.current_token.token:
+	match tokenWalker.current_token.name:
 		Syntax.TOKEN_SPEAKER:
 			return _line_with_speaker(tokenWalker)
 		Syntax.TOKEN_TEXT:
@@ -69,7 +69,7 @@ func _text_line(tokenWalker : TokenWalker) -> DialogueNode:
 
 
 func _line_with_metadata(tokenWalker : TokenWalker) -> LineNode:
-	match tokenWalker.current_token.token:
+	match tokenWalker.current_token.name:
 		Syntax.TOKEN_LINE_ID:
 			return _line_with_id(tokenWalker)
 		Syntax.TOKEN_TAG:
@@ -130,7 +130,7 @@ func _options(tokenWalker : TokenWalker) -> OptionsNode:
 
 func _option(tokenWalker : TokenWalker) -> ClydeNode:
 	tokenWalker.consume(TokenArray.options)
-	var type = option_types[tokenWalker.current_token.token]
+	var type = option_types[tokenWalker.current_token.name]
 	var acceptable_next = TokenArray.optionsAcceptableNext
 	var lines = []
 	var main_item : LineNode = LineNode.new()
@@ -139,17 +139,17 @@ func _option(tokenWalker : TokenWalker) -> ClydeNode:
 	var wrapper
 
 	tokenWalker.consume(acceptable_next)
-	if tokenWalker.current_token.token == Syntax.TOKEN_ASSIGN:
+	if tokenWalker.current_token.name == Syntax.TOKEN_ASSIGN:
 		include_label_as_content = true
 		tokenWalker.consume(acceptable_next)
 		
-	if tokenWalker.current_token.token == Syntax.TOKEN_BRACE_OPEN:
+	if tokenWalker.current_token.name == Syntax.TOKEN_BRACE_OPEN:
 		var block = LogicNodeParser.new()._nested_logic_block(tokenWalker)
 		root = block.root
 		wrapper = block.wrapper
 		tokenWalker.consume(acceptable_next)
 
-	if tokenWalker.current_token.token == Syntax.TOKEN_SPEAKER or tokenWalker.current_token.token == Syntax.TOKEN_TEXT:
+	if tokenWalker.current_token.name == Syntax.TOKEN_SPEAKER or tokenWalker.current_token.name == Syntax.TOKEN_TEXT:
 		tokenWalker._is_multiline_enabled = false
 		main_item = DialogueNodeParser.new()._dialogue_line(tokenWalker)
 		tokenWalker._is_multiline_enabled = true
@@ -170,8 +170,8 @@ func _option(tokenWalker : TokenWalker) -> ClydeNode:
 		tokenWalker.consume(TokenArray.lineBreak)
 
 
-	if tokenWalker.current_token.token == Syntax.TOKEN_INDENT || tokenWalker.peek(TokenArray.indent):
-		if tokenWalker.current_token.token != Syntax.TOKEN_INDENT:
+	if tokenWalker.current_token.name == Syntax.TOKEN_INDENT || tokenWalker.peek(TokenArray.indent):
+		if tokenWalker.current_token.name != Syntax.TOKEN_INDENT:
 			tokenWalker.consume(TokenArray.indent)
 
 		lines.append_array(MiscNodeParser.new()._lines(tokenWalker))

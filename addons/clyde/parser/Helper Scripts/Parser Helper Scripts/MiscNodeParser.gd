@@ -4,17 +4,14 @@ extends RefCounted
 var nodeFactory : NodeFactory = NodeFactory.new()
 
 
-const _variations_modes = ['sequence', 'once', 'cycle', 'shuffle', 'shuffle sequence', 'shuffle once', 'shuffle cycle' ]
-
-
 func _document(tokenWalker : TokenWalker) -> DocumentNode:
 
-	var next = tokenWalker.peek(TokenArray.expected)
+	var nextToken = tokenWalker.peek(TokenArray.expected)
 
-	if next == null:
-		tokenWalker._wrong_token_error(next, TokenArray.expected)
+	if nextToken == null:
+		tokenWalker._wrong_token_error(nextToken, TokenArray.expected)
 		return
-	match(next.token):
+	match(nextToken.name):
 		Syntax.TOKEN_EOF:
 			return nodeFactory.CreateNode(nodeFactory.NODE_TYPES.DOCUMENT, {}) as DocumentNode
 		Syntax.TOKEN_BLOCK:
@@ -47,7 +44,7 @@ func _lines(tokenWalker : TokenWalker) -> Array[ClydeNode]:
 	if !tk:
 		return []
 	
-	match(tk.token):
+	match(tk.name):
 		Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT:
 			tokenWalker.consume(TokenArray.dialogue)
 			var line = DialogueNodeParser.new()._dialogue_line(tokenWalker)
@@ -68,7 +65,7 @@ func _lines(tokenWalker : TokenWalker) -> Array[ClydeNode]:
 			lines = [_variations(tokenWalker)]
 			
 		Syntax.TOKEN_LINE_BREAK, Syntax.TOKEN_BRACE_OPEN:
-			if tk.token == Syntax.TOKEN_LINE_BREAK:
+			if tk.name == Syntax.TOKEN_LINE_BREAK:
 				tokenWalker.consume(TokenArray.lineBreak)
 				
 			tokenWalker.consume(TokenArray.braceOpen)
@@ -89,12 +86,12 @@ func _lines(tokenWalker : TokenWalker) -> Array[ClydeNode]:
 
 func _divert(tokenWalker : TokenWalker) -> ClydeNode:
 	tokenWalker.consume(TokenArray.divert)
-	var divert = tokenWalker.current_token
+	var divertToken = tokenWalker.current_token
 
 	var token : ClydeNode
-	match divert.token:
+	match divertToken.name:
 		Syntax.TOKEN_DIVERT:
-			token = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.DIVERT, {"target" = divert.value})
+			token = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.DIVERT, {"target" = divertToken.value})
 		Syntax.TOKEN_DIVERT_PARENT:
 			token = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.DIVERT, {"target" = '<parent>'})
 
@@ -116,13 +113,13 @@ func _variations(tokenWalker : TokenWalker) -> VariationsNode:
 	var variations = nodeFactory.CreateNode(NodeFactory.NODE_TYPES.VARIATIONS, {mode ='sequence'}) as VariationsNode
 
 	if tokenWalker.peek(TokenArray.variations):
-		var mode = tokenWalker.consume(TokenArray.variations)
-		if !_variations_modes.has(mode.value):
+		var mode : Token = tokenWalker.consume(TokenArray.variations)
+		if !Syntax._variations_modes.has(mode.value):
 			printerr("Wrong variation mode set \"%s\" checked line %s column %s. Valid modes: %s." % [
 				mode.value,
 				tokenWalker.current_token.line,
 				tokenWalker.current_token.column,
-				_variations_modes
+				Syntax._variations_modes
 			])
 			return
 

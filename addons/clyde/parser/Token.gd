@@ -1,7 +1,7 @@
 class_name Token
 extends RefCounted
 
-var token : String
+var name : String
 
 var value : String
 
@@ -9,8 +9,8 @@ var line : int
 
 var column : int
 
-func _init(_token, _line, _column, _value = ""):
-	token = _token
+func _init(_name, _line, _column, _value = ""):
+	name = _name
 	value = _value
 	line = _line
 	column = _column
