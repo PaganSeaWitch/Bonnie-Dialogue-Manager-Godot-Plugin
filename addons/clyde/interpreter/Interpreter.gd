@@ -1,67 +1,103 @@
+class_name ClydeInterpreter
 extends RefCounted
+
+const DEFAULT_INDEX = -1
 
 signal variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
-var memory : MemoryInterface = MemoryInterface.new()
-var LogicInterpreter : ClydeLogicInterpreter = ClydeLogicInterpreter.new()
+var memory : MemoryInterface
+var logicInterpreter : ClydeLogicInterpreter 
+
+class StackElement:
+	var node : ClydeNode
+	var content_index : int = -1
+
+class Config:
+	var id_suffix_lookup_separator : String
+
+var _doc : DocumentNode
+var _stack : Array[StackElement] = []
+var _handlers = {
+		ActionContentNode: Callable(self, "_handle_action_content_node"),
+		ConditionalContentNode: Callable(self, "_handle_conditional_content_node"),
+		BlockNode: Callable(self, "_handle_block_node"),
+		DocumentNode: Callable(self, "_handle_document_node"),
+		OptionNode: Callable(self, "_handle_option_node"),
+		LineNode: Callable(self, "_handle_line_node"),
+		OptionsNode: Callable(self, "_handle_options_node"),
+		VariationsNode: Callable(self, "_handle_variations_node"),
+		DivertNode: Callable(self, "_handle_divert_node"),
+		AssignmentsNode: Callable(self, "_handle_assignments_node"),
+		EventsNode: Callable(self, "_handle_events_node"),
+		ContentNode: Callable(self, "_handle_content_node"),
+	}
 
 
-var _logic
-var _doc
-var _stack = []
-var _handlers = {}
+var _variation_mode_handlers = {
+	Syntax.VARIATIONS_MODE_CYCLE : Callable(self, "_handle_cycle_variation"),
+	Syntax.VARIATIONS_MODE_ONCE : Callable(self, "_handle_once_variation"),
+	Syntax.VARIATIONS_MODE_SEQUENCE : Callable(self, "_handle_sequence_variation"),
+	Syntax.VARIATIONS_MODE_SHUFFLE : Callable(self, "_handle_shuffle_variation"),
+	Syntax.VARIATIONS_MODE_SHUFFLE_CYCLE : Callable(self, "_handle_shuffle_variation").bind(Syntax.VARIATIONS_MODE_CYCLE),
+	Syntax.VARIATIONS_MODE_SHUFFLE_ONCE : Callable(self, "_handle_shuffle_variation").bind(Syntax.VARIATIONS_MODE_ONCE),
+	Syntax.VARIATIONS_MODE_SHUFFLE_SEQUENCE : Callable(self, "_handle_shuffle_variation").bind(Syntax.VARIATIONS_MODE_SEQUENCE),
+}
+
+
 var _anchors = {}
-var _config
+var _config : Config = Config.new()
 
-func init(document, interpreter_options = {}):
-	_doc = document
+
+func init(documentDict : Dictionary, interpreter_options :Dictionary = {}) -> void:
+	_doc = Parser.new().to_Document_node(documentDict) as DocumentNode
 	_doc._index = 1
 	memory = MemoryInterface.new()
 	memory.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
-	_logic = LogicInterpreter.new()
-	_logic.init(memory)
+	logicInterpreter = ClydeLogicInterpreter.new()
+	logicInterpreter.init(memory)
 
-	_config = {
-		"id_suffix_lookup_separator": interpreter_options.get("id_suffix_lookup_separator", "&"),
-	}
+	_config.id_suffix_lookup_separator = interpreter_options.get("id_suffix_lookup_separator", "&")
 
 	_initialise_blocks(_doc)
 	_initialise_stack(_doc)
-	_initialize_handlers()
 
 
-func get_content():
-	return _handle_next_node(_stack_head().current)
+
+func get_current_node():
+	return _handle_next_node(_stack_head().node)
 
 
 func choose(option_index):
-	var node = _stack_head()
-	if node.current.type == 'options':
-		var content = _get_visible_options(node.current.content)
+	var head = _stack_head()
+	if head.node is OptionsNode:
+		var content = _get_visible_options(head.node.content)
 
 		if option_index >= content.size():
 			printerr("Index %s not available." % option_index)
 			return
 
 		memory.set_as_accessed(content[option_index]._index)
-		memory.set_internal_variable('OPTIONS_COUNT', _get_visible_options(node.current.content).size())
-		content[option_index].content._index = content[option_index]._index;
+		memory.set_internal_variable('OPTIONS_COUNT', _get_visible_options(head.node.content).size())
+		content[option_index]._index = content[option_index]._index;
 
-		if content[option_index].type == 'action_content':
+		if content[option_index] is ActionContentNode:
 			content[option_index].content.content._index = content[option_index].content._index
 			_handle_action(content[option_index]);
 			_add_to_stack(content[option_index].content);
 			_add_to_stack(content[option_index].content.content);
 		else:
 			_add_to_stack(content[option_index])
-			_add_to_stack(content[option_index].content)
+			var newContent : ContentNode = ContentNode.new()
+			newContent.content = content[option_index].content
+			_add_to_stack(newContent)
 	else:
 		printerr("Nothing to select")
 
 
-func select_block(block_name = null):
-	if block_name:
+func select_block(block_name : String = ""):
+	assert(block_name.is_empty() && !_anchors.has(block_name),"Block name was given but no such block exists!")
+	if _anchors.has(block_name):
 		_initialise_stack(_anchors[block_name])
 	else:
 		_initialise_stack(_doc)
@@ -87,94 +123,74 @@ func clear_data():
 	return memory.clear()
 
 
-func _initialise_stack(root):
-	_stack = [{
-	"current": root,
-	"content_index": -1
-	}]
+func _initialise_stack(root : ClydeNode):
+	var element = StackElement.new()
+	element.node = root
+	_stack.append(element)
 
 
-func _initialise_blocks(doc):
+func _initialise_blocks(doc : DocumentNode) -> void:
 	for i in range(doc.blocks.size()):
 		doc.blocks[i]._index = i + 2
-		_anchors[doc.blocks[i].name] = doc.blocks[i]
+		_anchors[doc.blocks[i].blockName] = doc.blocks[i]
 
 
-func _stack_head():
+func _stack_head() -> StackElement:
 	return _stack[_stack.size() - 1]
 
 
-func _stack_pop():
+func _stack_pop() -> StackElement:
 	return _stack.pop_back()
 
 
-func _add_to_stack(node):
-	if _stack_head().current != node:
-		_stack.push_back({
-			"current": node,
-			"content_index": -1
-		})
+func _add_to_stack(node : ClydeNode):
+	if _stack_head().node != node:
+		var element = StackElement.new()
+		element.node = node
+		_stack.push_back(element)
 
 
-func _generate_index():
-	return (10 * _stack_head().current._index) + _stack_head().content_index
+func _generate_index() -> int:
+	return (10 * _stack_head().node._index) + _stack_head().content_index
 
 
-func _initialize_handlers():
-	_handlers = {
-		"document": Callable(self, "_handle_document_node"),
-		"content": Callable(self, "_handle_content_node"),
-		"line": Callable(self, "_handle_line_node"),
-		"options": Callable(self, "_handle_options_node"),
-		"option": Callable(self, "_handle_option_node"),
-		"action_content": Callable(self, "_handle_action_content_node"),
-		"conditional_content": Callable(self, "_handle_conditional_content_node"),
-		"variations": Callable(self, "_handle_variations_node"),
-		"block": Callable(self, "_handle_block_node"),
-		"divert": Callable(self, "_handle_divert_node"),
-		"assignments": Callable(self, "_handle_assignments_node"),
-		"events": Callable(self, "_handle_events_node"),
-	}
+func _handle_document_node(_node : DocumentNode) -> DialogueNode:
+	var currentNode : StackElement = _stack_head()
+	return getAllContentNodes(currentNode, _node)
 
 
-func _handle_document_node(_node):
-	var node = _stack_head()
-	var content_index = node.content_index + 1
-	if content_index < node.current.content.size():
-		node.content_index = content_index
-		return _handle_next_node(node.current.content[content_index]);
-
-
-func _handle_content_node(content_node):
-	if not content_node.get("_index"):
-		content_node["_index"] = _generate_index()
+func _handle_content_node(content_node : ContentNode) -> DialogueNode:
+	if content_node._index == DEFAULT_INDEX:
+		content_node._index = _generate_index()
 	_add_to_stack(content_node)
 
-	var node = _stack_head()
-	var content_index = node.content_index + 1
-	if content_index < node.current.content.size():
-		node.content_index = content_index
-		return _handle_next_node(node.current.content[content_index])
+	var currentNode = _stack_head()
+	#Get all new nodes
+	var node  = getAllContentNodes(currentNode, content_node)
+	if(node != null): return node
 	_stack_pop()
-	return _handle_next_node(_stack_head().current);
+	return _handle_next_node(_stack_head().node);
 
 
-func _handle_line_node(line_node):
-	if not line_node.get("_index"):
-		line_node["_index"] = _generate_index()
-
-	return {
-		"type": "line",
-		"tags": line_node.get("tags"),
-		"id": line_node.get("id"),
-		"speaker": line_node.get("speaker"),
-		"text": _replace_variables(_translate_text(line_node.get("id"), line_node.get("value"), line_node.get("id_suffixes")))
-	}
+func getAllContentNodes(stackElement : StackElement, currentContent : ContentNode) -> DialogueNode:
+	var content_index : int = stackElement.content_index + 1
+	if content_index < stackElement.node.content.size():
+		stackElement.content_index = content_index
+		return _handle_next_node(stackElement.node.content[content_index])
+	return null
 
 
-func _handle_options_node(options_node):
-	if not options_node.get("_index"):
-		options_node["_index"] = _generate_index()
+func _handle_line_node(line_node : LineNode) -> LineNode:
+	if line_node._index == DEFAULT_INDEX:
+		line_node._index = _generate_index()
+
+	line_node.value = _replace_variables(_translate_text(line_node.id, line_node.value, line_node.id_suffixes))
+	return line_node
+ 
+
+func _handle_options_node(options_node : OptionsNode) -> OptionsNode:
+	if options_node._index == DEFAULT_INDEX:
+		options_node._index = _generate_index()
 		memory.set_internal_variable('OPTIONS_COUNT', options_node.content.size())
 	_add_to_stack(options_node)
 
@@ -183,166 +199,162 @@ func _handle_options_node(options_node):
 
 	if options.size() == 0:
 		_stack_pop()
-		return _handle_next_node(_stack_head().current)
+		return _handle_next_node(_stack_head().node)
 
-	if options.size() == 1 and options[0].mode == 'fallback':
+	if options.size() == 1 && options[0].mode == 'fallback':
 		choose(0)
-		return _handle_next_node(_stack_head().current)
-
-	return {
-		"type": "options",
-		"speaker": options_node.get("speaker"),
-		"id": options_node.get("id"),
-		"tags": options_node.get("tags"),
-		"name": _replace_variables(_translate_text(options_node.get("id"), options_node.get("name"), options_node.get("id_suffixes"))),
-		"options": _map(Callable(self, "_map_option"), options),
-	}
+		return _handle_next_node(_stack_head().node)
+	
+	options_node.name = _replace_variables(_translate_text(options_node.id, options_node.name, options_node.id_suffixes))
+	options_node.content = options
+	return options_node
 
 
-func _get_visible_options(options):
-	return _filter(
-		Callable(self, "_check_if_option_not_accessed"),
-		_map(
-			Callable(self, "_prepare_option"),
-			options
-		)
-	)
+func _get_visible_options(options : Array) -> Array:
+	return options.map(func (e : ClydeNode):
+		return _prepare_option(e, options.find(e))
+	).filter(_check_if_option_not_accessed)
 
 
-func _prepare_option(option, index):
-	if not option.get("index"):
+func _prepare_option(option : ClydeNode, index : int) -> ClydeNode:
+	if option._index == DEFAULT_INDEX:
 		option._index = _generate_index() * 100 + index
 
-	if option.type == 'conditional_content':
-		option.content._index = option._index;
-		if _logic.check_condition(option.conditions):
-			return _prepare_option(option.content, index)
-		return;
+	if option is ConditionalContentNode:
+		if(option.content.size() > 0):
+			option.content[0]._index = option._index;
+			if logicInterpreter.check_condition(option.conditions):
+				return _prepare_option(option.content[0], index)
+		return null
 
-	if option.type == 'action_content':
-		option.content._index = option._index
-		option.mode = option.content.mode
-		var content = _prepare_option(option.content, index)
-		if not content:
-			return
+	if option is ActionContentNode:
+		if(option.content.size() > 0):
+			option.content[0]._index = option._index
+			option.mode = option.content[0].mode
+			return _prepare_option(option.content[0], index)
+		return null
 
 	return option;
 
 
-func _check_if_option_not_accessed(option):
-	return option and not (option.mode == 'once' and memory.was_already_accessed(option._index))
+func _check_if_option_not_accessed(option : ClydeNode):
+	return option != null && !(option.mode == 'once' && memory.was_already_accessed(option._index))
 
 
-func _map_option(option, _index):
-	var o = option if option.type == 'option' else option.content
-	return {
-		"speaker": o.get("speaker"),
-		"id": o.get("id"),
-		"tags": o.get("tags"),
-		"label": _replace_variables(_translate_text(o.get("id"), o.get("name"), o.get("id_suffixes"))),
-	}
-
-
-func _handle_option_node(_option_node):
+func _handle_option_node(_option_node : OptionNode):
 	# this is called when the contents inside the option
 	# were read. option list default behavior is to quit
 	# so we need to remove_at both option and option list from the stack.
 	_stack_pop()
 	_stack_pop()
-	return _handle_next_node(_stack_head().current);
+	return _handle_next_node(_stack_head().node);
 
 
-func _handle_action_content_node(action_node):
+func _handle_action_content_node(action_node : ActionContentNode):
 	_handle_action(action_node)
-	return _handle_next_node(action_node.content)
+	var content = ContentNode.new()
+	content.content = action_node.content
+	return _handle_content_node(content)
 
 
-func _handle_action(action_node):
-	if action_node.action.type == 'events':
-		for event in action_node.action.events:
-			emit_signal("event_triggered", event.name)
-	else:
-		for assignment in action_node.action.assignments:
-			_logic.handle_assignment(assignment)
+func _handle_action(action_node : ActionContentNode):
+	for action in action_node.action:
+		if action is EventsNode:
+			for event in action.events:
+				emit_signal("event_triggered", event.name)
+		if action is AssignmentNode:
+			logicInterpreter.handle_assignment(action)
+		if action is AssignmentsNode:
+			_handle_assignments_node(action)
 
 
-func _handle_conditional_content_node(conditional_node, fallback_node = _stack_head().current):
-	if _logic.check_condition(conditional_node.conditions):
-		return _handle_next_node(conditional_node.content);
+func _handle_conditional_content_node(conditional_node : ConditionalContentNode, fallback_node = _stack_head().node):
+	if logicInterpreter.check_condition(conditional_node.conditions):
+		var content = ContentNode.new()
+		content.content = conditional_node.content
+		return _handle_content_node(content)
 	return _handle_next_node(fallback_node)
 
 
-func _handle_variations_node(variations, attempt = 0):
-	if not variations.get("_index"):
-		variations["_index"] = _generate_index()
+func _handle_variations_node(variations : VariationsNode, attempt : int = 0):
+	if (variations._index == DEFAULT_INDEX):
+		variations._index = _generate_index()
 		for index in range(variations.content.size()):
-			var c = variations.content[index]
-			c._index = _generate_index() * 100 + index
+			var node : ClydeNode = variations.content[index]
+			node._index = _generate_index() * 100 + index
 
-	var next = _handle_variation_mode(variations)
-	if next == -1 or attempt > variations.content.size():
-		return _handle_next_node(_stack_head().current)
+	var next_index : int = _handle_variation_mode(variations)
+	if next_index == -1 || attempt > variations.content.size():
+		return _handle_next_node(_stack_head().node)
 
-	if variations.content[next].content.size() == 1 and variations.content[next].content[0].type == 'conditional_content':
-		if not _logic.check_condition(variations.content[next].content[0].conditions):
+	if variations.content[next_index].content.size() == 1 && is_instance_of(variations.content[next_index].content[0], ConditionalContentNode):
+		if !logicInterpreter.check_condition(variations.content[next_index].content[0].conditions):
 			return _handle_variations_node(variations, attempt + 1)
 
-	return _handle_next_node(variations.content[next]);
+	return _handle_next_node(variations.content[next_index]);
 
 
-func _handle_block_node(block):
+func _handle_block_node(block : BlockNode):
 	_add_to_stack(block)
-	var node = _stack_head()
-	var content_index = node.content_index + 1
+	var head : StackElement = _stack_head()
+	var content_index : int = head.content_index + 1
 
-	if content_index < node.current.content.content.size():
-		node.content_index = content_index
-		return _handle_next_node(node.current.content.content[content_index]);
+	if content_index < head.node.content.size():
+		head.content_index = content_index
+		var next = head.node.content[content_index]
+		return _handle_next_node(head.node.content[content_index]);
 
 
-func _handle_divert_node(divert):
+func _handle_divert_node(divert : DivertNode):
 	if divert.target == '<parent>':
-		var target_parents = ['document', 'block', 'option', 'options']
-
-		while not target_parents.has(_stack_head().current.type):
-			_stack_pop()
+		var target_parents : Array = [DocumentNode, BlockNode, OptionNode, OptionsNode]
+		var is_target_parent : bool = false
+		while !is_target_parent:
+			for target_parent in target_parents:
+				is_target_parent = is_instance_of(_stack_head().node, target_parent)
+				if(is_target_parent): break
+			if(!is_target_parent):
+				_stack_pop()
 
 		if _stack.size() > 1:
 			_stack_pop()
-			return _handle_next_node(_stack_head().current)
+			return _handle_next_node(_stack_head().node)
 	elif divert.target == '<end>':
 		_initialise_stack(_doc)
-		_stack_head().content_index = _stack_head().current.content.size();
+		_stack_head().content_index = _stack_head().node.content.size();
 	else:
 		return _handle_next_node(_anchors[divert.target])
 
 
-func _handle_assignments_node(assignment_node):
-	for assignment in assignment_node.assignments:
-		_logic.handle_assignment(assignment)
-	return _handle_next_node(_stack_head().current);
+
+func _handle_assignments_node(assignments_node : AssignmentsNode):
+	for assignment in assignments_node.assignments:
+		logicInterpreter.handle_assignment(assignment)
 
 
-func _handle_events_node(events):
+
+func _handle_events_node(events : EventsNode):
 	for event in events.events:
 		emit_signal("event_triggered", event.name)
 
-	return _handle_next_node(_stack_head().current);
+	return _handle_next_node(_stack_head().node);
 
 
-func _handle_next_node(node):
-	if _handlers.has(node.type):
-		return _handlers[node.type].call_func(node)
-	else:
-		printerr("Unkown node type '%s'" % node.type)
+func _handle_next_node(node : ClydeNode):
+	for type in _handlers.keys():
+		
+		if is_instance_of(node, type):
+			return _handlers[type].call(node)
+	
+	printerr("Unkown node type '%s'" % node.type)
 
 
-func _translate_text(key, text, id_suffixes = null):
-	if not key:
+func _translate_text(key : String, text : String, id_suffixes : Array):
+	if key.is_empty():
 		return text
 
-	if id_suffixes:
-		var lookup_key = key
+	if !id_suffixes.is_empty():
+		var lookup_key : String = key
 		for ids in id_suffixes:
 			var value = memory.get_variable(ids)
 			if value:
@@ -358,8 +370,8 @@ func _translate_text(key, text, id_suffixes = null):
 	return position
 
 
-func _replace_variables(text):
-	if not text:
+func _replace_variables(text : String) -> String:
+	if text.is_empty():
 		return text
 	var regex = RegEx.new()
 	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
@@ -370,67 +382,55 @@ func _replace_variables(text):
 	return text
 
 
-func _handle_variation_mode(variations):
-	match variations.mode:
-		"cycle":
-			return _handle_cycle_variation(variations)
-		"sequence":
-			return _handle_sequence_variation(variations)
-		"once":
-			return _handle_once_variation(variations)
-		"shuffle":
-			return _handle_shuffle_variation(variations)
-		"shuffle sequence":
-			return _handle_shuffle_variation(variations, "sequence")
-		"shuffle once":
-			return _handle_shuffle_variation(variations, "once")
-		"shuffle cycle":
-			return _handle_shuffle_variation(variations, "cycle")
+func _handle_variation_mode(variations : VariationsNode):
+	if(_variation_mode_handlers.has(variations.mode)):
+		var function : Callable = _variation_mode_handlers.get(variations.mode)
+		return function.call(variations)
 	printerr("Variation mode '%s' is unknown" % variations.mode)
 
 
-func _handle_cycle_variation(variations):
-	var current = memory.get_internal_variable(variations._index, -1);
-	if current < variations.content.size() - 1:
-		current += 1;
+func _handle_cycle_variation(variations : VariationsNode):
+	var current_index : int = memory.get_internal_variable(variations._index, -1);
+	if current_index < variations.content.size() - 1:
+		current_index += 1;
 	else:
-		current = 0
+		current_index = 0
 
-	memory.set_internal_variable(variations._index, current)
-	return current;
+	memory.set_internal_variable(variations._index, current_index)
+	return current_index;
 
 
-func _handle_once_variation(variations):
-	var current = memory.get_internal_variable(variations._index, -1);
-	var index = current + 1;
+func _handle_once_variation(variations : VariationsNode) -> int:
+	var current_index : int = memory.get_internal_variable(variations._index, -1);
+	var index : int = current_index + 1;
 	if index <= variations.content.size() - 1:
 		memory.set_internal_variable(variations._index, index)
 		return index
 
-	return -1;
+	return DEFAULT_INDEX;
 
 
-func _handle_sequence_variation(variations):
-	var current = memory.get_internal_variable(variations._index, -1)
-	if current < variations.content.size() - 1:
-		current += 1;
-		memory.set_internal_variable(variations._index, current)
+func _handle_sequence_variation(variations : VariationsNode) -> int:
+	var current_index : int  = memory.get_internal_variable(variations._index, -1)
+	if current_index < variations.content.size() - 1:
+		current_index += 1;
+		memory.set_internal_variable(variations._index, current_index)
 
-	return current;
+	return current_index;
 
 
-func _handle_shuffle_variation(variations, mode = 'cycle'):
-	var SHUFFLE_VISITED_KEY = "%s_shuffle_visited" % variations._index;
-	var LAST_VISITED_KEY = "%s_last_index" % variations._index;
-	var visited_items = memory.get_internal_variable(SHUFFLE_VISITED_KEY, []);
-	var remaining_options = []
+func _handle_shuffle_variation(variations : VariationsNode, mode : String = 'cycle') -> int:
+	var SHUFFLE_VISITED_KEY : String = "%s_shuffle_visited" % variations._index;
+	var LAST_VISITED_KEY : String = "%s_last_index" % variations._index;
+	var visited_items : Array = memory.get_internal_variable(SHUFFLE_VISITED_KEY, []);
+	var remaining_options : Array = []
 	for o in variations.content:
 		if not visited_items.has(o._index):
 			remaining_options.push_back(o)
 
 	if remaining_options.size() == 0:
 		if mode == 'once':
-			return -1
+			return DEFAULT_INDEX
 
 		if mode == 'cycle':
 			memory.set_internal_variable(SHUFFLE_VISITED_KEY, []);
@@ -447,23 +447,6 @@ func _handle_shuffle_variation(variations, mode = 'cycle'):
 	memory.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items);
 
 	return index;
-
-
-func _map(function: Callable, array: Array) -> Array:
-	var output = []
-	var index = 0
-	for item in array:
-		output.append(function.call(item, index))
-		index += 1
-	return output
-
-
-func _filter(function: Callable, array: Array) -> Array:
-	var output = []
-	for item in array:
-		if function.call(item):
-			output.append(item)
-	return output
 
 
 func _trigger_variable_changed(name, value, previous_value):
