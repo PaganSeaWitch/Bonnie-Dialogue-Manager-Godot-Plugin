@@ -109,7 +109,7 @@ func _handle_quote(lexer : Lexer) -> Array[Token]:
 		
 	return []
 
-
+ 
 func _handle_options(lexer : Lexer) -> Array[Token]:
 	var tokenName : String
 	match lexer._input[lexer._position]:

@@ -100,7 +100,7 @@ func _handle_start_variations(lexer : Lexer) -> Array[Token]:
 	var identifier : RegEx = RegEx.new()
 	identifier.compile("[A-Z|a-z| ]")
 
-	while MiscLexerFunctions._is_valid_position(lexer._input, lexer._position) and identifier.search(lexer._input[lexer._position]) != null:
+	while MiscLexerFunctions._is_valid_position(lexer._input, lexer._position) && identifier.search(lexer._input[lexer._position]) != null:
 		setupDict["values"] += lexer._input[lexer._position]
 		MiscLexerFunctions._increase_lexer_position(lexer)
 
