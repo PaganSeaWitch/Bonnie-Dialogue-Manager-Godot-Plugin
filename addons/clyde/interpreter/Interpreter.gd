@@ -50,8 +50,8 @@ var _config : Config = Config.new()
 
 
 func init(documentDict : Dictionary, interpreter_options :Dictionary = {}) -> void:
-	_doc = Parser.new().to_Document_node(documentDict) as DocumentNode
-	_doc._index = 1
+	_doc = Parser.new().to_node(documentDict) as DocumentNode
+	_doc.index = 1
 	memory = MemoryInterface.new()
 	memory.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
 	logicInterpreter = ClydeLogicInterpreter.new()
@@ -77,12 +77,12 @@ func choose(option_index):
 			printerr("Index %s not available." % option_index)
 			return
 
-		memory.set_as_accessed(content[option_index]._index)
+		memory.set_as_accessed(content[option_index].index)
 		memory.set_internal_variable('OPTIONS_COUNT', _get_visible_options(head.node.content).size())
-		content[option_index]._index = content[option_index]._index;
+		content[option_index].index = content[option_index].index;
 
 		if content[option_index] is ActionContentNode:
-			content[option_index].content.content._index = content[option_index].content._index
+			content[option_index].content.content.index = content[option_index].content.index
 			_handle_action(content[option_index]);
 			_add_to_stack(content[option_index].content);
 			_add_to_stack(content[option_index].content.content);
@@ -131,7 +131,7 @@ func _initialise_stack(root : ClydeNode):
 
 func _initialise_blocks(doc : DocumentNode) -> void:
 	for i in range(doc.blocks.size()):
-		doc.blocks[i]._index = i + 2
+		doc.blocks[i].index = i + 2
 		_anchors[doc.blocks[i].blockName] = doc.blocks[i]
 
 
@@ -151,7 +151,7 @@ func _add_to_stack(node : ClydeNode):
 
 
 func _generate_index() -> int:
-	return (10 * _stack_head().node._index) + _stack_head().content_index
+	return (10 * _stack_head().node.index) + _stack_head().content_index
 
 
 func _handle_document_node(_node : DocumentNode) -> DialogueNode:
@@ -160,8 +160,8 @@ func _handle_document_node(_node : DocumentNode) -> DialogueNode:
 
 
 func _handle_content_node(content_node : ContentNode) -> DialogueNode:
-	if content_node._index == DEFAULT_INDEX:
-		content_node._index = _generate_index()
+	if content_node.index == DEFAULT_INDEX:
+		content_node.index = _generate_index()
 	_add_to_stack(content_node)
 
 	var currentNode = _stack_head()
@@ -181,16 +181,16 @@ func getAllContentNodes(stackElement : StackElement, currentContent : ContentNod
 
 
 func _handle_line_node(line_node : LineNode) -> LineNode:
-	if line_node._index == DEFAULT_INDEX:
-		line_node._index = _generate_index()
+	if line_node.index == DEFAULT_INDEX:
+		line_node.index = _generate_index()
 
 	line_node.value = _replace_variables(_translate_text(line_node.id, line_node.value, line_node.id_suffixes))
 	return line_node
  
 
 func _handle_options_node(options_node : OptionsNode) -> OptionsNode:
-	if options_node._index == DEFAULT_INDEX:
-		options_node._index = _generate_index()
+	if options_node.index == DEFAULT_INDEX:
+		options_node.index = _generate_index()
 		memory.set_internal_variable('OPTIONS_COUNT', options_node.content.size())
 	_add_to_stack(options_node)
 
@@ -217,19 +217,19 @@ func _get_visible_options(options : Array) -> Array:
 
 
 func _prepare_option(option : ClydeNode, index : int) -> ClydeNode:
-	if option._index == DEFAULT_INDEX:
-		option._index = _generate_index() * 100 + index
+	if option.index == DEFAULT_INDEX:
+		option.index = _generate_index() * 100 + index
 
 	if option is ConditionalContentNode:
 		if(option.content.size() > 0):
-			option.content[0]._index = option._index;
+			option.content[0].index = option.index;
 			if logicInterpreter.check_condition(option.conditions):
 				return _prepare_option(option.content[0], index)
 		return null
 
 	if option is ActionContentNode:
 		if(option.content.size() > 0):
-			option.content[0]._index = option._index
+			option.content[0].index = option.index
 			option.mode = option.content[0].mode
 			return _prepare_option(option.content[0], index)
 		return null
@@ -238,7 +238,7 @@ func _prepare_option(option : ClydeNode, index : int) -> ClydeNode:
 
 
 func _check_if_option_not_accessed(option : ClydeNode):
-	return option != null && !(option.mode == 'once' && memory.was_already_accessed(option._index))
+	return option != null && !(option.mode == 'once' && memory.was_already_accessed(option.index))
 
 
 func _handle_option_node(_option_node : OptionNode):
@@ -277,11 +277,11 @@ func _handle_conditional_content_node(conditional_node : ConditionalContentNode,
 
 
 func _handle_variations_node(variations : VariationsNode, attempt : int = 0):
-	if (variations._index == DEFAULT_INDEX):
-		variations._index = _generate_index()
+	if (variations.index == DEFAULT_INDEX):
+		variations.index = _generate_index()
 		for index in range(variations.content.size()):
 			var node : ClydeNode = variations.content[index]
-			node._index = _generate_index() * 100 + index
+			node.index = _generate_index() * 100 + index
 
 	var next_index : int = _handle_variation_mode(variations)
 	if next_index == -1 || attempt > variations.content.size():
@@ -390,42 +390,42 @@ func _handle_variation_mode(variations : VariationsNode):
 
 
 func _handle_cycle_variation(variations : VariationsNode):
-	var current_index : int = memory.get_internal_variable(variations._index, -1);
+	var current_index : int = memory.get_internal_variable(variations.index, -1);
 	if current_index < variations.content.size() - 1:
 		current_index += 1;
 	else:
 		current_index = 0
 
-	memory.set_internal_variable(variations._index, current_index)
+	memory.set_internal_variable(variations.index, current_index)
 	return current_index;
 
 
 func _handle_once_variation(variations : VariationsNode) -> int:
-	var current_index : int = memory.get_internal_variable(variations._index, -1);
+	var current_index : int = memory.get_internal_variable(variations.index, -1);
 	var index : int = current_index + 1;
 	if index <= variations.content.size() - 1:
-		memory.set_internal_variable(variations._index, index)
+		memory.set_internal_variable(variations.index, index)
 		return index
 
 	return DEFAULT_INDEX;
 
 
 func _handle_sequence_variation(variations : VariationsNode) -> int:
-	var current_index : int  = memory.get_internal_variable(variations._index, -1)
+	var current_index : int  = memory.get_internal_variable(variations.index, -1)
 	if current_index < variations.content.size() - 1:
 		current_index += 1;
-		memory.set_internal_variable(variations._index, current_index)
+		memory.set_internal_variable(variations.index, current_index)
 
 	return current_index;
 
 
 func _handle_shuffle_variation(variations : VariationsNode, mode : String = 'cycle') -> int:
-	var SHUFFLE_VISITED_KEY : String = "%s_shuffle_visited" % variations._index;
-	var LAST_VISITED_KEY : String = "%s_last_index" % variations._index;
+	var SHUFFLE_VISITED_KEY : String = "%s_shuffle_visited" % variations.index;
+	var LAST_VISITED_KEY : String = "%s_last_index" % variations.index;
 	var visited_items : Array = memory.get_internal_variable(SHUFFLE_VISITED_KEY, []);
 	var remaining_options : Array = []
 	for o in variations.content:
-		if not visited_items.has(o._index):
+		if not visited_items.has(o.index):
 			remaining_options.push_back(o)
 
 	if remaining_options.size() == 0:
@@ -441,7 +441,7 @@ func _handle_shuffle_variation(variations : VariationsNode, mode : String = 'cyc
 	var random = randi() % remaining_options.size()
 	var index = variations.content.find(remaining_options[random]);
 
-	visited_items.push_back(remaining_options[random]._index);
+	visited_items.push_back(remaining_options[random].index);
 
 	memory.set_internal_variable(LAST_VISITED_KEY, index);
 	memory.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items);

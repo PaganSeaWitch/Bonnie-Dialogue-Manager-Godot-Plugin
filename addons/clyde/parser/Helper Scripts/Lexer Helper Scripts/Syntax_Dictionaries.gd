@@ -1,7 +1,8 @@
 class_name SyntaxDictionaries
 extends RefCounted
 
-const logicDescriptiveTokens = {
+# change word descriptors of logic to the token verison
+const logic_descriptive_tokens = {
 	"not":Syntax.TOKEN_NOT,
 	"and":Syntax.TOKEN_AND,
 	"or":Syntax.TOKEN_OR,
@@ -17,8 +18,8 @@ const logicDescriptiveTokens = {
 
 const MAX_VALUE_LENGTH : int = 2
 
-
-const logicSymbolTokensOperatorsWithSideEffects = {
+# return a token type and length of token for logic symbol
+const logic_symbol_tokens_operators_with_side_effects = {
 	'==':{"token" :Syntax.TOKEN_EQUAL, "length" : 2},
 	'!=':{"token" :Syntax.TOKEN_NOT_EQUAL, "length" : 2},
 	'&&':{"token" :Syntax.TOKEN_AND, "length" : 2},
@@ -29,8 +30,8 @@ const logicSymbolTokensOperatorsWithSideEffects = {
 	'>' :{"token" :Syntax.TOKEN_GREATER,"length" : 1},
 }
 
-
-const logicSymbolTokensSideOperatorWithoutSideEffects = {
+# return a token type and length of a token for logic sysmbol
+const logic_symbol_tokens_side_operator_without_side_effects = {
 	'=' :{"token" :Syntax.TOKEN_ASSIGN,"length" :1},
 	'-=':{"token" :Syntax.TOKEN_ASSIGN_SUB, "length" :2},
 	'+=':{"token" :Syntax.TOKEN_ASSIGN_SUM,"length" :2},

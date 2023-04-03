@@ -28,16 +28,14 @@ const acceptable_next : Array[String] = [
 	Syntax.TOKEN_BRACE_OPEN,
 	Syntax.TOKEN_LINE_BREAK,
 ]
-const optionsAcceptableNext  : Array[String] = [Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT, Syntax.TOKEN_INDENT, Syntax.TOKEN_ASSIGN, Syntax.TOKEN_BRACE_OPEN]
-const block  : Array[String] = [Syntax.TOKEN_BLOCK]
 
-const braceOpen  : Array[String] = [Syntax.TOKEN_BRACE_OPEN]
 
-const bracketOpen : Array[String]  = [Syntax.TOKEN_BRACKET_OPEN]
+const options_acceptable_next  : Array[String] = [Syntax.TOKEN_SPEAKER, 
+	Syntax.TOKEN_TEXT, Syntax.TOKEN_INDENT, 
+	Syntax.TOKEN_ASSIGN, Syntax.TOKEN_BRACE_OPEN]
 
-const bracketClose  : Array[String] = [Syntax.TOKEN_BRACKET_CLOSE]
 
-const operatorsAndBracketClose  : Array[String] = [
+const operators_and_bracket_close  : Array[String] = [
 	Syntax.TOKEN_BRACKET_CLOSE,
 	Syntax.TOKEN_ASSIGN,
 	Syntax.TOKEN_ASSIGN_SUM,
@@ -45,8 +43,8 @@ const operatorsAndBracketClose  : Array[String] = [
 	Syntax.TOKEN_ASSIGN_MULT,
 	Syntax.TOKEN_ASSIGN_DIV,
 	Syntax.TOKEN_ASSIGN_POW,
-	Syntax.TOKEN_ASSIGN_MOD
-]
+	Syntax.TOKEN_ASSIGN_MOD ]
+
 
 const operator_literals : Array[String]= [
 		Syntax.TOKEN_IDENTIFIER,
@@ -54,8 +52,7 @@ const operator_literals : Array[String]= [
 		Syntax.TOKEN_NUMBER_LITERAL,
 		Syntax.TOKEN_STRING_LITERAL,
 		Syntax.TOKEN_BOOLEAN_LITERAL,
-		Syntax.TOKEN_NULL_TOKEN
-	]
+		Syntax.TOKEN_NULL_TOKEN ]
 
 
 const operator_assignments : Array[String] =[
@@ -65,8 +62,7 @@ const operator_assignments : Array[String] =[
 	Syntax.TOKEN_ASSIGN_MULT,
 	Syntax.TOKEN_ASSIGN_DIV,
 	Syntax.TOKEN_ASSIGN_POW,
-	Syntax.TOKEN_ASSIGN_MOD,
-]
+	Syntax.TOKEN_ASSIGN_MOD ]
 
 
 const operator_mathamatic_symbols : Array[String] =[
@@ -83,12 +79,21 @@ const operator_mathamatic_symbols : Array[String] =[
 	Syntax.TOKEN_MOD,
 	Syntax.TOKEN_MULT,
 	Syntax.TOKEN_DIV,
-	Syntax.TOKEN_POWER,
-]
+	Syntax.TOKEN_POWER ]
+
+
+const block  : Array[String] = [Syntax.TOKEN_BLOCK]
+
+const brace_open  : Array[String] = [Syntax.TOKEN_BRACE_OPEN]
+
+const bracket_open : Array[String]  = [Syntax.TOKEN_BRACKET_OPEN]
+
+const bracket_close  : Array[String] = [Syntax.TOKEN_BRACKET_CLOSE]
 
 const dialogue : Array[String]  = [Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT]
 
-const setTrigger : Array[String]  = [Syntax.TOKEN_KEYWORD_SET, Syntax.TOKEN_KEYWORD_TRIGGER]
+const set_trigger : Array[String]  = [Syntax.TOKEN_KEYWORD_SET,
+	Syntax.TOKEN_KEYWORD_TRIGGER]
 
 const when  : Array[String] = [Syntax.TOKEN_KEYWORD_WHEN]
 
@@ -96,17 +101,18 @@ const lineBreak  : Array[String] = [Syntax.TOKEN_LINE_BREAK]
 
 const text  : Array[String] = [Syntax.TOKEN_TEXT]
 
-const tagAndId  : Array[String] = [Syntax.TOKEN_LINE_ID, Syntax.TOKEN_TAG]
+const tag_and_id  : Array[String] = [Syntax.TOKEN_LINE_ID, Syntax.TOKEN_TAG]
 
 const indent  : Array[String] = [Syntax.TOKEN_INDENT]
 
-const options  : Array[String] = [Syntax.TOKEN_OPTION, Syntax.TOKEN_STICKY_OPTION, Syntax.TOKEN_FALLBACK_OPTION]
+const options  : Array[String] = [Syntax.TOKEN_OPTION, 
+	Syntax.TOKEN_STICKY_OPTION, Syntax.TOKEN_FALLBACK_OPTION]
 
 const end : Array[String]  = [Syntax.TOKEN_DEDENT, Syntax.TOKEN_EOF]
 
 const tag : Array[String]  = [Syntax.TOKEN_TAG]
 
-const idSuffixes : Array[String]  = [Syntax.TOKEN_ID_SUFFIX]
+const id_suffixes : Array[String]  = [Syntax.TOKEN_ID_SUFFIX]
 
 const dedent : Array[String]  = [Syntax.TOKEN_DEDENT]
 
@@ -116,7 +122,7 @@ const eof : Array[String]  = [Syntax.TOKEN_EOF]
 
 const variations : Array[String]  = [Syntax.TOKEN_VARIATIONS_MODE]
 
-const indentMinus  : Array[String] = [Syntax.TOKEN_INDENT, Syntax.TOKEN_MINUS]
+const indent_minus  : Array[String] = [Syntax.TOKEN_INDENT, Syntax.TOKEN_MINUS]
 
 const minus  : Array[String] = [Syntax.TOKEN_MINUS]
 
@@ -126,6 +132,6 @@ const trigger : Array[String]  = [Syntax.TOKEN_KEYWORD_TRIGGER]
 
 const comma : Array[String]  = [Syntax.TOKEN_COMMA]
 
-const braceClose : Array[String]  = [Syntax.TOKEN_BRACE_CLOSE]
+const brace_close : Array[String]  = [Syntax.TOKEN_BRACE_CLOSE]
 
 const identifier : Array[String]  = [Syntax.TOKEN_IDENTIFIER]

@@ -1,14 +1,16 @@
 class_name NodeFactory
 extends RefCounted
 
+
 enum NODE_TYPES 
 { ASSIGNMENT, EXPRESSION, DOCUMENT, DIVERT, OPTION, OPTIONS, 
 LINE, BLOCK, VARIATIONS, VARIABLE,
 LITERAL, NULL, ASSIGNMENTS, CONDITIONAL_CONTENT, 
-ACTION_CONTENT, EVENTS, EVENT, CONTENT, STRINGLITERAL, NUMBERLITERAL, BOOLEANLITERAL}
+ACTION_CONTENT, EVENTS, EVENT, CONTENT, 
+STRINGLITERAL, NUMBERLITERAL, BOOLEANLITERAL}
 
 
-var NodeFactoryDictionary : Dictionary = {
+var node_factory_dictionary : Dictionary = {
 	NODE_TYPES.DOCUMENT : DocumentNode,
 	NODE_TYPES.DIVERT : DivertNode,
 	NODE_TYPES.OPTION : OptionNode,
@@ -28,10 +30,10 @@ var NodeFactoryDictionary : Dictionary = {
 	NODE_TYPES.ACTION_CONTENT : ActionContentNode,
 	NODE_TYPES.EVENTS : EventsNode,
 	NODE_TYPES.EVENT : EventNode,
-	NODE_TYPES.CONTENT : ContentNode
-}
+	NODE_TYPES.CONTENT : ContentNode }
 
-var NodeFactoryDictionaryReverse : Dictionary = {
+
+var node_factory_dictionary_reverse : Dictionary = {
 	DocumentNode : NODE_TYPES.DOCUMENT,
 	DivertNode : NODE_TYPES.DIVERT,
 	OptionNode: NODE_TYPES.OPTION,
@@ -51,13 +53,13 @@ var NodeFactoryDictionaryReverse : Dictionary = {
 	ActionContentNode : NODE_TYPES.ACTION_CONTENT,
 	EventsNode : NODE_TYPES.EVENTS,
 	EventNode : NODE_TYPES.EVENT,
-	ContentNode : NODE_TYPES.CONTENT
-}
+	ContentNode : NODE_TYPES.CONTENT }
 
-func CreateNode(type : NODE_TYPES, args : Dictionary) -> ClydeNode:
-	var node = NodeFactoryDictionary.get(type).new();
+
+func create_node(type : NODE_TYPES, args : Dictionary) -> ClydeNode:
+	var node = node_factory_dictionary.get(type).new();
 	
-	var properties = node.get_property_list()
+	
 	for property in node.get_property_list():
 		if(args.has(property.name)):
 			var value = args.get(property.name , node[property.name])
@@ -65,54 +67,61 @@ func CreateNode(type : NODE_TYPES, args : Dictionary) -> ClydeNode:
 
 
 	if(node is DivertNode):
-		return Divert(node)
+		return _divert(node)
 	if(node is NumberNode):
-		return NumberLiteral(node)
+		return _number_literal(node)
 	if(node is	BooleanNode):
-		return BooleanLiteral(node)
+		return _boolean_literal(node)
 	return node
 
-func CreateNodeTree(jsonDictionary : Dictionary) -> ClydeNode:
-	var node = NodeFactoryDictionary.get(jsonDictionary["type"] as NodeFactory.NODE_TYPES).new()
+
+
+func create_node_tree(json_dictionary : Dictionary) -> ClydeNode:
+	var node = node_factory_dictionary.get(
+		json_dictionary["type"] as NodeFactory.NODE_TYPES).new()
+	
 	var properties = node.get_property_list()
 	
 	for property in node.get_property_list():
-		if(jsonDictionary.has(property.name)):
-			var currentVal = jsonDictionary.get(property.name)
+		if(json_dictionary.has(property.name)):
+			var current_val = json_dictionary.get(property.name)
 			
-			match(typeof(currentVal)):
+			match(typeof(current_val)):
 				
 				TYPE_ARRAY:
 					var array : Array = []
-					if(!currentVal.is_empty() && typeof(currentVal[0]) == TYPE_DICTIONARY):
-						for dic in currentVal:
-							array.append(CreateNodeTree(dic))
+					if(!current_val.is_empty() 
+					&& typeof(current_val[0]) == TYPE_DICTIONARY):
+						for dic in current_val:
+							array.append(create_node_tree(dic))
 						node[property.name] = array
 					else:
-						node[property.name] = currentVal
+						node[property.name] = current_val
 				
 				TYPE_DICTIONARY:
-					if(currentVal.size() != 0):
-						node[property.name] = CreateNodeTree(currentVal)
+					if(current_val.size() != 0):
+						node[property.name] = create_node_tree(current_val)
 				
 				TYPE_STRING, TYPE_BOOL, TYPE_FLOAT:
-					node[property.name] = currentVal
+					node[property.name] = current_val
 	return node
 
 
-func Divert(divertNode: DivertNode) -> DivertNode:
-	if divertNode.target == 'END':
-		divertNode.target = '<end>'
+func _divert(divert_node: DivertNode) -> DivertNode:
+	if divert_node.target == 'END':
+		divert_node.target = '<end>'
 
-	return divertNode
-
-
-func NumberLiteral(numNode : NumberNode) -> NumberNode:
-	numNode.value =  float(numNode.value) if numNode.value.is_valid_float() else int(numNode.value)
-	return numNode
+	return divert_node
 
 
-func BooleanLiteral(boolNode : BooleanNode) -> BooleanNode:
-	boolNode.value = boolNode.value == 'true'
-	return boolNode
+func _number_literal(num_node : NumberNode) -> NumberNode:
+	num_node.value =  (float(num_node.value) 
+		if num_node.value.is_valid_float() else int(num_node.value))
+	
+	return num_node
+
+
+func _boolean_literal(bool_node : BooleanNode) -> BooleanNode:
+	bool_node.value = bool_node.value == 'true'
+	return bool_node
 

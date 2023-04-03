@@ -1,6 +1,7 @@
 class_name Syntax
 extends RefCounted
 
+# Tokens
 const TOKEN_TEXT = "TEXT"
 const TOKEN_INDENT = "INDENT"
 const TOKEN_DEDENT = "DEDENT"
@@ -53,14 +54,14 @@ const TOKEN_ASSIGN_MOD = "%="
 const TOKEN_COMMA = ","
 const TOKEN_LINE_BREAK = "line break"
 
-
+# Modes
 const MODE_DEFAULT = "DEFAULT"
 const MODE_OPTION = "OPTION"
 const MODE_QSTRING = "QSTRING"
 const MODE_LOGIC = "LOGIC"
 const MODE_VARIATIONS = "VARIATIONS"
 
-
+# Sequence Modes
 const VARIATIONS_MODE_SEQUENCE = "sequence"
 const VARIATIONS_MODE_SHUFFLE = "shuffle"
 const VARIATIONS_MODE_ONCE = "once"
@@ -69,8 +70,8 @@ const VARIATIONS_MODE_SHUFFLE_SEQUENCE = "shuffle sequence"
 const VARIATIONS_MODE_SHUFFLE_ONCE = "shuffle once"
 const VARIATIONS_MODE_SHUFFLE_CYCLE = "shuffle cycle"
 
-
-const _token_hints = {
+# hints for tokens
+const token_hints = {
 	TOKEN_TEXT: 'text',
 	TOKEN_INDENT: 'INDENT',
 	TOKEN_DEDENT: 'DEDENT',
@@ -101,12 +102,12 @@ const _token_hints = {
 	TOKEN_LESS: '<',
 }
 
-const _keywords = [
+const keywords = [
 	'is', 'isnt', 'or', 'and', 'not', 'true', 'false', 'null',
 	'set', 'trigger', 'when'
 ]
 
-const _variations_modes = [VARIATIONS_MODE_SEQUENCE, VARIATIONS_MODE_ONCE, 
+const variations_modes = [VARIATIONS_MODE_SEQUENCE, VARIATIONS_MODE_ONCE, 
 	VARIATIONS_MODE_CYCLE, VARIATIONS_MODE_SHUFFLE, 
 	VARIATIONS_MODE_SHUFFLE_SEQUENCE,
 	VARIATIONS_MODE_SHUFFLE_ONCE, VARIATIONS_MODE_SHUFFLE_CYCLE ]

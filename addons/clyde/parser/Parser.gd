@@ -1,105 +1,92 @@
 class_name Parser
 extends RefCounted
 
-var lexer : Lexer = Lexer.new()
+var _lexer : Lexer = Lexer.new()
 
 
-func parse(doc):
-	var tokenWalker = TokenWalker.new()
-	tokenWalker.setLexer(lexer.init(doc))
+# Parses given string data into a DocumentNode
+func parse(doc : String) -> DocumentNode:
+	var token_walker = TokenWalker.new()
+	token_walker.set_lexer(_lexer.init(doc))
 
-#	var l = Syntax.new()
-#	print(l.init(doc).get_all())
-
-	var result : DocumentNode = MiscNodeParser.new()._document(tokenWalker)
-	if tokenWalker.peek():
-		tokenWalker.consume(TokenArray.eof)
+	var result : DocumentNode = MiscNodeParser.new().document(token_walker)
+	if token_walker.peek() != null:
+		token_walker.consume(TokenArray.eof)
 
 	return result
 
 
-var NODE_TYPE_DICTIONARY : Dictionary = {
-	DocumentNode : "DOCUMENT",
-	DivertNode   : "DIVERT",
-	OptionNode   : "OPTION",
-	OptionsNode  : "OPTIONS",
-	LineNode     : "LINE",
-	BlockNode    : "BLOCK",
-	VariationsNode : "VARIATIONS",
-	VariableNode   : "VARIABLE",
-	StringNode     : "STRING",
-	NumberNode     : "NUMBER",
-	BooleanNode    : "BOOLEAN",
-	NullTokenNode  : "NULL",
-	AssignmentsNode : "ASSIGNMENTS",
-	ExpressionNode  : "EXPRESSION",
-	AssignmentNode  : "ASSIGNMENT",
-	ConditionalContentNode  : "CONDITIONAL_CONTENT",
-	ActionContentNode : "ACTION_CONTENT",
-	EventsNode : "EVENTS",
-	EventNode : "EVENT",
-	ContentNode : "CONTENT"
-}
-
-
-func to_JSON_object(doc : ClydeNode) -> Dictionary:
+# Transforms a ClydeNode into a JSON dictionary
+func to_JSON_object(node : ClydeNode, to_print : bool = false) -> Dictionary:
 	var json_dictionary : Dictionary = {}
-	var keys : Array = NodeFactory.new().NodeFactoryDictionaryReverse.keys()
-	if(doc == null):
+	
+	# Get all node types
+	var keys : Array = NodeFactory.new().node_factory_dictionary_reverse.keys()
+	if(node == null):
 		return {}
+		
+	# Set the type in the JSON dictionary based on the node type as a ENUM number
 	for key in keys:
-		if is_instance_of(doc, key):
-			var number : int = NodeFactory.new().NodeFactoryDictionaryReverse[key]
-			json_dictionary["type"] = number
+		if is_instance_of(node, key):
+			if(to_print):
+				json_dictionary["type"] = key.new().get_node_class().replace("Node", "")
+			else:
+				var number : int = NodeFactory.new().node_factory_dictionary_reverse[key]
+				json_dictionary["type"] = number
 			break
 	if(!json_dictionary.has("type")):
 		return {}
 
-	for property in doc.get_property_list():
+	# For every property in the current node check its type
+	# and add it to the JSON dictionary if it a usable type
+	for property in node.get_property_list():
+		var name : String = property.name
 		match(property.type):
 			TYPE_ARRAY:
 				var array : Array = []
-				if(property.name != "tags" && property.name != "id_suffixes"):
-					for node in doc[property.name]:
-						array.append(to_JSON_object(node))
-					json_dictionary[property.name] = array
+				if(name != "tags" && name != "id_suffixes"):
+					for val in node[name]:
+						array.append(to_JSON_object(val,to_print))
+					json_dictionary[name] = array
 				else:
-					json_dictionary[property.name] = doc[property.name]
+					json_dictionary[name] = node[name]
 			TYPE_OBJECT:
-				if(property.name != "script"):
-					json_dictionary[property.name] = to_JSON_object(doc[property.name])
+				if(name != "script"):
+					json_dictionary[name] = to_JSON_object(node[name],to_print)
 			TYPE_STRING, TYPE_BOOL, TYPE_FLOAT:
-				json_dictionary[property.name] = doc[property.name]
+				json_dictionary[name] = node[name]
 			TYPE_NIL:
-				if((property.name == "value"|| property.name == "variable" )&& json_dictionary["type"] == NodeFactory.NODE_TYPES.ASSIGNMENT):
-					json_dictionary[property.name] = to_JSON_object(doc[property.name])
-				elif(property.name != "RefCounted" && !property.name.ends_with(".gd")):
-					json_dictionary[property.name] = doc[property.name]
+				if(name != "RefCounted" 
+				&& !name.ends_with(".gd")):
+					json_dictionary[name] = node[name]
 			
 	return json_dictionary
 
 
-func to_Document_node(jsonDictionary : Dictionary) -> ClydeNode:
-	if(validate_json_object(jsonDictionary)):
-		return NodeFactory.new().CreateNodeTree(jsonDictionary);
+# Turns a JSON object into a ClydeNode
+func to_node(json_dictionary : Dictionary) -> ClydeNode:
+	if(_validate_json_object(json_dictionary)):
+		return NodeFactory.new().create_node_tree(json_dictionary);
 	return null
 
 
-func validate_json_object(jsonDictionary : Dictionary) -> bool:
-	var isNotBroken : bool = true
-	var keys  : Array = NodeFactory.new().NodeFactoryDictionary.keys()
+# Validates that a json object has a correct type
+func _validate_json_object(json_dictionary : Dictionary) -> bool:
+	var is_not_broken : bool = true
+	var keys  : Array = NodeFactory.new().node_factory_dictionary.keys()
 	
-	if(!jsonDictionary.keys().has("type") || !keys.has(jsonDictionary["type"] as NodeFactory.NODE_TYPES)):
+	if(!json_dictionary.keys().has("type") || 
+	!keys.has(json_dictionary["type"] as NodeFactory.NODE_TYPES)):
 		return false
 	
-	for value in jsonDictionary.values():
+	for value in json_dictionary.values():
 		match(typeof(value)):
 			TYPE_ARRAY:
 				if(!value.is_empty() && typeof(value[0]) == TYPE_DICTIONARY):
 					for dic in value:
-						isNotBroken = isNotBroken && validate_json_object(dic)
+						is_not_broken = is_not_broken && _validate_json_object(dic)
 
 			TYPE_DICTIONARY:
 				if(value.size() != 0):
-					isNotBroken = isNotBroken && validate_json_object(value)
-	return isNotBroken
+					is_not_broken = is_not_broken && _validate_json_object(value)
+	return is_not_broken

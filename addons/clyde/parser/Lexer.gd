@@ -1,141 +1,193 @@
 class_name Lexer
 extends RefCounted
 
+# The handlers for lines recieved 
+var line_handler : LineHandler = LineHandler.new()
+var _nonline_handler : NonLineHandler = NonLineHandler.new()
+var _logic_handler : LogicHandler = LogicHandler.new()
 
-var lineHandler : LineHandler = LineHandler.new()
-var nonLineHandler : NonLineHandler = NonLineHandler.new()
-var logicHandler : LogicHandler = LogicHandler.new()
-var _input : String = ""
-var _indent: Array[int] = [0]
-var _position: int = 0
-var _line : int = 0
-var _column: int = 0
-var _length : int= 0
-var _pending_tokens : Array = []
-var _modes : Array[String]= [ Syntax.MODE_DEFAULT ]
-var _current_quote : String = ""
+# The data recieved
+var input : String = ""
+
+# keeps track of the indentation of the files
+var indent: Array[int] = [0]
+
+# The current position of the data in the file
+var position: int = 0
+var line : int = 0
+var column: int = 0
+var length : int= 0
 
 
-static func get_token_friendly_hint(tokenName : String) -> String:
-	return Syntax._token_hints.get(tokenName, tokenName)
-
-
-func init(input : String) -> Lexer:
-	_input = input
-	_indent = [0]
-	_position = 0
-	_line = 0
-	_column = 0
-	_length = input.length()
+func init(_input : String) -> Lexer:
+	input = _input
+	indent = [0]
+	position = 0
+	line = 0
+	column = 0
+	length = _input.length()
 	_pending_tokens = []
 
 	return self
 
 
+# Tokens we have yet to process
+var _pending_tokens : Array = []
+
+
+# The current modes
+var modes : Array[String]= [ Syntax.MODE_DEFAULT ]
+
+
+# The current quote
+var current_quote : String = ""
+
+
+# Gets the error hint for a token
+static func get_token_friendly_hint(tokenName : String) -> String:
+	return Syntax.token_hints.get(tokenName, tokenName)
+
+
+# Gets all tokens from a file
 func get_all() -> Array[Token]:
 	var tokens : Array[Token]= []
-	while _position < _length:
+	while position < length:
 		var new_tokens : Array[Token] = _get_next_tokens()
 		tokens.append_array(new_tokens)
 
-
-	_position += 1
-	tokens.push_back(Token.new(Syntax.TOKEN_EOF, _line, _column))
+	position += 1
+	tokens.push_back(Token.new(Syntax.TOKEN_EOF, line, column))
 
 	return tokens
 
 
+# Gets the next token
 func next() -> Token:
 	if _pending_tokens.size() > 0:
 		return _pending_tokens.pop_front()
 
-	while _position < _length:
+	while position < length:
 		var tokens = _get_next_tokens()
 		if !tokens.is_empty():
 			_pending_tokens = tokens
 			return _pending_tokens.pop_front()
 
-	_position += 1
-	return Token.new(Syntax.TOKEN_EOF, _line, _column)
+	position += 1
+	return Token.new(Syntax.TOKEN_EOF, line, column)
 
 
-func _stack_mode(mode):
-	_modes.push_front(mode)
+# Puts a mode at the top of the stack
+func stack_mode(mode : String):
+	modes.push_front(mode)
 
 
-func _pop_mode():
-	if _modes.size() > 1:
-		_modes.pop_front()
+# removes top mode from stack
+func pop_mode():
+	if modes.size() > 1:
+		modes.pop_front()
 
 
-func _is_current_mode(mode):
-	return _modes[0] == mode
+# Checks whether top mode in stack is mode
+func is_current_mode(mode : String):
+	return modes[0] == mode
 
 
+# Returns an array of tokens gotten from input
 func _get_next_tokens() -> Array[Token]:
-	if not _is_current_mode(Syntax.MODE_QSTRING) and _input[_position] == '-' and _input[_position + 1] == '-':
-		return lineHandler._handle_comments(self)
+	
+	# Rule : If -- in not quote mode, consume as comment
+	if  (input.substr(position, 2) == '--' 
+	&& !is_current_mode(Syntax.MODE_QSTRING)):
+		return line_handler.handle_comments(self)
+	
+	# Rule : If \n in not quote mode, consume line break
+	if (input[position] == '\n'
+	&& !is_current_mode(Syntax.MODE_QSTRING)):
+		return _nonline_handler.handle_line_breaks(self)
 
-	if not _is_current_mode(Syntax.MODE_QSTRING) and _input[_position] == '\n':
-		return nonLineHandler._handle_line_breaks(self)
+	# Rule : If tab at the zeroth columm in not logic mode, consume the indents
+	if (((column == 0 && MiscLexerFunctions.is_tab_char(input[position])) 
+	|| (column == 0 && indent.size() > 1))
+	&&  !is_current_mode(Syntax.MODE_LOGIC)):
+		return _nonline_handler.handle_indent(self)
 
-	if not _is_current_mode(Syntax.MODE_LOGIC) and ((_column == 0 and MiscLexerFunctions._is_tab_char(_input[_position])) or (_column == 0 and _indent.size() > 1)):
-		return nonLineHandler._handle_indent(self)
+	# Rule : if { in not quote mode, start logic mode
+	if (input[position] == '{'
+	&& !is_current_mode(Syntax.MODE_QSTRING)):
+		return _logic_handler.handle_logic_block_start(self)
 
-	if not _is_current_mode(Syntax.MODE_QSTRING) and _input[_position] == '{':
-		return logicHandler._handle_logic_block_start(self)
-
-	if _is_current_mode(Syntax.MODE_LOGIC):
-		var response = logicHandler._handle_logic_block(self)
-
-		if response:
+	# Rule : if we are in logic mode, consume as a logic block
+	if is_current_mode(Syntax.MODE_LOGIC):
+		var response : Array[Token] = _logic_handler.handle_logic_block(self)
+		if !response.is_empty():
 			return response
-
-	if _input[_position] == '"' or _input[_position] == "'":
-		if _current_quote:
-			if _input[_position] == _current_quote:
-				return lineHandler._handle_quote(self)
+ 
+	# Rule : if " or ', start quote mode
+	if (input[position] == '"' 
+	|| input[position] == "'"):
+		if !current_quote.is_empty():
+			if input[position] == current_quote:
+				return line_handler.handle_quote(self)
 		else:
-			_current_quote = _input[_position]
-			return lineHandler._handle_quote(self)
+			current_quote = input[position]
+			return line_handler.handle_quote(self)
 
-	if _is_current_mode(Syntax.MODE_QSTRING):
-		return lineHandler._handle_qtext(self)
+	# Rule : if we are in quote mode, consume text
+	if is_current_mode(Syntax.MODE_QSTRING):
+		return line_handler.handle_qtext(self)
 
-	if _input[_position] == ' ':
-		return nonLineHandler._handle_space(self)
+	# Rule : ignore and consume spaces
+	if input[position] == ' ':
+		return _nonline_handler.handle_space(self)
 
-	if MiscLexerFunctions._is_tab_char(_input[_position]):
-		return nonLineHandler._handle_rogue_tab(self)
+	# Rule : ignore and consume non logic tabs
+	if MiscLexerFunctions.is_tab_char(input[position]):
+		return _nonline_handler.handle_rogue_tab(self)
+	
+	# Rule : if (, start variations mode
+	if input[position] == '(':
+		return _nonline_handler.handle_start_variations(self)
 
-	if _input[_position] == '(':
-		return nonLineHandler._handle_start_variations(self)
+	# Rule : if ), end variations mode
+	if input[position] == ')':
+		return _nonline_handler.handle_stop_variations(self)
 
-	if _input[_position] == ')':
-		return nonLineHandler._handle_stop_variations(self)
+	# Rule : if == at zeroth column, consume block
+	if input.substr(position, 2) == '==' && column == 0:
+		return _nonline_handler.handle_block(self)
 
-	if _column == 0 and _input[_position] == '=' and _input[_position + 1] == '=':
-		return nonLineHandler._handle_block(self)
+	# Rule : if ->, consume divert
+	if input.substr(position, 2) == '->':
+		return _nonline_handler.handle_divert(self)
 
-	if _input[_position] == '-' and _input[_position + 1] == '>':
-		return nonLineHandler._handle_divert(self)
+	# Rule : if <-, consume parent divert
+	if input.substr(position, 2) == '<-':
+		return _nonline_handler.handle_divert_parent(self)
 
-	if _input[_position] == '<' and _input[_position + 1] == '-':
-		return nonLineHandler._handle_divert_parent(self)
+	# Rule : if - in variations mode, consume variation  
+	if (input[position] == '-' 
+	&& is_current_mode(Syntax.MODE_VARIATIONS)):
+		return _nonline_handler.handle_variation_item(self)
 
-	if _is_current_mode(Syntax.MODE_VARIATIONS) and _input[_position] == '-':
-		return nonLineHandler._handle_variation_item(self)
 
-	if _input[_position] == '*' or _input[_position] == '+' or _input[_position] == '>':
-		return lineHandler._handle_options(self)
+	# Rule : if *, +, >, start option mode
+	if (input[position] == '*' 
+	|| input[position] == '+' 
+	|| input[position] == '>'):
+		return line_handler.handle_options(self)
 
-	if _is_current_mode(Syntax.MODE_OPTION) and _input[_position] == '=':
-		return lineHandler._handle_option_display_char(self)
+	# Rule : if = in option mode, consume assign
+	if (input[position] == '=' 
+	&& is_current_mode(Syntax.MODE_OPTION)):
+		return line_handler.handle_option_display_char(self)
 
-	if _input[_position] == '$':
-		return lineHandler._handle_line_id(self)
+	# Rule : if $, consume line id
+	if input[position] == '$':
+		return line_handler.handle_line_id(self)
 
-	if _input[_position] == '#':
-		return lineHandler._handle_tag(self)
+	# Rule : if #, consume tag
+	if input[position] == '#':
+		return line_handler.handle_tag(self)
 
-	return lineHandler._handle_text(self)
+	# Rule : base case, handle as regular text
+	return line_handler.handle_text(self)
