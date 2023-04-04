@@ -73,14 +73,25 @@ func handle_indent(lexer : Lexer) -> Array[Token]:
 # Consume and return block
 func handle_block(lexer : Lexer) -> Array[Token]:
 	var setup_dict : Dictionary = MiscLexerFunctions.internal_setup(lexer)
+
+	var token_name : String 
+	match lexer.input[lexer.position+1]: 
+		'*':
+			token_name = Syntax.TOKEN_RANDOM_BLOCK
+		'+':
+			token_name = Syntax.TOKEN_RANDOM_STICKY_BLOCK
+		'>':
+			token_name = Syntax.TOKEN_RANDOM_FALLBACK_BLOCK
+		'=':
+			token_name = Syntax.TOKEN_BLOCK
 	MiscLexerFunctions.increase_lexer_position(lexer,2,2)
 
 	while  (MiscLexerFunctions.is_valid_position(lexer.input, lexer.position) 
-	&& MiscLexerFunctions.is_identifier(lexer.input[lexer.position])):
+	&& MiscLexerFunctions.is_block_identifier(lexer.input[lexer.position])):
 		setup_dict["values"] += lexer.input[lexer.position]
 		MiscLexerFunctions.increase_lexer_position(lexer)
 	
-	return [Token.new(Syntax.TOKEN_BLOCK, lexer.line, 
+	return [Token.new(token_name, lexer.line, 
 		setup_dict["initial_column"], setup_dict["values"].strip_edges())]
 
 
@@ -90,7 +101,7 @@ func handle_divert(lexer : Lexer) -> Array[Token]:
 	MiscLexerFunctions.increase_lexer_position(lexer,2,2)
 
 	while  (MiscLexerFunctions.is_valid_position(lexer.input, lexer.position) 
-	&& MiscLexerFunctions.is_identifier(lexer.input[lexer.position])):
+	&& MiscLexerFunctions.is_block_identifier(lexer.input[lexer.position])):
 		setup_dict["values"] += lexer.input[lexer.position]
 		MiscLexerFunctions.increase_lexer_position(lexer)
 

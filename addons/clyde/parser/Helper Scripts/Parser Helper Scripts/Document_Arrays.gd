@@ -135,3 +135,6 @@ const comma : Array[String]  = [Syntax.TOKEN_COMMA]
 const brace_close : Array[String]  = [Syntax.TOKEN_BRACE_CLOSE]
 
 const identifier : Array[String]  = [Syntax.TOKEN_IDENTIFIER]
+
+const block_types : Array[String] = [Syntax.TOKEN_BLOCK, Syntax.TOKEN_RANDOM_BLOCK, 
+	Syntax.TOKEN_RANDOM_STICKY_BLOCK]

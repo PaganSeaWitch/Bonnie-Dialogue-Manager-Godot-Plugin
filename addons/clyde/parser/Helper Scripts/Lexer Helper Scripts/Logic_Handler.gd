@@ -56,14 +56,14 @@ func handle_logic_block(lexer : Lexer) -> Array[Token]:
 	# Rule : if a logic operatior in logic block, return it
 	for i in range(SyntaxDictionaries.MAX_VALUE_LENGTH, 0, -1):
 		if(SyntaxDictionaries.logic_symbol_tokens_operators_with_side_effects.has(
-		lexer.input.substr(lexer.position,i))):
+		lexer.input.substr(lexer.position,i).to_lower())):
 			var token_dict : Dictionary = (SyntaxDictionaries.
 				logic_symbol_tokens_operators_with_side_effects.get(
 				lexer.input.substr(lexer.position,i)))
 			return handle_logic_operator(lexer, token_dict["token"], token_dict["length"])
 			
 		if(SyntaxDictionaries.logic_symbol_tokens_side_operator_without_side_effects.has(
-		lexer.input.substr(lexer.position,i))):
+		lexer.input.substr(lexer.position,i).to_lower())):
 			var token_dict : Dictionary = (SyntaxDictionaries.
 				logic_symbol_tokens_side_operator_without_side_effects.get(
 				lexer.input.substr(lexer.position,i)))
@@ -71,6 +71,7 @@ func handle_logic_block(lexer : Lexer) -> Array[Token]:
 				token_dict["token"], token_dict["length"])]
 	
 	# Rule : if ! in logic block, consume logic not
+	
 	if lexer.input[lexer.position] == '!':
 		return handle_logic_not(lexer)
 	
@@ -94,7 +95,7 @@ func handle_logic_identifier(lexer : Lexer) -> Array[Token]:
 	# Rule : if logic identifier is descriptive operator, consume it as that
 	if Syntax.keywords.has(setup_dict["values"].to_lower()):
 		return handle_logic_descriptive_operator(lexer, 
-			setup_dict["values"], setup_dict["initial_column"])
+			setup_dict["values"].to_lower(), setup_dict["initial_column"])
 	return [Token.new(Syntax.TOKEN_IDENTIFIER, lexer.line, 
 		setup_dict["initial_column"], setup_dict["values"].strip_edges())]
 

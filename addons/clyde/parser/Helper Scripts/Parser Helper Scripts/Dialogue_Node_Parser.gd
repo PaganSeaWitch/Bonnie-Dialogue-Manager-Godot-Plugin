@@ -4,10 +4,7 @@ extends RefCounted
 var node_factory : NodeFactory = NodeFactory.new()
 
 
-var option_types = {
-	Syntax.TOKEN_OPTION: 'once',
-	Syntax.TOKEN_STICKY_OPTION: 'sticky',
-	Syntax.TOKEN_FALLBACK_OPTION: 'fallback' }
+
 
 
 func dialogue_line(token_walker : TokenWalker) -> DialogueNode:
@@ -137,7 +134,7 @@ func options(token_walker : TokenWalker) -> OptionsNode:
 
 func _option(token_walker : TokenWalker) -> ClydeNode:
 	token_walker.consume(TokenArray.options)
-	var type : String = option_types[token_walker.current_token.name]
+	var type : String = SyntaxDictionaries.option_types[token_walker.current_token.name]
 	var acceptable_next : Array[String]= TokenArray.options_acceptable_next
 	var lines : Array= []
 	var main_item : LineNode = LineNode.new()

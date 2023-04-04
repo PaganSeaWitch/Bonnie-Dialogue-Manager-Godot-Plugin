@@ -206,7 +206,7 @@ func _operand(token_walker : TokenWalker) -> ClydeNode:
 	match token_walker.current_token.name:
 		Syntax.TOKEN_NOT:
 			return nodeFactory.create_node(NodeFactory.NODE_TYPES.EXPRESSION, 
-				{"name"=token_walker.current_token.value,"elements"= [_operand(token_walker)]})
+				{"name"=token_walker.current_token.name,"elements"= [_operand(token_walker)]})
 		Syntax.TOKEN_IDENTIFIER:
 			return nodeFactory.create_node(NodeFactory.NODE_TYPES.VARIABLE, 
 				{"name" = token_walker.current_token.value})

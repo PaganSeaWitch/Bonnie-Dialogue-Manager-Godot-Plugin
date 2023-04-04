@@ -153,7 +153,11 @@ func _get_next_tokens() -> Array[Token]:
 		return _nonline_handler.handle_stop_variations(self)
 
 	# Rule : if == at zeroth column, consume block
-	if input.substr(position, 2) == '==' && column == 0:
+	if ((input.substr(position, 2) == '==' 
+	|| input.substr(position, 2) == '=+'
+	|| input.substr(position, 2) == '=*'
+	|| input.substr(position, 2) == '=>') 
+	&& column == 0):
 		return _nonline_handler.handle_block(self)
 
 	# Rule : if ->, consume divert

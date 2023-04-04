@@ -13,10 +13,10 @@ const logic_descriptive_tokens = {
 	"null": Syntax.TOKEN_NULL_TOKEN,
 	"set":Syntax.TOKEN_KEYWORD_SET,
 	"trigger":Syntax.TOKEN_KEYWORD_TRIGGER,
-	"when":Syntax.TOKEN_KEYWORD_WHEN,
-}
+	"when":Syntax.TOKEN_KEYWORD_WHEN}
 
 const MAX_VALUE_LENGTH : int = 2
+
 
 # return a token type and length of token for logic symbol
 const logic_symbol_tokens_operators_with_side_effects = {
@@ -27,8 +27,8 @@ const logic_symbol_tokens_operators_with_side_effects = {
 	'<=':{"token" :Syntax.TOKEN_LE, "length" :2},
 	'>=':{"token" :Syntax.TOKEN_GE, "length" :2},
 	'<' :{"token" :Syntax.TOKEN_LESS,"length" : 1},
-	'>' :{"token" :Syntax.TOKEN_GREATER,"length" : 1},
-}
+	'>' :{"token" :Syntax.TOKEN_GREATER,"length" : 1}}
+
 
 # return a token type and length of a token for logic sysmbol
 const logic_symbol_tokens_side_operator_without_side_effects = {
@@ -45,5 +45,17 @@ const logic_symbol_tokens_side_operator_without_side_effects = {
 	'/' :{"token" :Syntax.TOKEN_DIV,"length" :1},
 	'^' :{"token" :Syntax.TOKEN_POWER, "length" :1},
 	'%' :{"token" :Syntax.TOKEN_MOD, "length" :1},
-	',' :{"token" :Syntax.TOKEN_COMMA,"length" :1},
-}
+	',' :{"token" :Syntax.TOKEN_COMMA,"length" :1}}
+
+
+const random_block_types = {
+	Syntax.TOKEN_RANDOM_BLOCK: 'once',
+	Syntax.TOKEN_RANDOM_FALLBACK_BLOCK : 'fallback',
+	Syntax.TOKEN_RANDOM_STICKY_BLOCK: 'sticky'}
+
+
+const option_types = {
+	Syntax.TOKEN_OPTION: 'once',
+	Syntax.TOKEN_STICKY_OPTION: 'sticky',
+	Syntax.TOKEN_FALLBACK_OPTION: 'fallback' }
+

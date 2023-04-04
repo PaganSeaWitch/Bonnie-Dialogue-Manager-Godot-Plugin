@@ -59,6 +59,12 @@ static func is_identifier(character : String) -> bool:
 	return regex.search(character) != null
 
 
+static func is_block_identifier(character : String) -> bool:
+	var regex : RegEx = RegEx.new()
+	regex.compile("[A-Z|a-z|0-9|_| ]")
+	return regex.search(character) != null
+
+
 # Creates a dictionary of line and column and values so we can manipulate them
 static func internal_setup(lexer : Lexer) -> Dictionary:
 	var initial_line : int = lexer.line

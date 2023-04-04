@@ -4,6 +4,7 @@ extends RefCounted
 var nodeFactory : NodeFactory = NodeFactory.new()
 
 
+
 func document(tokenWalker : TokenWalker) -> DocumentNode:
 
 	var nextToken : Token = tokenWalker.peek(TokenArray.expected)
@@ -14,25 +15,37 @@ func document(tokenWalker : TokenWalker) -> DocumentNode:
 	match(nextToken.name):
 		Syntax.TOKEN_EOF:
 			return nodeFactory.create_node(nodeFactory.NODE_TYPES.DOCUMENT, {})
-		Syntax.TOKEN_BLOCK:
+		
+		Syntax.TOKEN_BLOCK, Syntax.TOKEN_RANDOM_BLOCK:
+			return nodeFactory.create_node(nodeFactory.NODE_TYPES.DOCUMENT,
+				{"content"= [], "blocks"= _blocks(tokenWalker)})
+		
+		Syntax.TOKEN_RANDOM_FALLBACK_BLOCK, Syntax.TOKEN_RANDOM_STICKY_BLOCK:
 			return nodeFactory.create_node(nodeFactory.NODE_TYPES.DOCUMENT,
 				{"content"= [], "blocks"= _blocks(tokenWalker)})
 
 	var result =  nodeFactory.create_node(nodeFactory.NODE_TYPES.DOCUMENT, 
 		{"content" = lines(tokenWalker)})
 
-	if tokenWalker.peek(TokenArray.block):
+	if tokenWalker.peek(TokenArray.block_types):
 		result.blocks = _blocks(tokenWalker)
 
 	return result
 
 
 func _blocks(tokenWalker : TokenWalker) -> Array[BlockNode]:
-	tokenWalker.consume(TokenArray.block)
-	var blocks : Array[BlockNode] =  [
-		nodeFactory.create_node(nodeFactory.NODE_TYPES.BLOCK, 
-			{"blockName" =tokenWalker.current_token.value, "content"= lines(tokenWalker)}) as BlockNode]
+	var token : Token = tokenWalker.consume(TokenArray.block_types)
+	var node = BlockNode
 
+	if(token.name == Syntax.TOKEN_BLOCK):
+		node = nodeFactory.create_node(nodeFactory.NODE_TYPES.BLOCK, 
+			{"block_name" = tokenWalker.current_token.value, "content" = lines(tokenWalker)})
+	else:
+		node = nodeFactory.create_node(nodeFactory.NODE_TYPES.RANDOM_BLOCK, 
+			{"mode" = SyntaxDictionaries.random_block_types[token.name], 
+			"block_name" = tokenWalker.current_token.value, "content" = lines(tokenWalker)})
+
+	var blocks : Array[BlockNode] =  [node]
 	while tokenWalker.peek(TokenArray.block) != null:
 		blocks.append_array(_blocks(tokenWalker))
 
