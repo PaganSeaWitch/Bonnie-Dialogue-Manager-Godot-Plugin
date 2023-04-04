@@ -1,13 +1,5 @@
 class_name ClydeLogicInterpreter
-extends RefCounted
-
-
-#internal memory object
-var memory : MemoryInterface
-
-
-func init(mem : MemoryInterface) -> void:
-	memory = mem
+extends MiscInterpreter
 
 
 func handle_assignment(assignment : AssignmentNode):
@@ -51,6 +43,7 @@ func _get_node_value(node : ClydeNode):
 		"NullTokenNode":
 			return null
 	printerr("Unknown node in expression %s" % node.type)
+	return null
 
 
 func check_condition(condition : NamedNode):
@@ -64,6 +57,7 @@ func check_condition(condition : NamedNode):
 
 
 func check_expression(node : ExpressionNode):
+	print(node)
 	match node.name:
 		Syntax.TOKEN_EQUAL:
 			return _get_node_value(node.elements[0]) == _get_node_value(node.elements[1])
