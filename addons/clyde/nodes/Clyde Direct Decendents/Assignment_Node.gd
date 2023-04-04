@@ -1,11 +1,11 @@
 class_name AssignmentNode
 extends ClydeNode
 
-func get_node_class() -> String:
-	return "AssignmentNode"
-
-var variable : VariableNode
 
 var operation
-
+var variable : VariableNode
 var value : ClydeNode
+
+
+func get_node_class() -> String:
+	return "AssignmentNode"

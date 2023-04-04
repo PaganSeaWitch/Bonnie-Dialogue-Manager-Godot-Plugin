@@ -7,7 +7,8 @@ enum NODE_TYPES
 LINE, BLOCK, VARIATIONS, VARIABLE,
 LITERAL, NULL, ASSIGNMENTS, CONDITIONAL_CONTENT, 
 ACTION_CONTENT, EVENTS, EVENT, CONTENT, 
-STRINGLITERAL, NUMBERLITERAL, BOOLEANLITERAL}
+STRINGLITERAL, NUMBERLITERAL, BOOLEANLITERAL, 
+RANDOM_BLOCK }
 
 
 var node_factory_dictionary : Dictionary = {
@@ -16,6 +17,7 @@ var node_factory_dictionary : Dictionary = {
 	NODE_TYPES.OPTION : OptionNode,
 	NODE_TYPES.OPTIONS : OptionsNode,
 	NODE_TYPES.LINE : LineNode,
+	NODE_TYPES.RANDOM_BLOCK : RandomBlockNode,
 	NODE_TYPES.BLOCK : BlockNode,
 	NODE_TYPES.VARIATIONS : VariationsNode,
 	NODE_TYPES.VARIABLE : VariableNode,
@@ -39,6 +41,7 @@ var node_factory_dictionary_reverse : Dictionary = {
 	OptionNode: NODE_TYPES.OPTION,
 	OptionsNode : NODE_TYPES.OPTIONS,
 	LineNode : NODE_TYPES.LINE,
+	RandomBlockNode : NODE_TYPES.RANDOM_BLOCK,
 	BlockNode : NODE_TYPES.BLOCK,
 	VariationsNode : NODE_TYPES.VARIATIONS,
 	VariableNode: NODE_TYPES.VARIABLE,
@@ -57,7 +60,7 @@ var node_factory_dictionary_reverse : Dictionary = {
 
 
 func create_node(type : NODE_TYPES, args : Dictionary) -> ClydeNode:
-	var node = node_factory_dictionary.get(type).new();
+	var node : ClydeNode = node_factory_dictionary.get(type).new();
 	
 	
 	for property in node.get_property_list():
@@ -77,10 +80,10 @@ func create_node(type : NODE_TYPES, args : Dictionary) -> ClydeNode:
 
 
 func create_node_tree(json_dictionary : Dictionary) -> ClydeNode:
-	var node = node_factory_dictionary.get(
+	var node : ClydeNode = node_factory_dictionary.get(
 		json_dictionary["type"] as NodeFactory.NODE_TYPES).new()
 	
-	var properties = node.get_property_list()
+	var properties : Array = node.get_property_list()
 	
 	for property in node.get_property_list():
 		if(json_dictionary.has(property.name)):
