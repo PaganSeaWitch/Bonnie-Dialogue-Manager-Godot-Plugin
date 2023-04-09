@@ -1,14 +1,17 @@
 extends "res://addons/gut/test.gd"
 
-const Lexer = preload('res://addons/clyde/parser/Lexer.gd')
+
 
 
 func test_text():
 	var lexer = Lexer.new()
 	var tokens = lexer.init('this is a line').get_all()
-	assert_eq_deep(tokens.size(), 2)
-	assert_eq_deep(tokens[0], {
-		"token": Lexer.TOKEN_TEXT,
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens.size(), 2)
+	assert_eq_deep(jsonTokens[0], {
+		"name": Syntax.TOKEN_TEXT,
 		"value": "this is a line",
 		"line": 0,
 		"column": 0,
@@ -17,15 +20,18 @@ func test_text():
 func test_text_with_multiple_lines():
 	var lexer = Lexer.new()
 	var tokens = lexer.init('this is a line\nthis is another line 2').get_all()
-	assert_eq_deep(tokens.size(), 3)
-	assert_eq_deep(tokens[0], {
-		"token": Lexer.TOKEN_TEXT,
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens.size(), 3)
+	assert_eq_deep(jsonTokens[0], {
+		"name": Syntax.TOKEN_TEXT,
 		"value": 'this is a line',
 		"line": 0,
 		"column": 0,
 	})
-	assert_eq_deep(tokens[1], {
-		"token": Lexer.TOKEN_TEXT,
+	assert_eq_deep(jsonTokens[1], {
+		"name": Syntax.TOKEN_TEXT,
 		"value": 'this is another line 2',
 		"line": 1,
 		"column": 0
@@ -34,99 +40,127 @@ func test_text_with_multiple_lines():
 func test_text_with_quotes():
 	var lexer = Lexer.new()
 	var tokens = lexer.init('"this is a line with: special# characters $.\\" Enjoy"').get_all()
-	assert_eq_deep(tokens, [
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
 		{
-			"token": Lexer.TOKEN_TEXT,
+			"name": Syntax.TOKEN_TEXT,
 			"value": 'this is a line with: special# characters $." Enjoy',
 			"line": 0,
 			"column": 1,
 		},
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 53, "value": null },
+		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 53, "value": "" },
 	])
 
 func test_text_with_single_quotes():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("'this is a line with: special# characters $.\\' Enjoy'").get_all()
-	assert_eq_deep(tokens, [
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
 		{
-			"token": Lexer.TOKEN_TEXT,
+			"name": Syntax.TOKEN_TEXT,
 			"value": "this is a line with: special# characters $.' Enjoy",
 			"line": 0,
 			"column": 1,
 		},
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 53, "value": null },
+		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 53, "value": "" },
 	])
 
 
 func test_text_with_both_leading_quote_types():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("\"'this' is a 'line'\"").get_all()
-	assert_eq_deep(tokens, [
+	
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
 		{
-			"token": Lexer.TOKEN_TEXT,
+			"name": Syntax.TOKEN_TEXT,
 			"value": "'this' is a 'line'",
 			"line": 0,
 			"column": 1,
 		},
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 20, "value": null },
+		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 20, "value": "" },
 	])
 	tokens = lexer.init('\'this is a "line"\'').get_all()
-	assert_eq_deep(tokens, [
+	jsonTokens = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
 		{
-			"token": Lexer.TOKEN_TEXT,
+			"name": Syntax.TOKEN_TEXT,
 			"value": 'this is a "line"',
 			"line": 0,
 			"column": 1,
 		},
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 18, "value": null },
+		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 18, "value": "" },
 	])
 
 
 func test_variable_with_both_quote_types():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("{ set characters = '{\"name\": \"brain\"}' }").get_all()
-	assert_eq_deep(tokens, [
-		{"column":0, "line":0, "token":Lexer.TOKEN_BRACE_OPEN, "value": null},
-		{"column":2, "line":0, "token":Lexer.TOKEN_KEYWORD_SET, "value": null},
-		{"column":6, "line":0, "token":Lexer.TOKEN_IDENTIFIER, "value":"characters"},
-		{"column":17, "line":0, "token":Lexer.TOKEN_ASSIGN, "value": null},
-		{"column":19, "line":0, "token":Lexer.TOKEN_STRING_LITERAL, "value": '{"name": "brain"}' },
-		{"column":39, "line":0, "token":Lexer.TOKEN_BRACE_CLOSE, "value": null},
-		{"column":40, "line":0, "token":Lexer.TOKEN_EOF, "value":null}
+	
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{"column":0, "line":0, "name":Syntax.TOKEN_BRACE_OPEN, "value": ""},
+		{"column":2, "line":0, "name":Syntax.TOKEN_KEYWORD_SET, "value": ""},
+		{"column":6, "line":0, "name":Syntax.TOKEN_IDENTIFIER, "value":"characters"},
+		{"column":17, "line":0, "name":Syntax.TOKEN_ASSIGN, "value": ""},
+		{"column":19, "line":0, "name":Syntax.TOKEN_STRING_LITERAL, "value": '{"name": "brain"}' },
+		{"column":39, "line":0, "name":Syntax.TOKEN_BRACE_CLOSE, "value": ""},
+		{"column":40, "line":0, "name":Syntax.TOKEN_EOF, "value": ""}
 	])
 
 
 func test_escape_characters_in_regular_text():
 	var lexer = Lexer.new()
 	var tokens = lexer.init('this is a line with\\: special\\# characters \\$.\\" Enjoy').get_all()
-	assert_eq_deep(tokens, [
+	
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	
+	assert_eq_deep(jsonTokens, [
 		{
-			"token": Lexer.TOKEN_TEXT,
+			"name": Syntax.TOKEN_TEXT,
 			"value": 'this is a line with: special# characters $." Enjoy',
 			"line": 0,
 			"column": 0,
 		},
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 54, "value": null },
+		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 54, "value": "" },
 	])
 
 
 func test_count_lines_correctly_in_quotted_text_with_line_breaks():
 	var lexer = Lexer.new()
-	var tokens = lexer.init('"this is a line with\nline break"\nthis should be checked line 2').get_all()
-	assert_eq_deep(tokens, [
+	var tokens = lexer.init('"this is a line with\nline break"\nthis should be on line 2').get_all()
+	
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	
+	assert_eq_deep(jsonTokens, [
 		{
-			"token": Lexer.TOKEN_TEXT,
+			"name": Syntax.TOKEN_TEXT,
 			"value": 'this is a line with\nline break',
 			"line": 0,
 			"column": 1,
 			},
 		{
-			"token": Lexer.TOKEN_TEXT,
-			"value": 'this should be checked line 2',
+			"name": Syntax.TOKEN_TEXT,
+			"value": 'this should be on line 2',
 			"line": 2,
 			"column": 0,
 			},
-		{ "token": Lexer.TOKEN_EOF, "line": 2, "column": 24, "value": null },
+		{ "name": Syntax.TOKEN_EOF, "line": 2, "column": 24, "value": "" },
 	])
 
 
@@ -139,15 +173,18 @@ this is a line
 this is another line 2
 -- another one
 """).get_all()
-	assert_eq_deep(tokens.size(), 3)
-	assert_eq_deep(tokens[0], {
-		"token": Lexer.TOKEN_TEXT,
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens.size(), 3)
+	assert_eq_deep(jsonTokens[0], {
+		"name": Syntax.TOKEN_TEXT,
 		"value": 'this is a line',
 		"line": 2,
 		"column": 0,
 	})
-	assert_eq_deep(tokens[1], {
-		"token": Lexer.TOKEN_TEXT,
+	assert_eq_deep(jsonTokens[1], {
+		"name": Syntax.TOKEN_TEXT,
 		"value": 'this is another line 2',
 		"line": 4,
 		"column": 0
@@ -165,12 +202,18 @@ this is another line 4
 -- another one
 """).get_all()
 
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is a line', "line": 2, "column": 0, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is another line 2', "line": 4, "column": 0 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is another line 3', "line": 5, "column": 1 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is another line 4', "line": 6, "column": 0 },
-		{ "token": Lexer.TOKEN_EOF, "line": 8, "column": 0, "value": null },
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+		
+		
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is a line', "line": 2, "column": 0, },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is another line 2', "line": 4, "column": 0 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is another line 3', "line": 5, "column": 1 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is another line 4', "line": 6, "column": 0 },
+		{ "name": Syntax.TOKEN_EOF, "line": 8, "column": 0, "value": "" },
 	])
 
 
@@ -188,29 +231,35 @@ dedent all the way
 		tab test
 he he
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, },
-		{ "token": Lexer.TOKEN_INDENT, "line": 1, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 4 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'indented line', "line": 2, "column": 4 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 3, "column": 4, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'another indent', "line": 3, "column": 6 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 4, "column": 4, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'now a dedent', "line": 4, "column": 4 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 5, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'now another dedent', "line": 5, "column": 0 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 6, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'indent again', "line": 6, "column": 2 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 7, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'one more time', "line": 7, "column": 4 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 8, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 8, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'dedent all the way', "line": 8, "column": 0 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 9, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'tab test', "line": 9, "column": 2 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 10, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'he he', "line": 10, "column": 0 },
-		{ "token": Lexer.TOKEN_EOF, "line": 11, "column": 0, "value": null },
+
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, },
+		{ "name": Syntax.TOKEN_INDENT, "line": 1, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 4 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 2, "column": 4 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 3, "column": 4, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'another indent', "line": 3, "column": 6 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 4, "column": 4, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'now a dedent', "line": 4, "column": 4 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 5, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'now another dedent', "line": 5, "column": 0 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 6, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'indent again', "line": 6, "column": 2 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 7, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'one more time', "line": 7, "column": 4 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 8, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 8, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'dedent all the way', "line": 8, "column": 0 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 9, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'tab test', "line": 9, "column": 2 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 10, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'he he', "line": 10, "column": 0 },
+		{ "name": Syntax.TOKEN_EOF, "line": 11, "column": 0, "value": "" },
 	])
 
 
@@ -225,22 +274,27 @@ func test_detects_indents_and_dedents_after_quoted_options():
 		* indented line
 				hello
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 1, },
-		{ "token": Lexer.TOKEN_INDENT, "line": 2, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_OPTION, "line": 2, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'indented line', "line": 2, "column": 4 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 3, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 4 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 5, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 5, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'indented line', "line": 5, "column": 1, },
-		{ "token": Lexer.TOKEN_INDENT, "line": 6, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_OPTION, "line": 6, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'indented line', "line": 6, "column": 4 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 7, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 7, "column": 4 },
-		{ "token": Lexer.TOKEN_EOF, "line": 8, "column": 0, "value": null },
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 1, },
+		{ "name": Syntax.TOKEN_INDENT, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_OPTION, "line": 2, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 2, "column": 4 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 3, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 4 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 5, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 5, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 5, "column": 1, },
+		{ "name": Syntax.TOKEN_INDENT, "line": 6, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_OPTION, "line": 6, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 6, "column": 4 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 7, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 7, "column": 4 },
+		{ "name": Syntax.TOKEN_EOF, "line": 8, "column": 0, "value": "" },
 	])
 
 
@@ -248,8 +302,8 @@ func test_returns_EOF():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("normal line")
 
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, })
-	assert_eq_deep(tokens.next(),{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 11, "value": null })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()),{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 11, "value": "" })
 	assert_eq_deep(tokens.next(), null)
 
 func test_options():
@@ -269,36 +323,40 @@ this is something
 > this is a fallback
 """).get_all()
 
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 0 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 2, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_OPTION, "line": 2, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 4 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 3, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 4 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 4, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_STICKY_OPTION, "line": 4, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is a sticky option', "line": 4, "column": 4 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 5, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello again', "line": 5, "column": 4 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 6, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 6, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_OPTION, "line": 6, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'a whole new list', "line": 6, "column": 2 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 7, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 7, "column": 2 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 8, "column": 0 , "value": null},
-		{ "token": Lexer.TOKEN_OPTION, "line": 8, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 8, "column": 1, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 8, "column": 3 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 9, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hi', "line": 9, "column": 2 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is just some text with [ brackets ]', "line": 10, "column": 2 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'and this is some text with * and + and >', "line": 11, "column": 2 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 12, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_FALLBACK_OPTION, "line": 12, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is a fallback', "line": 12, "column": 2 },
-		{ "token": Lexer.TOKEN_EOF, "line": 13, "column": 0, "value": null },
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 0 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_OPTION, "line": 2, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 4 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 3, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 4 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 4, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_STICKY_OPTION, "line": 4, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is a sticky option', "line": 4, "column": 4 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 5, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello again', "line": 5, "column": 4 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 6, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 6, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_OPTION, "line": 6, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'a whole new list', "line": 6, "column": 2 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 7, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 7, "column": 2 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 8, "column": 0 , "value": ""},
+		{ "name": Syntax.TOKEN_OPTION, "line": 8, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 8, "column": 1, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 8, "column": 3 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 9, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hi', "line": 9, "column": 2 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is just some text with [ brackets ]', "line": 10, "column": 2 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'and this is some text with * and + and >', "line": 11, "column": 2 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 12, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_FALLBACK_OPTION, "line": 12, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is a fallback', "line": 12, "column": 2 },
+		{ "name": Syntax.TOKEN_EOF, "line": 13, "column": 0, "value": "" },
 	])
 
 
@@ -312,29 +370,33 @@ speaker1: this is something
 *= speaker5: hello
 		speaker 1: this is ok
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 2, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_OPTION, "line": 2, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker2', "line": 2, "column": 4 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 14 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 3, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker3', "line": 3, "column": 4 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 14 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 4, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_STICKY_OPTION, "line": 4, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker4', "line": 4, "column": 4 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is a sticky option', "line": 4, "column": 14 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 5, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_OPTION, "line": 5, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 5, "column": 1, "value": null },
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker5', "line": 5, "column": 3 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 5, "column": 13 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 6, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker 1', "line": 6, "column": 2 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is ok', "line": 6, "column": 13 },
-		{ "token": Lexer.TOKEN_EOF, "line": 7, "column": 0, "value": null },
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_OPTION, "line": 2, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker2', "line": 2, "column": 4 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 14 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 3, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker3', "line": 3, "column": 4 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 14 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 4, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_STICKY_OPTION, "line": 4, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker4', "line": 4, "column": 4 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is a sticky option', "line": 4, "column": 14 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 5, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_OPTION, "line": 5, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 5, "column": 1, "value": "" },
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker5', "line": 5, "column": 3 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 5, "column": 13 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 6, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker 1', "line": 6, "column": 2 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is ok', "line": 6, "column": 13 },
+		{ "name": Syntax.TOKEN_EOF, "line": 7, "column": 0, "value": "" },
 	])
 
 func test_line_id():
@@ -344,21 +406,25 @@ speaker1: this is something $123
 * this is another thing $abc
 *= hello $a1b2
 speaker1: this is something $123""").get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
-		{ "token": Lexer.TOKEN_LINE_ID, "value": '123', "line": 1, "column": 28 },
-		{ "token": Lexer.TOKEN_OPTION, "line": 2, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 2 },
-		{ "token": Lexer.TOKEN_LINE_ID, "value": 'abc', "line": 2, "column": 24 },
-		{ "token": Lexer.TOKEN_OPTION, "line": 3, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 3, "column": 1, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 3 },
-		{ "token": Lexer.TOKEN_LINE_ID, "value": 'a1b2', "line": 3, "column": 9 },
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker1', "line": 4, "column": 0 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 4, "column": 10 },
-		{ "token": Lexer.TOKEN_LINE_ID, "value": '123', "line": 4, "column": 28 },
-		{ "token": Lexer.TOKEN_EOF, "line": 4, "column": 32, "value": null },
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
+		{ "name": Syntax.TOKEN_LINE_ID, "value": '123', "line": 1, "column": 28 },
+		{ "name": Syntax.TOKEN_OPTION, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 2 },
+		{ "name": Syntax.TOKEN_LINE_ID, "value": 'abc', "line": 2, "column": 24 },
+		{ "name": Syntax.TOKEN_OPTION, "line": 3, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 3, "column": 1, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 3 },
+		{ "name": Syntax.TOKEN_LINE_ID, "value": 'a1b2', "line": 3, "column": 9 },
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker1', "line": 4, "column": 0 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 4, "column": 10 },
+		{ "name": Syntax.TOKEN_LINE_ID, "value": '123', "line": 4, "column": 28 },
+		{ "name": Syntax.TOKEN_EOF, "line": 4, "column": 32, "value": "" },
 	])
 
 
@@ -369,23 +435,27 @@ speaker1: this is something $123&var1
 * this is another thing $abc&var1&var2
 *= hello $a1b2&var1 #tag""").get_all()
 
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
-		{ "token": Lexer.TOKEN_LINE_ID, "value": '123', "line": 1, "column": 28 },
-		{ "token": Lexer.TOKEN_ID_SUFFIX, "value": 'var1', "line": 1, "column": 32 },
-		{ "token": Lexer.TOKEN_OPTION, "line": 2, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 2 },
-		{ "token": Lexer.TOKEN_LINE_ID, "value": 'abc', "line": 2, "column": 24 },
-		{ "token": Lexer.TOKEN_ID_SUFFIX, "value": 'var1', "line": 2, "column": 28 },
-		{ "token": Lexer.TOKEN_ID_SUFFIX, "value": 'var2', "line": 2, "column": 33 },
-		{ "token": Lexer.TOKEN_OPTION, "line": 3, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 3, "column": 1, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 3 },
-		{ "token": Lexer.TOKEN_LINE_ID, "value": 'a1b2', "line": 3, "column": 9 },
-		{ "token": Lexer.TOKEN_ID_SUFFIX, "value": 'var1', "line": 3, "column": 14 },
-		{ "token": Lexer.TOKEN_TAG, "value": 'tag', "line": 3, "column": 20 },
-		{ "token": Lexer.TOKEN_EOF, "line": 3, "column": 24, "value": null },
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
+		{ "name": Syntax.TOKEN_LINE_ID, "value": '123', "line": 1, "column": 28 },
+		{ "name": Syntax.TOKEN_ID_SUFFIX, "value": 'var1', "line": 1, "column": 32 },
+		{ "name": Syntax.TOKEN_OPTION, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is another thing', "line": 2, "column": 2 },
+		{ "name": Syntax.TOKEN_LINE_ID, "value": 'abc', "line": 2, "column": 24 },
+		{ "name": Syntax.TOKEN_ID_SUFFIX, "value": 'var1', "line": 2, "column": 28 },
+		{ "name": Syntax.TOKEN_ID_SUFFIX, "value": 'var2', "line": 2, "column": 33 },
+		{ "name": Syntax.TOKEN_OPTION, "line": 3, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 3, "column": 1, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 3, "column": 3 },
+		{ "name": Syntax.TOKEN_LINE_ID, "value": 'a1b2', "line": 3, "column": 9 },
+		{ "name": Syntax.TOKEN_ID_SUFFIX, "value": 'var1', "line": 3, "column": 14 },
+		{ "name": Syntax.TOKEN_TAG, "value": 'tag', "line": 3, "column": 20 },
+		{ "name": Syntax.TOKEN_EOF, "line": 3, "column": 24, "value": "" },
 	]);
 
 
@@ -394,12 +464,17 @@ func test_tags():
 	var tokens = lexer.init("""
 this is something #hello #happy #something_else
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 0 },
-		{ "token": Lexer.TOKEN_TAG, "value": 'hello', "line": 1, "column": 18 },
-		{ "token": Lexer.TOKEN_TAG, "value": 'happy', "line": 1, "column": 25 },
-		{ "token": Lexer.TOKEN_TAG, "value": 'something_else', "line": 1, "column": 32 },
-		{ "token": Lexer.TOKEN_EOF, "line": 2, "column": 0, "value": null },
+
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 0 },
+		{ "name": Syntax.TOKEN_TAG, "value": 'hello', "line": 1, "column": 18 },
+		{ "name": Syntax.TOKEN_TAG, "value": 'happy', "line": 1, "column": 25 },
+		{ "name": Syntax.TOKEN_TAG, "value": 'something_else', "line": 1, "column": 32 },
+		{ "name": Syntax.TOKEN_EOF, "line": 2, "column": 0, "value": "" },
 	])
 
 
@@ -414,14 +489,19 @@ line 2
 line 3
 line 4
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_BLOCK, "value": 'first_block', "line": 1, "column": 0, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'line', "line": 2, "column": 0, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'line 2', "line": 3, "column": 0, },
-		{ "token": Lexer.TOKEN_BLOCK, "value": 'second block', "line": 5, "column": 0, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'line 3', "line": 6, "column": 0, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'line 4', "line": 7, "column": 0, },
-		{ "token": Lexer.TOKEN_EOF, "line": 8, "column": 0, "value": null },
+
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_BLOCK, "value": 'first_block', "line": 1, "column": 0, },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'line', "line": 2, "column": 0, },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'line 2', "line": 3, "column": 0, },
+		{ "name": Syntax.TOKEN_BLOCK, "value": 'second block', "line": 5, "column": 0, },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'line 3', "line": 6, "column": 0, },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'line 4', "line": 7, "column": 0, },
+		{ "name": Syntax.TOKEN_EOF, "line": 8, "column": 0, "value": "" },
 	])
 
 
@@ -436,38 +516,51 @@ hello
 		<-
 		-> END
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_TEXT, "value": 'hello', "line": 1, "column": 0, },
-		{ "token": Lexer.TOKEN_DIVERT, "value": 'first divert', "line": 2, "column": 0, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 2, "column": 15, },
-		{ "token": Lexer.TOKEN_OPTION, "line": 4, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'test', "line": 4, "column": 2 },
-		{ "token": Lexer.TOKEN_INDENT, "line": 5, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_DIVERT, "value": 'divert', "line": 5, "column": 2 },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 5, "column": 11, },
-		{ "token": Lexer.TOKEN_DIVERT_PARENT, "line": 6, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 6, "column": 4, },
-		{ "token": Lexer.TOKEN_DIVERT, "value": 'END', "line": 7, "column": 2 },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 7, "column": 8, },
-		{ "token": Lexer.TOKEN_EOF, "line": 8, "column": 0, "value": null},
+
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 1, "column": 0, },
+		{ "name": Syntax.TOKEN_DIVERT, "value": 'first divert', "line": 2, "column": 0, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "value": "", "line": 2, "column": 15, },
+		{ "name": Syntax.TOKEN_OPTION, "line": 4, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'test', "line": 4, "column": 2 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 5, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_DIVERT, "value": 'divert', "line": 5, "column": 2 },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "value": "", "line": 5, "column": 11, },
+		{ "name": Syntax.TOKEN_DIVERT_PARENT, "line": 6, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "value": "", "line": 6, "column": 4, },
+		{ "name": Syntax.TOKEN_DIVERT, "value": 'END', "line": 7, "column": 2 },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "value": "", "line": 7, "column": 8, },
+		{ "name": Syntax.TOKEN_EOF, "line": 8, "column": 0, "value": ""},
 	])
 
 
 func test_divert_on_eof():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("-> div").get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_DIVERT, "value": 'div', "line": 0, "column": 0, },
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 6, "value": null},
+	
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_DIVERT, "value": 'div', "line": 0, "column": 0, },
+		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 6, "value": ""},
 	])
 
 
 func test_divert_parent_on_eof():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("<-").get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_DIVERT_PARENT, "value": null, "line": 0, "column": 0, },
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 2, "value": null},
+	
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_DIVERT_PARENT, "value": "", "line": 0, "column": 0, },
+		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 2, "value": ""},
 	])
 
 
@@ -493,47 +586,51 @@ func test_variations():
 )
 
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_BRACKET_OPEN, "line": 1, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_INDENT, "line": 2, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_MINUS, "line": 2, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'nope', "line": 2, "column": 4 },
-		{ "token": Lexer.TOKEN_MINUS, "line": 3, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'yep', "line": 3, "column": 4 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 4, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACKET_CLOSE, "line": 4, "column": 0, "value": null },
 
-		{ "token": Lexer.TOKEN_BRACKET_OPEN, "line": 6, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_VARIATIONS_MODE, "value": 'shuffle', "line": 6, "column": 2, },
-		{ "token": Lexer.TOKEN_INDENT, "line": 7, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_MINUS, "line": 7, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_DIVERT, "value": 'nope', "line": 7, "column": 4 },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "value": null, "line": 7, "column": 11, },
-		{ "token": Lexer.TOKEN_MINUS, "line": 8, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'yep', "line": 8, "column": 4 },
-		{ "token": Lexer.TOKEN_DEDENT, "line": 9, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACKET_CLOSE, "line": 9, "column": 0, "value": null, },
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_BRACKET_OPEN, "line": 1, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_INDENT, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_MINUS, "line": 2, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'nope', "line": 2, "column": 4 },
+		{ "name": Syntax.TOKEN_MINUS, "line": 3, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'yep', "line": 3, "column": 4 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 4, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACKET_CLOSE, "line": 4, "column": 0, "value": "" },
 
-		{ "token": Lexer.TOKEN_BRACKET_OPEN, "line": 11, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_VARIATIONS_MODE, "value": 'shuffle once', "line": 11, "column": 2, },
-		{ "token": Lexer.TOKEN_INDENT, "line": 12, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_MINUS, "line": 12, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'nope', "line": 12, "column": 4 },
-		{ "token": Lexer.TOKEN_MINUS, "line": 13, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'yep', "line": 13, "column": 4 },
+		{ "name": Syntax.TOKEN_BRACKET_OPEN, "line": 6, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_VARIATIONS_MODE, "value": 'shuffle', "line": 6, "column": 2, },
+		{ "name": Syntax.TOKEN_INDENT, "line": 7, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_MINUS, "line": 7, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_DIVERT, "value": 'nope', "line": 7, "column": 4 },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "value": "", "line": 7, "column": 11, },
+		{ "name": Syntax.TOKEN_MINUS, "line": 8, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'yep', "line": 8, "column": 4 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 9, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACKET_CLOSE, "line": 9, "column": 0, "value": "", },
 
-		{ "token": Lexer.TOKEN_BRACKET_OPEN, "line": 14, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_INDENT, "line": 15, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_MINUS, "line": 15, "column": 4, "value": null, },
+		{ "name": Syntax.TOKEN_BRACKET_OPEN, "line": 11, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_VARIATIONS_MODE, "value": 'shuffle once', "line": 11, "column": 2, },
+		{ "name": Syntax.TOKEN_INDENT, "line": 12, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_MINUS, "line": 12, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'nope', "line": 12, "column": 4 },
+		{ "name": Syntax.TOKEN_MINUS, "line": 13, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'yep', "line": 13, "column": 4 },
 
-		{ "token": Lexer.TOKEN_TEXT, "value": 'another one', "line": 15, "column": 7 },
+		{ "name": Syntax.TOKEN_BRACKET_OPEN, "line": 14, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_INDENT, "line": 15, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_MINUS, "line": 15, "column": 4, "value": "", },
 
-		{ "token": Lexer.TOKEN_DEDENT, "line": 16, "column": 2, "value": null },
-		{ "token": Lexer.TOKEN_BRACKET_CLOSE, "line": 16, "column": 2, "value": null, },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'another one', "line": 15, "column": 7 },
 
-		{ "token": Lexer.TOKEN_DEDENT, "line": 17, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACKET_CLOSE, "line": 17, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_EOF, "line": 19, "column": 0, "value": null },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 16, "column": 2, "value": "" },
+		{ "name": Syntax.TOKEN_BRACKET_CLOSE, "line": 16, "column": 2, "value": "", },
+
+		{ "name": Syntax.TOKEN_DEDENT, "line": 17, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACKET_CLOSE, "line": 17, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_EOF, "line": 19, "column": 0, "value": "" },
 
 	])
 
@@ -567,174 +664,179 @@ func test_variables_conditions():
 { variable == null }
 
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 1, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 1, "column": 2, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 1, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 1, "column": 12, "value": null, },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 2, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_NOT, "line": 2, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 2, "column": 6, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 2, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 2, "column": 16, "value": null, },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 3, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 3, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_NOT, "line": 3, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 3, "column": 3, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 3, "column": 12, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 3, "column": 13, "value": null, },
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 1, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 1, "column": 2, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 1, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 12, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 4, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 4, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 4, "column": 2, },
-		{ "token": Lexer.TOKEN_EQUAL, "line": 4, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 4, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 4, "column": 24, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 4, "column": 25, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 2, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_NOT, "line": 2, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 2, "column": 6, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 2, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 16, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 5, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 5, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 5, "column": 2, },
-		{ "token": Lexer.TOKEN_NOT_EQUAL, "line": 5, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 5, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 5, "column": 24, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 5, "column": 25, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 3, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 3, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_NOT, "line": 3, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 3, "column": 3, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 3, "column": 12, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 3, "column": 13, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 6, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 6, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 6, "column": 2, },
-		{ "token": Lexer.TOKEN_AND, "line": 6, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 6, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 6, "column": 24, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 6, "column": 25, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 4, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 4, "column": 2, },
+		{ "name": Syntax.TOKEN_EQUAL, "line": 4, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 4, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 4, "column": 24, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 25, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 7, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 7, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 7, "column": 2, },
-		{ "token": Lexer.TOKEN_OR, "line": 7, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 7, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 7, "column": 24, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 7, "column": 25, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 5, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 5, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 5, "column": 2, },
+		{ "name": Syntax.TOKEN_NOT_EQUAL, "line": 5, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 5, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 5, "column": 24, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 5, "column": 25, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 8, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 8, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 8, "column": 2, },
-		{ "token": Lexer.TOKEN_LE, "line": 8, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 8, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 8, "column": 24, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 8, "column": 25, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 6, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 6, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 6, "column": 2, },
+		{ "name": Syntax.TOKEN_AND, "line": 6, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 6, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 6, "column": 24, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 6, "column": 25, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 9, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 9, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 9, "column": 2, },
-		{ "token": Lexer.TOKEN_GE, "line": 9, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 9, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 9, "column": 24, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 9, "column": 25, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 7, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 7, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 7, "column": 2, },
+		{ "name": Syntax.TOKEN_OR, "line": 7, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 7, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 7, "column": 24, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 7, "column": 25, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 10, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 10, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 10, "column": 2, },
-		{ "token": Lexer.TOKEN_LESS, "line": 10, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 10, "column": 13, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 10, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 10, "column": 24, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 8, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 8, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 8, "column": 2, },
+		{ "name": Syntax.TOKEN_LE, "line": 8, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 8, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 8, "column": 24, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 8, "column": 25, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 11, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 11, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 11, "column": 2, },
-		{ "token": Lexer.TOKEN_GREATER, "line": 11, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 11, "column": 13, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 11, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 11, "column": 24, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 9, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 9, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 9, "column": 2, },
+		{ "name": Syntax.TOKEN_GE, "line": 9, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 9, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 9, "column": 24, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 9, "column": 25, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 12, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 12, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 12, "column": 2, },
-		{ "token": Lexer.TOKEN_GREATER, "line": 12, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 12, "column": 13, },
-		{ "token": Lexer.TOKEN_LESS, "line": 12, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable3', "line": 12, "column": 25, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 12, "column": 35, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 12, "column": 36, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 10, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 10, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 10, "column": 2, },
+		{ "name": Syntax.TOKEN_LESS, "line": 10, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 10, "column": 13, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 10, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 10, "column": 24, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 14, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 14, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 14, "column": 2, },
-		{ "token": Lexer.TOKEN_EQUAL, "line": 14, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 14, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 14, "column": 24, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 14, "column": 25, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 11, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 11, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 11, "column": 2, },
+		{ "name": Syntax.TOKEN_GREATER, "line": 11, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 11, "column": 13, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 11, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 11, "column": 24, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 15, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 15, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 15, "column": 2, },
-		{ "token": Lexer.TOKEN_NOT_EQUAL, "line": 15, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 15, "column": 16, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 15, "column": 26, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 15, "column": 27, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 12, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 12, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 12, "column": 2, },
+		{ "name": Syntax.TOKEN_GREATER, "line": 12, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 12, "column": 13, },
+		{ "name": Syntax.TOKEN_LESS, "line": 12, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable3', "line": 12, "column": 25, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 12, "column": 35, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 12, "column": 36, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 16, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 16, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 16, "column": 2, },
-		{ "token": Lexer.TOKEN_AND, "line": 16, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 16, "column": 15, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 16, "column": 25, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 16, "column": 26, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 14, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 14, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 14, "column": 2, },
+		{ "name": Syntax.TOKEN_EQUAL, "line": 14, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 14, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 14, "column": 24, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 14, "column": 25, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 17, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 17, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 17, "column": 2, },
-		{ "token": Lexer.TOKEN_OR, "line": 17, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable2', "line": 17, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 17, "column": 24, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 17, "column": 25, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 15, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 15, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 15, "column": 2, },
+		{ "name": Syntax.TOKEN_NOT_EQUAL, "line": 15, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 15, "column": 16, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 15, "column": 26, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 15, "column": 27, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 19, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 19, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 19, "column": 2, },
-		{ "token": Lexer.TOKEN_EQUAL, "line": 19, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '12.1', "line": 19, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 19, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 19, "column": 20, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 16, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 16, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 16, "column": 2, },
+		{ "name": Syntax.TOKEN_AND, "line": 16, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 16, "column": 15, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 16, "column": 25, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 16, "column": 26, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 20, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 20, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 20, "column": 2, },
-		{ "token": Lexer.TOKEN_EQUAL, "line": 20, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_BOOLEAN_LITERAL, "value": 'true', "line": 20, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 20, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 20, "column": 20, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 17, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 17, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 17, "column": 2, },
+		{ "name": Syntax.TOKEN_OR, "line": 17, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable2', "line": 17, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 17, "column": 24, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 17, "column": 25, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 21, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 21, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 21, "column": 2, },
-		{ "token": Lexer.TOKEN_EQUAL, "line": 21, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_BOOLEAN_LITERAL, "value": 'false', "line": 21, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 21, "column": 20, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 21, "column": 21, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 19, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 19, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 19, "column": 2, },
+		{ "name": Syntax.TOKEN_EQUAL, "line": 19, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '12.1', "line": 19, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 19, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 19, "column": 20, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 22, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 22, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 22, "column": 2, },
-		{ "token": Lexer.TOKEN_EQUAL, "line": 22, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_STRING_LITERAL, "value": 's1', "line": 22, "column": 14, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 22, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 22, "column": 20, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 20, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 20, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 20, "column": 2, },
+		{ "name": Syntax.TOKEN_EQUAL, "line": 20, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_BOOLEAN_LITERAL, "value": 'true', "line": 20, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 20, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 20, "column": 20, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 23, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 23, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 23, "column": 2, },
-		{ "token": Lexer.TOKEN_EQUAL, "line": 23, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_NULL_TOKEN, "line": 23, "column": 14, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 23, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 23, "column": 20, "value": null, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 21, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 21, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 21, "column": 2, },
+		{ "name": Syntax.TOKEN_EQUAL, "line": 21, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_BOOLEAN_LITERAL, "value": 'false', "line": 21, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 21, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 21, "column": 21, "value": "", },
 
-		{ "token": Lexer.TOKEN_EOF, "line": 25, "column": 0, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 22, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 22, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 22, "column": 2, },
+		{ "name": Syntax.TOKEN_EQUAL, "line": 22, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_STRING_LITERAL, "value": 's1', "line": 22, "column": 14, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 22, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 22, "column": 20, "value": "", },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 23, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 23, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 23, "column": 2, },
+		{ "name": Syntax.TOKEN_EQUAL, "line": 23, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_NULL_TOKEN, "line": 23, "column": 14, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 23, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 23, "column": 20, "value": "", },
+
+		{ "name": Syntax.TOKEN_EOF, "line": 25, "column": 0, "value": "" },
 	])
 
 
@@ -745,23 +847,27 @@ func test_variables_indent():
 { a }
 
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_INDENT, "line": 1, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 1, "column": 1, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'a', "line": 1, "column": 3, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 1, "column": 5, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 1, "column": 6, "value": null, },
 
-		{ "token": Lexer.TOKEN_DEDENT, "line": 2, "column": 0, "value": null, },
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_INDENT, "line": 1, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 1, "column": 1, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 1, "column": 3, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 1, "column": 5, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 6, "value": "", },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 2, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'a', "line": 2, "column": 2, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 2, "column": 4, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 2, "column": 5, "value": null },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 2, "column": 0, "value": "", },
 
-		{ "token": Lexer.TOKEN_EOF, "line": 4, "column": 0, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 2, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 2, "column": 2, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 2, "column": 4, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 5, "value": "" },
+
+		{ "name": Syntax.TOKEN_EOF, "line": 4, "column": 0, "value": "" },
 	])
 
 
@@ -789,193 +895,203 @@ func test_variables_assignements():
 { when a }
 
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 1, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 1, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 1, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 1, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 1, "column": 17, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 1, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 1, "column": 20, "value": null },
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 2, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 2, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 2, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN_SUB, "line": 2, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 2, "column": 18, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 2, "column": 20, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 2, "column": 21, "value": null },
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 3, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 3, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 3, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 3, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN_SUM, "line": 3, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 3, "column": 18, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 3, "column": 20, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 3, "column": 21, "value": null },
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 4, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 4, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 4, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 4, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN_MULT, "line": 4, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 4, "column": 18, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 4, "column": 20, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 4, "column": 21, "value": null },
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 5, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 5, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 5, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 5, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN_DIV, "line": 5, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 5, "column": 18, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 5, "column": 20, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 5, "column": 21, "value": null },
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 6, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 6, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 6, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 6, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN_POW, "line": 6, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 6, "column": 18, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 6, "column": 20, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 6, "column": 21, "value": null },
 
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 7, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 7, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 7, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 7, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN_MOD, "line": 7, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 7, "column": 18, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 7, "column": 20, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 7, "column": 21, "value": null },
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 1, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 1, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 1, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 1, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 1, "column": 17, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 1, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 20, "value": "" },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 8, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 8, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 8, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 8, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 8, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'a', "line": 8, "column": 17, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 8, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'b', "line": 8, "column": 21, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 8, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 8, "column": 24, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 2, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 2, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 2, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_SUB, "line": 2, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 2, "column": 18, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 2, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 21, "value": "" },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 10, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 10, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 10, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 10, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 10, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 10, "column": 17, },
-		{ "token": Lexer.TOKEN_PLUS, "line": 10, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '2', "line": 10, "column": 21, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 10, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 10, "column": 24, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 3, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 3, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 3, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 3, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_SUM, "line": 3, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 3, "column": 18, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 3, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 3, "column": 21, "value": "" },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 11, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 11, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 11, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 11, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 11, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 11, "column": 17, },
-		{ "token": Lexer.TOKEN_MINUS, "line": 11, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '2', "line": 11, "column": 21, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 11, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 11, "column": 24, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 4, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 4, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 4, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_MULT, "line": 4, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 4, "column": 18, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 4, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 21, "value": "" },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 12, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 12, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 12, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 12, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 12, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 12, "column": 17, },
-		{ "token": Lexer.TOKEN_MULT, "line": 12, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '2', "line": 12, "column": 21, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 12, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 12, "column": 24, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 5, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 5, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 5, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 5, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_DIV, "line": 5, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 5, "column": 18, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 5, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 5, "column": 21, "value": "" },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 13, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 13, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 13, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 13, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 13, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 13, "column": 17, },
-		{ "token": Lexer.TOKEN_DIV, "line": 13, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '2', "line": 13, "column": 21, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 13, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 13, "column": 24, "value": null },
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 14, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 14, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 14, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 14, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 14, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 14, "column": 17, },
-		{ "token": Lexer.TOKEN_POWER, "line": 14, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '2', "line": 14, "column": 21, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 14, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 14, "column": 24, "value": null },
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 15, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 15, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 15, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 15, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 15, "column": 15, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 15, "column": 17, },
-		{ "token": Lexer.TOKEN_MOD, "line": 15, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '2', "line": 15, "column": 21, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 15, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 15, "column": 24 , "value": null},
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 17, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 17, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_TRIGGER, "line": 17, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'event_name', "line": 17, "column": 10, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 17, "column": 21, "value": null },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 17, "column": 22, "value": null },
-
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 18, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 18, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 18, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'a', "line": 18, "column": 6, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 18, "column": 8, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 18, "column": 10, },
-		{ "token": Lexer.TOKEN_COMMA, "line": 18, "column": 11, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 18, "column": 13, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'b', "line": 18, "column": 17, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 18, "column": 19, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '2', "line": 18, "column": 21, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 18, "column": 23, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 18, "column": 24, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 6, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 6, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 6, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 6, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_POW, "line": 6, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 6, "column": 18, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 6, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 6, "column": 21, "value": "" },
 
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 19, "column": 0, "value": null },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 19, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_WHEN, "line": 19, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'a', "line": 19, "column": 7, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 19, "column": 9, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 19, "column": 10, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 7, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 7, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 7, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 7, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_MOD, "line": 7, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 7, "column": 18, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 7, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 7, "column": 21, "value": "" },
 
-		{ "token": Lexer.TOKEN_EOF, "line": 21, "column": 0, "value": null },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 8, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 8, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 8, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 8, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 8, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 8, "column": 17, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 8, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'b', "line": 8, "column": 21, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 8, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 8, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 10, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 10, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 10, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 10, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 10, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 10, "column": 17, },
+		{ "name": Syntax.TOKEN_PLUS, "line": 10, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 10, "column": 21, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 10, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 10, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 11, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 11, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 11, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 11, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 11, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 11, "column": 17, },
+		{ "name": Syntax.TOKEN_MINUS, "line": 11, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 11, "column": 21, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 11, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 11, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 12, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 12, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 12, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 12, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 12, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 12, "column": 17, },
+		{ "name": Syntax.TOKEN_MULT, "line": 12, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 12, "column": 21, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 12, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 12, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 13, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 13, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 13, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 13, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 13, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 13, "column": 17, },
+		{ "name": Syntax.TOKEN_DIV, "line": 13, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 13, "column": 21, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 13, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 13, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 14, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 14, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 14, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 14, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 14, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 14, "column": 17, },
+		{ "name": Syntax.TOKEN_POWER, "line": 14, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 14, "column": 21, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 14, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 14, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 15, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 15, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 15, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 15, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 15, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 15, "column": 17, },
+		{ "name": Syntax.TOKEN_MOD, "line": 15, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 15, "column": 21, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 15, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 15, "column": 24 , "value": ""},
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 17, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 17, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_TRIGGER, "line": 17, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'event_name', "line": 17, "column": 10, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 17, "column": 21, "value": "" },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 17, "column": 22, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 18, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 18, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 18, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 18, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 18, "column": 8, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 18, "column": 10, },
+		{ "name": Syntax.TOKEN_COMMA, "line": 18, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 18, "column": 13, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'b', "line": 18, "column": 17, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 18, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 18, "column": 21, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 18, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 18, "column": 24, "value": "" },
+
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 19, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 19, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_WHEN, "line": 19, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 19, "column": 7, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 19, "column": 9, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 19, "column": 10, "value": "" },
+
+		{ "name": Syntax.TOKEN_EOF, "line": 21, "column": 0, "value": "" },
 	])
 
 
 func test_variables_assignment_after_line():
 	var lexer = Lexer.new()
 	var tokens = lexer.init("this line { set variable = 1 }").get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_TEXT, "value": 'this line', "line": 0, "column": 0, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 0, "column": 10, "value": null, },
-		{ "token": Lexer.TOKEN_KEYWORD_SET, "line": 0, "column": 12, "value": null, },
-		{ "token": Lexer.TOKEN_IDENTIFIER, "value": 'variable', "line": 0, "column": 16, },
-		{ "token": Lexer.TOKEN_ASSIGN, "line": 0, "column": 25, "value": null, },
-		{ "token": Lexer.TOKEN_NUMBER_LITERAL, "value": '1', "line": 0, "column": 27, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 0, "column": 29, "value": null, },
-		{ "token": Lexer.TOKEN_EOF, "line": 0, "column": 30, "value": null, },
+	
+	
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this line', "line": 0, "column": 0, },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 0, "column": 10, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 0, "column": 12, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 0, "column": 16, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 0, "column": 25, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 0, "column": 27, },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 0, "column": 29, "value": "", },
+		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 30, "value": "", },
 	])
 
 
@@ -987,23 +1103,28 @@ after {}
 both
 {}
 """).get_all()
-	assert_eq_deep(tokens, [
-		{ "token": Lexer.TOKEN_TEXT, "value": 'after', "line": 1, "column": 0, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 1, "column": 6, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 1, "column": 7, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 1, "column": 8, "value": null, },
 
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 2, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 2, "column": 1, "value": null, },
-		{ "token": Lexer.TOKEN_TEXT, "value": 'before', "line": 2, "column": 3, },
 
-		{ "token": Lexer.TOKEN_TEXT, "value": 'both', "line": 3, "column": 0, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 4, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_OPEN, "line": 4, "column": 0, "value": null, },
-		{ "token": Lexer.TOKEN_BRACE_CLOSE, "line": 4, "column": 1, "value": null, },
-		{ "token": Lexer.TOKEN_LINE_BREAK, "line": 4, "column": 2, "value": null, },
-		{ "token": Lexer.TOKEN_EOF, "line": 5, "column": 0, "value": null, },
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'after', "line": 1, "column": 0, },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 1, "column": 6, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 1, "column": 7, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 8, "value": "", },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 2, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 2, "column": 1, "value": "", },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'before', "line": 2, "column": 3, },
+
+		{ "name": Syntax.TOKEN_TEXT, "value": 'both', "line": 3, "column": 0, },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_OPEN, "line": 4, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_BRACE_CLOSE, "line": 4, "column": 1, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_EOF, "line": 5, "column": 0, "value": "", },
 	])
 
 
@@ -1014,17 +1135,17 @@ func test_returns_line_by_line():
 						another indent
 now another dedent""")
 
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, })
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_INDENT, "line": 1, "column": 0 , "value": null})
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 4 })
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_INDENT, "line": 2, "column": 4, "value": null })
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_TEXT, "value": 'another indent', "line": 2, "column": 6 })
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_DEDENT, "line": 3, "column": 4, "value": null })
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_DEDENT, "line": 3, "column": 0, "value": null })
-	assert_eq_deep(tokens.next(), { "token": Lexer.TOKEN_TEXT, "value": 'now another dedent', "line": 3, "column": 0 })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_INDENT, "line": 1, "column": 0 , "value": ""})
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 4 })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_INDENT, "line": 2, "column": 4, "value": "" })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'another indent', "line": 2, "column": 6 })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_DEDENT, "line": 3, "column": 4, "value": "" })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_DEDENT, "line": 3, "column": 0, "value": "" })
+	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'now another dedent', "line": 3, "column": 0 })
 
 func test_parse_token_friendly_hint():
-	assert_eq_deep(Lexer.get_token_friendly_hint(Lexer.TOKEN_LINE_ID), '$id')
+	assert_eq_deep(Lexer.get_token_friendly_hint(Syntax.TOKEN_LINE_ID), '$id')
 	assert_eq_deep(Lexer.get_token_friendly_hint('some_unkown_token'), 'some_unkown_token')
 
 
@@ -1047,6 +1168,9 @@ Pick an option.
  bleh { QUEST_STARTED}
 """).get_all()
 
+	var json2Tokens : Array = []
+	for token in tokens:
+		json2Tokens.append(Token.to_JSON_object(token))
 	var tab_tokens = lexer.init("""
 Pick an option.
 	+ Quest test
@@ -1058,5 +1182,8 @@ Pick an option.
 	bleh { QUEST_STARTED}
 """).get_all()
 
-	assert_eq_deep(tab_tokens, tokens)
+	var jsonTokens : Array = []
+	for token in tab_tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, json2Tokens)
 

@@ -1,17 +1,10 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://d4kebchr40i1h"]
 
-[ext_resource path="res://addons/gut/plugin_control.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://test/TestRunner.gd" id="1_4ylat"]
 
 [node name="Gut" type="Control"]
-offset_right = 740.0
-offset_bottom = 250.0
-custom_minimum_size = Vector2( 740, 250 )
+layout_mode = 3
+anchors_preset = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-_run_on_load = true
-_show_orphans = false
-_directory1 = "res://test"
+script = ExtResource("1_4ylat")

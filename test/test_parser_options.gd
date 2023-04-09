@@ -4,7 +4,7 @@ var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()
-	return parser.parse(input)
+	return parser.to_JSON_object(parser.parse(input))
 
 
 func test_parse_options():
@@ -607,9 +607,9 @@ func test_options_with_blocks_both_sides():
 					"id_suffixes": null,
 					"content": [
 						{
-						 "type": "conditional_content",
-						 "conditions": { "type": "variable", "name": "what" },
-						 "content": {
+						"type": "conditional_content",
+						"conditions": { "type": "variable", "name": "what" },
+						"content": {
 								"type": "action_content",
 								"action": {
 									"type": 'assignments',
@@ -630,7 +630,7 @@ func test_options_with_blocks_both_sides():
 									"content": { "type": 'content', "content": [{ "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }]},
 								},
 							},
-					 },
+					},
 
 						{
 							"type": "action_content",

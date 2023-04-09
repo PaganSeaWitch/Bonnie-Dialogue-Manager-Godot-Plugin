@@ -4,7 +4,7 @@ const Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()
-	return parser.parse(input)
+	return parser.to_JSON_object(parser.parse(input))
 
 
 func test_simple_variations():

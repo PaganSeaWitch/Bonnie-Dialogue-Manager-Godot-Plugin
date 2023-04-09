@@ -4,7 +4,7 @@ var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func test_parse_empty_document():
 	var parser = Parser.new()
-	var result = parser.parse('');
+	var result = parser.to_JSON_object(parser.parse(''));
 	var expected = {
 		"type": 'document',
 		"content": [],
@@ -15,7 +15,7 @@ func test_parse_empty_document():
 
 func test_parse_document_with_multiple_line_breaks():
 	var parser = Parser.new()
-	var result = parser.parse('\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+	var result = parser.to_JSON_object(parser.parse('\n\n\n\n\n\n\n\n\n\n\n\n\n\n'))
 	var expected = {
 		"type": 'document',
 		"content": [],

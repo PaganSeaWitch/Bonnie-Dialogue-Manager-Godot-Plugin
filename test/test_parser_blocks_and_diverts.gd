@@ -4,7 +4,7 @@ var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()
-	return parser.parse(input)
+	return parser.to_JSON_object(parser.parse(input))
 
 func test_parse_blocks():
 	var result = parse("""
@@ -18,23 +18,21 @@ line 4
 
 """)
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"content": [],
 		"blocks": [
-			{ "type": 'block', "name": 'first block', "content": {
-				"type": 'content',
+			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'first block', 
 				"content": [
-					{ "type": 'line', "value": 'line 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-					{ "type": 'line', "value": 'line 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 				]
-			}},
-			{ "type": 'block', "name": 'second_block', "content": {
-				"type": 'content',
+			},
+			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'second_block', 
 				"content": [
-					{ "type": 'line', "value": 'line 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-					{ "type": 'line', "value": 'line 4', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 4', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 				]
-			}},
+			},
 		]
 	}
 	assert_eq_deep(result, expected)
@@ -54,29 +52,27 @@ line 4
 
 """)
 	var expected = {
-		"type": 'document',
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'line', "value": 'line outside block 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-				{ "type": 'line', "value": 'line outside block 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-			]
-		}],
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
+		
+		"content": [
+			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line outside block 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line outside block 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+		]
+		,
 		"blocks": [
-			{ "type": 'block', "name": 'first block', "content": {
-				"type": 'content',
+			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'first block', 
 				"content": [
-					{ "type": 'line', "value": 'line 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-					{ "type": 'line', "value": 'line 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 				]
-			}},
-			{ "type": 'block', "name": 'second_block', "content": {
-				"type": 'content',
+			},
+			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'second_block', 
+				
 				"content": [
-					{ "type": 'line', "value": 'line 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-					{ "type": 'line', "value": 'line 4', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 4', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 				]
-			}},
+			},
 		]
 	}
 	assert_eq_deep(result, expected)
@@ -94,30 +90,25 @@ func test_parse_diverts():
 	-> go
 """)
 	var expected = {
-		"type": 'document',
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'divert', "target": 'one' },
-				{ "type": 'divert', "target": '<end>' },
-				{ "type": 'divert', "target": '<parent>' },
-				{ "type": 'options', "speaker": null, "id": null, "tags": null, "name": null, "id_suffixes": null, "content": [
-						{ "type": 'option', "name": 'thats it', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null, "content": {
-								"type": 'content',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
+		"content": [
+				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'one' },
+				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<end>' },
+				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<parent>' },
+				{ "type": NodeFactory.NODE_TYPES.OPTIONS, "speaker": "", "id": "", "tags": [], "name": "", "id_suffixes": [], "content": [
+						{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'thats it', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [], 
 								"content": [
-									{ "type": 'divert', "target": 'somewhere' },
-									{ "type": 'divert', "target": '<parent>' },
+									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'somewhere' },
+									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<parent>' },
 								],
-						}},
-						{ "type": 'option', "name": 'does it work this way?', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null, "content": {
-								"type": 'content',
-								"content": [
-									{ "type": 'divert', "target": 'go' },
+						},
+						{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'does it work this way?', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [], "content":  [
+									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'go' },
 								],
-						}},
+						},
 				]},
-			]
-		}],
+			
+		],
 		"blocks": []
 	}
 	assert_eq_deep(result, expected)
@@ -128,13 +119,10 @@ func test_parse_empty_block():
 == first block
 """)
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"content": [],
 		"blocks": [
-			{ "type": 'block', "name": 'first block', "content": {
-				"type": 'content',
-				"content": []
-			}},
+			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'first block',"content": [] },
 		]
 	}
 	assert_eq_deep(result, expected)

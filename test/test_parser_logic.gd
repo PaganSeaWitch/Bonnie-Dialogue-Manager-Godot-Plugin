@@ -4,15 +4,12 @@ var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()
-	return parser.parse(input)
+	return parser.to_JSON_object(parser.parse(input))
 
 func _create_doc_payload(content = [], blocks = []):
 	return {
-		"type": 'document',
-		"content": [{
-			"type": "content",
-			"content": content
-		}],
+		"type":  NodeFactory.NODE_TYPES.DOCUMENT,
+		"content": content,
 		"blocks": blocks
 	}
 
@@ -20,9 +17,9 @@ func test_condition_single_var():
 	var result = parse("{ some_var } This is conditional")
 	var expected = _create_doc_payload([
 		{
-			"type": "conditional_content",
-			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is conditional", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }]
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -33,9 +30,9 @@ func test_condition_with_multiline_dialogue():
 """)
 
 	var expected = _create_doc_payload([{
-		"type": "conditional_content",
-		"conditions": { "type": "variable", "name": "another_var" },
-		"content": { "type": "line", "value": "This is conditional multiline", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
+		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "another_var" },
+		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is conditional multiline", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }]
 	}])
 	assert_eq_deep(result, expected)
 
@@ -45,13 +42,13 @@ func test_not_operator():
 
 	var expected = _create_doc_payload([
 		{
-			"type": "conditional_content",
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": "expression",
-				"name": "not",
-				"elements": [{ "type": "variable", "name": "some_var" }]
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": "NOT",
+				"elements": [{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" }]
 			},
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is conditional", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }]
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -62,16 +59,16 @@ func test_and_operator():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'and',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": 'AND',
 				"elements": [
-					{ "type": 'variable', "name": 'first_time', },
-					{ "type": 'variable', "name": 'second_time', },
+					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
 				],
 			},
-			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'what do you want to talk about?', "speaker": 'npc', "id": "", "tags": [], "id_suffixes": [], }],
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -82,23 +79,23 @@ func test_multiple_logical_checks_and_and_or():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'or',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": 'OR',
 				"elements": [
 					{
-						"type": 'expression',
-						"name": 'and',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": 'AND',
 						"elements": [
-							{ "type": 'variable', "name": 'first_time', },
-							{ "type": 'variable', "name": 'second_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
 						],
 					},
-					{ "type": 'variable', "name": 'third_time', },
+					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
 				],
 			},
-			"content": { "type": 'line', "value": 'what do you want to talk about?', "speaker": 'npc', "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'what do you want to talk about?', "speaker": 'npc', "id": "", "tags": [], "id_suffixes": [], }],
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -109,30 +106,30 @@ func test_multiple_equality_check():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'or',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": 'OR',
 				"elements": [
 					{
-						"type": 'expression',
-						"name": 'equal',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": '==, is',
 						"elements": [
-							{ "type": 'variable', "name": 'first_time', },
-							{ "type": 'variable', "name": 'second_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
 						],
 					},
 					{
-						"type": 'expression',
-						"name": 'not_equal',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": '!=, isnt',
 						"elements": [
-							{ "type": 'variable', "name": 'third_time', },
-							{ "type": 'variable', "name": 'fourth_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'fourth_time', },
 						],
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'equality', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'equality', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -143,30 +140,30 @@ func test_multiple_alias_equality_check():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'or',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": 'OR',
 				"elements": [
 					{
-						"type": 'expression',
-						"name": 'equal',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": '==, is',
 						"elements": [
-							{ "type": 'variable', "name": 'first_time', },
-							{ "type": 'variable', "name": 'second_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
 						],
 					},
 					{
-						"type": 'expression',
-						"name": 'not_equal',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": '!=, isnt',
 						"elements": [
-							{ "type": 'variable', "name": 'third_time', },
-							{ "type": 'variable', "name": 'fourth_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'fourth_time', },
 						],
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'alias equality', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'alias equality', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -177,30 +174,30 @@ func test_less_or_greater():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'or',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": 'OR',
 				"elements": [
 					{
-						"type": 'expression',
-						"name": 'less_than',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": 'LESS',
 						"elements": [
-							{ "type": 'variable', "name": 'first_time', },
-							{ "type": 'variable', "name": 'second_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
 						],
 					},
 					{
-						"type": 'expression',
-						"name": 'greater_than',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": 'GREATER',
 						"elements": [
-							{ "type": 'variable', "name": 'third_time', },
-							{ "type": 'variable', "name": 'fourth_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'fourth_time', },
 						],
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'comparison', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'comparison', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -211,30 +208,30 @@ func test_less_or_equal_and_greater_or_equal():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'and',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": 'AND',
 				"elements": [
 					{
-						"type": 'expression',
-						"name": 'less_or_equal',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": '<=',
 						"elements": [
-							{ "type": 'variable', "name": 'first_time', },
-							{ "type": 'variable', "name": 'second_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
 						],
 					},
 					{
-						"type": 'expression',
-						"name": 'greater_or_equal',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": '>=',
 						"elements": [
-							{ "type": 'variable', "name": 'third_time', },
-							{ "type": 'variable', "name": 'fourth_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
+							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'fourth_time', },
 						],
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'second comparison', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'second comparison', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -246,51 +243,51 @@ func test__complex_precendence_case():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'greater_than',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": 'GREATER',
 				"elements": [
-					{ "type": 'variable', "name": 'first_time', },
+					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 					{
-						"type": 'expression',
-						"name": 'sub',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": '-',
 						"elements": [
 							{
-								"type": 'expression',
-								"name": 'add',
+								"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+								"name": '+',
 								"elements": [
-									{ "type": 'variable', "name": 'x', },
-									{ "type": 'variable', "name": 'y', },
+									{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'x', },
+									{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'y', },
 								],
 							},
 							{
-								"type": 'expression',
-								"name": 'mod',
+								"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+								"name": '%',
 								"elements": [
 									{
-										"type": 'expression',
-										"name": 'div',
+										"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+										"name": '/',
 										"elements": [
 											{
-												"type": 'expression',
-												"name": 'mult',
+												"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+												"name": '*',
 												"elements": [
-													{ "type": 'variable', "name": 'z', },
-													{ "type": 'variable', "name": 'd', },
+													{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'z', },
+													{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'd', },
 												],
 											},
-											{ "type": 'variable', "name": 'e', },
+											{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'e', },
 										],
 									},
-									{ "type": 'variable', "name": 'b', },
+									{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', },
 								],
 							},
 						],
 					},
 				],
 			},
-			"content": { "type": 'line', "value": 'test', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'test', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -302,16 +299,16 @@ func test_number_literal():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'greater_than',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": 'GREATER',
 				"elements": [
-					{ "type": 'variable', "name": 'first_time', },
-					{ "type": 'literal', "name": 'number', "value": 0.0, },
+					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+					{ "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 0.0, },
 				],
 			},
-			"content": { "type": 'line', "value": 'hey', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'hey', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -323,16 +320,16 @@ func test__null_token():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'not_equal',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": '!=, isnt',
 				"elements": [
-					{ "type": 'variable', "name": 'first_time', },
-					{ "type": 'null', },
+					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+					{ "type": NodeFactory.NODE_TYPES.NULL},
 				],
 			},
-			"content": { "type": 'line', "value": 'ho', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'ho', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -344,16 +341,16 @@ func test_boolean_literal():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'equal',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": '==, is',
 				"elements": [
-					{ "type": 'variable', "name": 'first_time', },
-					{ "type": 'literal', "name": 'boolean', "value": false, },
+					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+					{ "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": false, },
 				],
 			},
-			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -364,16 +361,16 @@ func test_string_literal():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'conditional_content',
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
-				"type": 'expression',
-				"name": 'equal',
+				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+				"name": '==, is',
 				"elements": [
-					{ "type": 'variable', "name": 'first_time', },
-					{ "type": 'literal', "name": 'string', "value": 'hello darkness >= my old friend', },
+					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
+					{ "type": NodeFactory.NODE_TYPES.STRING_LITERAL, "value": 'hello darkness >= my old friend', },
 				],
 			},
-			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		}
 	])
 	assert_eq_deep(result, expected)
@@ -382,9 +379,9 @@ func test_condition_before_line_with_keyword():
 	var result = parse("{ when some_var } This is conditional")
 	var expected = _create_doc_payload([
 		{
-			"type": "conditional_content",
-			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is conditional", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }]
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -394,9 +391,9 @@ func test_condition_after_line():
 	var result = parse("This is conditional { when some_var }")
 	var expected = _create_doc_payload([
 		{
-			"type": "conditional_content",
-			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is conditional", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }]
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -406,9 +403,9 @@ func test_condition_after_line_without_when():
 	var result = parse("This is conditional { some_var }")
 	var expected = _create_doc_payload([
 		{
-			"type": "conditional_content",
-			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is conditional", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }]
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -419,9 +416,9 @@ func test_conditional_divert():
 	var result = parse("{ some_var } -> some_block")
 	var expected = _create_doc_payload([
 		{
-			"type": "conditional_content",
-			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "divert", "target": "some_block", }
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+			"content": [{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": "some_block", }]
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -431,9 +428,9 @@ func test_conditional_divert_after():
 	var result = parse("-> some_block { some_var }")
 	var expected = _create_doc_payload([
 		{
-			"type": "conditional_content",
-			"conditions": { "type": "variable", "name": "some_var" },
-			"content": { "type": "divert", "target": "some_block", }
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+			"content": [{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": "some_block", }]
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -446,54 +443,40 @@ func test_conditional_option():
 *= { some_other_var } option 3
 """)
 	var expected = _create_doc_payload([{
-		"type": 'options',
-		"name": null,
-		"speaker": null, "id": null, "tags": null, "id_suffixes": null,
+		"type": NodeFactory.NODE_TYPES.OPTIONS,
+		"name": "",
+		"speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		"content": [
 			{
-				"type": "conditional_content",
-				"conditions": { "type": "variable", "name": "some_var" },
-				"content": {
-					"type": 'option',
+				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+				"content": [{
+					"type": NodeFactory.NODE_TYPES.OPTION,
 					"name": 'option 1',
-					"mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
-					"content": {
-						"type": 'content',
-						"content": [
-							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-						],
-					},
-				},
+					"mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					"content":  [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
+					
+				}],
 			},
 			{
-				"type": "conditional_content",
-				"conditions": { "type": "variable", "name": "some_var" },
-				"content": {
-					"type": 'option',
+				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+				"content": [{
+					"type": NodeFactory.NODE_TYPES.OPTION,
 					"name": 'option 2',
-					"mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
-					"content": {
-						"type": 'content',
-						"content": [
-							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-						],
-					},
-				},
+					"mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },],
+				}],
 			},
 			{
-				"type": "conditional_content",
-				"conditions": { "type": "variable", "name": "some_other_var" },
-				"content": {
-					"type": 'option',
+				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_other_var" },
+				"content": [{
+					"type": NodeFactory.NODE_TYPES.OPTION,
 					"name": 'option 3',
-					"mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
-					"content": {
-						"type": 'content',
-						"content": [
-							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-						],
-					},
-				},
+					"mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					"content":  [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
+				}],
 			},
 		],
 			}
@@ -510,16 +493,14 @@ func test_conditional_indented_block():
 """)
 	var expected = _create_doc_payload([
 		{
-			"type": "conditional_content",
-			"conditions": { "type": "variable", "name": "some_var" },
-			"content": {
-				"type": 'content',
-				"content": [
-					{ "type": "line", "value": "This is conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-					{ "type": "line", "value": "This is second conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
-					{ "type": "line", "value": "This is third conditional", "speaker": null, "id": null, "tags": null, "id_suffixes": null, }
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
+			"content": [
+					{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is conditional", "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+					{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is second conditional", "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+					{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is third conditional", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }
 				]
-			}
+			
 		},
 	])
 	assert_eq_deep(result, expected)
@@ -543,19 +524,19 @@ func test_assignments():
 func _assignment_tests(token, node_name):
 	var result = parse("{ set a %s 2 } let's go" % token)
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 		"action": {
-			"type": 'assignments',
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'a', },
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
 					"operation": node_name,
-					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+		"content": { "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 	}])
 	assert_eq_deep(result, expected)
 
@@ -563,19 +544,19 @@ func _assignment_tests(token, node_name):
 func test_assignment_with_expression():
 	var result = parse('{ set a -= 4 ^ 2 } let\'s go')
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 		"action": {
-			"type": 'assignments',
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": {
-						"type": 'variable',
+						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
 					"operation": 'assign_sub',
 					"value": {
-						"type": 'expression',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
 						"name": 'pow',
 						"elements": [
 							{
@@ -593,7 +574,7 @@ func test_assignment_with_expression():
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+		"content": { "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 	}])
 	assert_eq_deep(result, expected)
 
@@ -601,36 +582,41 @@ func test_assignment_with_expression():
 func test_assignment_with_expression_after():
 	var result = parse('multiply { set a = a * 2 }')
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
-		"action": {
-			"type": 'assignments',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": {
-						"type": 'variable',
+						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
-					"operation": 'assign',
+					"operation": '=',
 					"value": {
-						"type": 'expression',
-						"name": 'mult',
+						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
+						"name": '*',
 						"elements": [
 							{
-								"type": 'variable',
+								"type":  NodeFactory.NODE_TYPES.VARIABLE,
 								"name": 'a',
 							},
 							{
-								"type": 'literal',
-								"name": 'number',
+								"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 								"value": 2.0,
 							},
 						],
 					},
 				},
 			],
-		},
-		"content": { "type": 'line', "value": 'multiply', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+		}],
+		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'multiply', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -638,41 +624,46 @@ func test_assignment_with_expression_after():
 func test_chaining_assigments():
 	var result = parse('{ set a = b = c = d = 3 } let\'s go')
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
-		"action": {
-			"type": 'assignments',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": {
-						"type": 'variable',
+						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
-					"operation": 'assign',
+					"operation": '=',
 					"value": {
-						"type": 'assignment',
+						"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 						"variable": {
-							"type": 'variable',
+							"type":  NodeFactory.NODE_TYPES.VARIABLE,
 							"name": 'b',
 						},
-						"operation": 'assign',
+						"operation": '=',
 						"value": {
-							"type": 'assignment',
+							"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 							"variable": {
-								"type": 'variable',
+								"type":  NodeFactory.NODE_TYPES.VARIABLE,
 								"name": 'c',
 							},
-							"operation": 'assign',
+							"operation": '=',
 							"value": {
-								"type": 'assignment',
+								"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 								"variable": {
-									"type": 'variable',
+									"type":  NodeFactory.NODE_TYPES.VARIABLE,
 									"name": 'd',
 								},
-								"operation": 'assign',
+								"operation": '=',
 								"value": {
-									"type": 'literal',
-									"name": 'number',
+									"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 									"value": 3.0,
 								},
 							},
@@ -680,8 +671,8 @@ func test_chaining_assigments():
 					},
 				},
 			],
-		},
-		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+		}],
+		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -689,33 +680,39 @@ func test_chaining_assigments():
 func test_chaining_assigment_ending_with_variable():
 		var result = parse('{ set a = b = c } let\'s go')
 		var expected = _create_doc_payload([{
-			"type": 'action_content',
-			"action": {
-				"type": 'assignments',
+			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
+			"mode": "",
+			"id": "",
+			"id_suffixes" : [],
+			"tags" : [],
+			"name" : "",
+			"speaker": "",
+			"actions": [{
+				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [
 					{
-						"type": 'assignment',
+						"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 						"variable": {
-							"type": 'variable',
+							"type":  NodeFactory.NODE_TYPES.VARIABLE,
 							"name": 'a',
 						},
-						"operation": 'assign',
+						"operation": '=',
 						"value": {
-							"type": 'assignment',
+							"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 							"variable": {
-								"type": 'variable',
+								"type":  NodeFactory.NODE_TYPES.VARIABLE,
 								"name": 'b',
 							},
-							"operation": 'assign',
+							"operation": '=',
 							"value": {
-								"type": 'variable',
+								"type":  NodeFactory.NODE_TYPES.VARIABLE,
 								"name": 'c',
 							},
 						},
 					},
 				],
-			},
-			"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+			}],
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 		}])
 		assert_eq_deep(result, expected)
 
@@ -723,52 +720,55 @@ func test_chaining_assigment_ending_with_variable():
 func test_multiple_assigments_block():
 	var result = parse('{ set a -= 4, b=1, c = "hello" } hey you')
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
-		"action": {
-			"type": 'assignments',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": {
-						"type": 'variable',
+						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
-					"operation": 'assign_sub',
+					"operation": '-=',
 					"value": {
-						"type": 'literal',
-						"name": 'number',
+						"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 						"value": 4.0,
 					},
 				},
 				{
-					"type": 'assignment',
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": {
-						"type": 'variable',
+						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'b',
 					},
-					"operation": 'assign',
+					"operation": '=',
 					"value": {
-						"type": 'literal',
-						"name": 'number',
+						"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 						"value": 1.0,
 					},
 				},
 				{
-					"type": 'assignment',
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": {
-						"type": 'variable',
+						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'c',
 					},
-					"operation": 'assign',
+					"operation": '=',
 					"value": {
-						"type": 'literal',
-						"name": 'string',
+						"type": NodeFactory.NODE_TYPES.STRING_LITERAL,
 						"value": 'hello',
 					},
 				},
 			],
-		},
-		"content": { "type": 'line', "value": 'hey you', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+		}],
+		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'hey you', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -776,19 +776,19 @@ func test_multiple_assigments_block():
 func test_assignment_after_line():
 	var result = parse("let's go { set a = 2 }")
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
+		"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
 		"action": {
-			"type": 'assignments',
+			"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'a', },
+					"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
 					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
 		},
-		"content": { "type": 'line', "value": 'let\'s go', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -800,24 +800,24 @@ func test_standalone_assignment():
 
 	var expected = _create_doc_payload([
 		{
-			"type": 'assignments',
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'a', },
-					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
+					"operation": '=',
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
 		},
 		{
-			"type": 'assignments',
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'b', },
-					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 3.0, },
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', },
+					"operation": '=',
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 3.0, },
 				},
 			],
 		}
@@ -833,20 +833,20 @@ func test_options_assignment():
 """)
 	var expected = _create_doc_payload([{
 		"type": 'options',
-		"name": null,
-		"speaker": null, "id": null, "tags": null, "id_suffixes": null,
+		"name": "",
+		"speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		"content": [
 			{
 				"type": "action_content",
 				"action": {
-					"type": 'assignments',
-					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'a', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 2.0, }, }, ],
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 2.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
 					},
 				},
@@ -854,14 +854,14 @@ func test_options_assignment():
 			{
 				"type": "action_content",
 				"action": {
-					"type": 'assignments',
-					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'b', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 3.0, }, }, ],
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 3.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
 					},
 				},
@@ -869,14 +869,14 @@ func test_options_assignment():
 			{
 				"type": "action_content",
 				"action": {
-					"type": 'assignments',
-					"assignments": [{ "type": 'assignment', "variable": { "type": 'variable', "name": 'c', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 4.0, }, }, ],
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'c', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 4.0, }, }, ],
 				},
-				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
 					},
 				},
@@ -890,13 +890,13 @@ func test_options_assignment():
 func test_divert_with_assignment():
 	var result = parse("-> go { set a = 2 }")
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 		"action": {
-			"type": 'assignments',
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'a', },
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
 					"operation": 'assign',
 					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
 				},
@@ -916,7 +916,7 @@ func test_standalone_assignment_with_standalone_variable():
 			"assignments": [
 				{
 					"type": "assignment",
-					"variable": { "type": "variable", "name": "a", },
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "a", },
 					"operation": "assign",
 					"value": { "type": "literal", "name": "boolean", "value": true, },
 				},
@@ -929,14 +929,14 @@ func test_standalone_assignment_with_standalone_variable():
 func test_trigger_event():
 	var result = parse("{ trigger some_event } trigger")
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 		"action": {
 			"type": 'events',
 			"events": [{ "type": 'event', "name": 'some_event' }],
 		},
 		"content": {
-			"type": 'line',
-			"value": 'trigger', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+			"type":  NodeFactory.NODE_TYPES.LINE,
+			"value": 'trigger', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		},
 	}])
 	assert_eq_deep(result, expected)
@@ -945,7 +945,7 @@ func test_trigger_event():
 func test_trigger_multiple_events_in_one_block():
 	var result = parse("{ trigger some_event, another_event } trigger")
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 		"action": {
 			"type": 'events',
 			"events": [
@@ -954,8 +954,8 @@ func test_trigger_multiple_events_in_one_block():
 		],
 		},
 		"content": {
-			"type": 'line',
-			"value": 'trigger', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+			"type":  NodeFactory.NODE_TYPES.LINE,
+			"value": 'trigger', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		},
 	}])
 	assert_eq_deep(result, expected)
@@ -975,14 +975,14 @@ func test_standalone_trigger_event():
 func test_trigger_event_after_line():
 	var result = parse("trigger { trigger some_event }")
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 		"action": {
 			"type": 'events',
 			"events": [{ "type": 'event', "name": 'some_event' }],
 		},
 		"content": {
-			"type": 'line',
-			"value": 'trigger', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+			"type":  NodeFactory.NODE_TYPES.LINE,
+			"value": 'trigger', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		},
 	}])
 	assert_eq_deep(result, expected)
@@ -997,7 +997,7 @@ func test_options_trigger():
 	var expected = _create_doc_payload([{
 		"type": 'options',
 		"name": null,
-		"speaker": null, "id": null, "tags": null, "id_suffixes": null,
+		"speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		"content": [
 			{
 				"type": "action_content",
@@ -1005,11 +1005,11 @@ func test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'a' }],
 				},
-				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 1', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
 					},
 				},
@@ -1020,11 +1020,11 @@ func test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'b' }],
 				},
-				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 2', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
 					},
 				},
@@ -1035,11 +1035,11 @@ func test_options_trigger():
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'c' }],
 				},
-				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": {
 						"type": 'content',
 						"content": [
-							{ "type": 'line', "value": 'option 3', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
 					},
 				},
@@ -1053,15 +1053,15 @@ func test_options_trigger():
 func test_multiple_logic_blocks_in_the_same_line():
 	var result = parse("{ some_var } {set something = 1} { trigger event }")
 	var expected = _create_doc_payload([{
-		"type": "conditional_content",
-		"conditions": { "type": "variable", "name": "some_var" },
+		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
 		"content": {
-			"type": 'action_content',
+			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 			"action": {
-				"type": 'assignments',
+				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'something' },
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
 					"operation": 'assign',
 					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 				}],
@@ -1078,28 +1078,28 @@ func test_multiple_logic_blocks_in_the_same_line():
 func test_multiple_logic_blocks_in_the_same_line_before():
 	var result = parse("{ some_var } {set something = 1} { trigger event } hello")
 	var expected = _create_doc_payload([{
-		"type": "conditional_content",
-		"conditions": { "type": "variable", "name": "some_var" },
+		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
 		"content": {
-			"type": 'action_content',
+			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 			"action": {
-				"type": 'assignments',
+				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'something' },
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
 					"operation": 'assign',
 					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 				}],
 			},
 			"content": {
-				"type": 'action_content',
+				"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 				"action": {
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'event' } ],
 				},
 				"content": {
-					"type": 'line',
-					"value": 'hello', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+					"type":  NodeFactory.NODE_TYPES.LINE,
+					"value": 'hello', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 				},
 			},
 		},
@@ -1110,28 +1110,28 @@ func test_multiple_logic_blocks_in_the_same_line_before():
 func test_multiple_logic_blocks_in_the_same_line_after():
 	var result = parse("hello { when some_var } {set something = 1} { trigger event }")
 	var expected = _create_doc_payload([{
-		"type": "conditional_content",
-		"conditions": { "type": "variable", "name": "some_var" },
+		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
 		"content": {
-			"type": 'action_content',
+			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 			"action": {
-				"type": 'assignments',
+				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'something' },
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
 					"operation": 'assign',
 					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 				}],
 			},
 			"content": {
-				"type": 'action_content',
+				"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 				"action": {
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'event' } ],
 				},
 				"content": {
-					"type": 'line',
-					"value": 'hello', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+					"type":  NodeFactory.NODE_TYPES.LINE,
+					"value": 'hello', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 				},
 			},
 		},
@@ -1142,28 +1142,28 @@ func test_multiple_logic_blocks_in_the_same_line_after():
 func test_multiple_logic_blocks_in_the_same_line_around():
 	var result = parse("{ some_var } hello {set something = 1} { trigger event }")
 	var expected = _create_doc_payload([{
-		"type": "conditional_content",
-		"conditions": { "type": "variable", "name": "some_var" },
+		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
 		"content": {
-			"type": 'action_content',
+			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 			"action": {
-				"type": 'assignments',
+				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [{
-					"type": 'assignment',
-					"variable": { "type": 'variable', "name": 'something' },
+					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
 					"operation": 'assign',
 					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 				}],
 			},
 			"content": {
-				"type": 'action_content',
+				"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 				"action": {
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'event' } ],
 				},
 				"content": {
-					"type": 'line',
-					"value": 'hello', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+					"type":  NodeFactory.NODE_TYPES.LINE,
+					"value": 'hello', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 				},
 			},
 		},
@@ -1174,28 +1174,28 @@ func test_multiple_logic_blocks_in_the_same_line_around():
 func test_multiple_logic_blocks_with_condition_after():
 	var result = parse("{set something = 1} { some_var } { trigger event } hello")
 	var expected = _create_doc_payload([{
-		"type": 'action_content',
+		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 		"action": {
-			"type": 'assignments',
+			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [{
-				"type": 'assignment',
-				"variable": { "type": 'variable', "name": 'something' },
+				"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
+				"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
 				"operation": 'assign',
 				"value": { "type": 'literal', "name": 'number', "value": 1.0 },
 			}],
 		},
 		"content": {
-			"type": "conditional_content",
-			"conditions": { "type": "variable", "name": "some_var" },
+			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
 			"content": {
-				"type": 'action_content',
+				"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
 				"action": {
 					"type": 'events',
 					"events": [{ "type": 'event', "name": 'event' } ],
 				},
 				"content": {
-					"type": 'line',
-					"value": 'hello', "speaker": null, "id": null, "tags": null, "id_suffixes": null,
+					"type":  NodeFactory.NODE_TYPES.LINE,
+					"value": 'hello', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 				},
 			},
 		},
@@ -1206,8 +1206,8 @@ func test_multiple_logic_blocks_with_condition_after():
 func test_empty_block():
 	var result = parse("{} empty")
 	var expected = _create_doc_payload([{
-		"type": 'conditional_content',
-		"content": { "type": 'line', "value": 'empty', "speaker": null, "id": null, "tags": null, "id_suffixes": null, },
+		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+		"content": { "type":  NodeFactory.NODE_TYPES.LINE, "value": 'empty', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 		"conditions": null,
 	}])
 	assert_eq_deep(result, expected)

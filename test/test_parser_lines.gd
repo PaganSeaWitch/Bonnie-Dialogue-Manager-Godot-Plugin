@@ -4,17 +4,16 @@ var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()
-	return parser.parse(input)
+	return parser.to_JSON_object(parser.parse(input))
 
 
 func test_parse_single_line():
 	var result = parse('jules: say what one more time! $first #yelling #mad')
 	var expected = {
-		"type": 'document',
-		"content": [{
-			"type": 'content',
-			"content": [{
-				"type": 'line',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
+		"content": [
+			{
+				"type": NodeFactory.NODE_TYPES.LINE,
 				"value": 'say what one more time!',
 				"id": 'first',
 				"speaker": 'jules',
@@ -22,9 +21,9 @@ func test_parse_single_line():
 					'yelling',
 					'mad'
 				],
-				"id_suffixes": null,
-			}]
-		}],
+				"id_suffixes": [],
+			}
+		],
 		"blocks": []
 	}
 	assert_eq_deep(result, expected)
@@ -41,18 +40,14 @@ id last #tag #another_tag $some_id
 """)
 
 		var expected = {
-			"type": 'document',
-			"content": [{
-				"type": 'content',
-				"content": [
-					{ "type": 'line', "value": 'say what one more time!', "id": 'first', "speaker": 'jules', "tags": [ 'yelling', 'mad' ], "id_suffixes": null },
-					{ "type": 'line', "value": 'just text', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
-					{ "type": 'line', "value": 'just id', "id": 'another', "speaker": null, "tags": null, "id_suffixes": [ "var1", "var2" ] },
-					{ "type": 'line', "value": 'just tags', "tags": [ 'tag' ], "speaker": null, "id": null, "id_suffixes": null },
-					{ "type": 'line', "value": 'just speaker', "speaker": 'speaker', "id": null, "tags": null, "id_suffixes": null },
-					{ "type": 'line', "value": 'id last', "speaker": null, "id": 'some_id', "tags": [ 'tag', 'another_tag' ], "id_suffixes": null },
-				]
-			}],
+			"type": NodeFactory.NODE_TYPES.DOCUMENT,
+			"content": [
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'say what one more time!', "id": 'first', "speaker": 'jules', "tags": [ 'yelling', 'mad' ], "id_suffixes": [] },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'just text', "speaker": "", "id": "", "tags": [], "id_suffixes": [] },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'just id', "id": 'another', "speaker": "", "tags": [], "id_suffixes": [ "var1", "var2" ] },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'just tags', "tags": [ 'tag' ], "speaker": "", "id": "", "id_suffixes": [] },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'just speaker', "speaker": 'speaker', "id": "", "tags": [], "id_suffixes": [] },
+					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'id last', "speaker": "", "id": 'some_id', "tags": [ 'tag', 'another_tag' ], "id_suffixes": [] },],
 			"blocks": []
 		}
 
@@ -67,15 +62,12 @@ hello! $id_on_first_line #and_tags
 	Just talking.
 """)
 	var expected = {
-		"type": 'document',
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'line', "value": 'say what one more time! Just say it', "id": 'some_id', "speaker": 'jules', "tags": [ 'tag' ], "id_suffixes": null },
-				{ "type": 'line', "value": 'hello! Just talking.', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, "id_suffixes": null },
-			]
-		}],
-		"blocks": []
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
+		"blocks":[],
+		"content": [
+			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'say what one more time! Just say it', "id": 'some_id', "speaker": 'jules', "tags": [ 'tag' ], "id_suffixes": [] },
+			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'hello! Just talking.', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": "", "id_suffixes": [] },
+		],
 	}
 	assert_eq_deep(result, expected)
 
@@ -89,15 +81,14 @@ Just talking.\"
 \"this has $everything:\" $id_on_first_line #and_tags
 """)
 	var expected = {
-		"type": 'document',
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'line', "value": 'jules: say what one more time!\n	 Just say it $some_id #tag', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
-				{ "type": 'line', "value": 'hello! $id_on_first_line #and_tags\nJust talking.', "speaker": null, "id": null, "tags": null, "id_suffixes": null },
-				{ "type": 'line', "value": 'this has $everything:', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": null, "id_suffixes": null },
-			]
-		}],
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
+		"content": [
+
+				{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'jules: say what one more time!\n	 Just say it $some_id #tag', "speaker": "", "id": "", "tags": [], "id_suffixes": [] },
+				{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'hello! $id_on_first_line #and_tags\nJust talking.', "speaker": "", "id": "", "tags": [], "id_suffixes": [] },
+				{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'this has $everything:', "id": 'id_on_first_line', "tags": [ 'and_tags' ], "speaker": "", "id_suffixes": [] },
+			
+		],
 		"blocks": []
 	}
 	assert_eq_deep(result, expected)
