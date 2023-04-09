@@ -72,6 +72,9 @@ func next() -> Token:
 			_pending_tokens = tokens
 			return _pending_tokens.pop_front()
 
+
+	if(position == input.length() + 1):
+		return null
 	position += 1
 	return Token.new(Syntax.TOKEN_EOF, line, column)
 

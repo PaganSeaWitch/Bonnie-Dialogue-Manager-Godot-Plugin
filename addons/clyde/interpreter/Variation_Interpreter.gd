@@ -24,7 +24,7 @@ func handle_variations_node(variations : VariationsNode, attempt : int = 0):
 
 	var next_index : int = _handle_variation_mode(variations)
 	if next_index == -1 || attempt > variations.content.size():
-		return interpreter._handle_next_node(stack.stack_head().node)
+		return interpreter.handle_next_node(stack.stack_head().node)
 
 	if (variations.content[next_index].content.size() == 1 
 	&& is_instance_of(variations.content[next_index].content[0], ConditionalContentNode)):

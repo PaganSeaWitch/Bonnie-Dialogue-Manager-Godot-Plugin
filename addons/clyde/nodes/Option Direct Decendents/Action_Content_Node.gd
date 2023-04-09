@@ -1,8 +1,8 @@
 class_name ActionContentNode
-extends ContentNode
+extends OptionNode
 
 
-var action : Array
+var actions : Array = []
 
 
 func get_node_class() -> String:

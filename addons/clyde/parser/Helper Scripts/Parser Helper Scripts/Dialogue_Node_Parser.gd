@@ -139,8 +139,8 @@ func _option(token_walker : TokenWalker) -> ClydeNode:
 	var lines : Array= []
 	var main_item : LineNode = LineNode.new()
 	var include_label_as_content : bool = false
-	var root : ContentNode
-	var wrapper : ContentNode
+	var root : ClydeNode
+	var wrapper : ClydeNode
 
 	token_walker.consume(acceptable_next)
 	if token_walker.current_token.name == Syntax.TOKEN_ASSIGN:

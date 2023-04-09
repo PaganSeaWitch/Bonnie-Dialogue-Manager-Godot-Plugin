@@ -37,8 +37,13 @@ func _get_import_options(str: String, i : int):
 
 func _get_option_visibility(option :String,optionName : StringName,  options : Dictionary):
 	return true
+
+
 func _get_import_order():
 	return 0
+
+func _get_priority():
+	return 1.0
 
 func _import(source_file, save_path, options, platform_variants, gen_files):
 	var file : FileAccess = FileAccess.open(source_file, FileAccess.READ)

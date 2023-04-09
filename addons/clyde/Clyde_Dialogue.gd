@@ -42,7 +42,7 @@ func get_content() -> ClydeNode:
 
 
 # Choose one of the available options.
-func choose(option_index):
+func choose(option_index) -> ClydeDialogue:
 	return _interpreter.choose(option_index)
 
 
@@ -57,23 +57,27 @@ func get_variable(name):
 	return _interpreter.get_variable(name)
 
 
+func set_random_block() -> bool:
+	return _interpreter.set_random_block()
+
+
 # Return all variables and internal variables. Useful for persisting the dialogue's internal
 # data, such as options already choosen and random variations states.
-func get_data():
+func get_data() -> MemoryInterface.InternalMemory:
 	return _interpreter.get_data()
 
 
 # Load internal data
-func load_data(data):
-	return _interpreter.load_data(data)
+func load_data(data) -> void:
+	_interpreter.load_data(data)
 
 
 # Clear all internal data
-func clear_data():
-	return _interpreter.clear_data()
+func clear_data() -> void:
+	_interpreter.clear_data()
 
 
-func _load_file(path) -> Dictionary:
+func _load_file(path : String) -> Dictionary:
 	if path.get_extension() == 'clyde':
 		return _load_clyde_file(path)
 
@@ -90,7 +94,7 @@ func _load_file(path) -> Dictionary:
 	return result.result as Dictionary
 
 
-func _load_clyde_file(path) -> Dictionary:
+func _load_clyde_file(path : String) -> Dictionary:
 	var data = load(path).__data__.get_string_from_utf8()
 	var test_json_conv = JSON.new()
 	var error : Error = test_json_conv.parse(data)
@@ -128,13 +132,15 @@ func _get_file_path(file_name : String) -> String:
 
 
 func _get_source_folder() -> String:
-	var cfg_folder = ProjectSettings.get_setting("dialogue/source_folder") if ProjectSettings.has_setting("dialogue/source_folder") else ""
+	var cfg_folder = (ProjectSettings.get_setting("dialogue/source_folder") 
+		if ProjectSettings.has_setting("dialogue/source_folder") else "")
 	var folder = dialogue_folder if !dialogue_folder.is_empty() else cfg_folder
 	# https://github.com/godotengine/godot/issues/56598
 	return folder if folder else "res://dialogues/"
 
 
 func _config_id_suffix_lookup_separator() -> String:
-	var lookup_separator = ProjectSettings.get_setting("dialogue/id_suffix_lookup_separator") if ProjectSettings.has_setting("dialogue/id_suffix_lookup_separator") else ""
+	var lookup_separator = (ProjectSettings.get_setting("dialogue/id_suffix_lookup_separator") 
+		if ProjectSettings.has_setting("dialogue/id_suffix_lookup_separator") else "")
 	return lookup_separator if !lookup_separator.is_empty() else "&"
 

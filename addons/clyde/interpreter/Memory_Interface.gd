@@ -19,12 +19,12 @@ var internalMemory : InternalMemory = InternalMemory.new()
 
 # Sets the id for a block in access as a key for true
 # This will be used to check for whether it has already been accessed
-func set_as_accessed(id):
+func set_as_accessed(id) -> void:
 	internalMemory.access[str(id)] = true
 
 
 # Checks whether the access dict has corrosponding id
-func was_already_accessed(id):
+func was_already_accessed(id) -> bool:
 	return internalMemory.access.has(str(id))
 
 
@@ -62,15 +62,15 @@ func get_internal_variable(id, default_value):
 
 
 # Returns memory object
-func get_all():
+func get_all() -> InternalMemory:
 	return internalMemory
 
 
 # Sets data as memory object
-func load_data(data):
+func load_data(data : InternalMemory) -> void:
 	internalMemory = data
 
 
 # Resets memory object
-func clear():
+func clear() -> void:
 	internalMemory = InternalMemory.new()

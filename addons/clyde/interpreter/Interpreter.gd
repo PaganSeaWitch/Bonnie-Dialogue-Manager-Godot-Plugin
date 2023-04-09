@@ -42,6 +42,9 @@ var config : Config = Config.new()
 
 func init(document_dict : Dictionary, interpreter_options :Dictionary = {}) -> void:
 	doc = Parser.new().to_node(document_dict) as DocumentNode
+	if(doc == null):
+		printerr("Failed to load dictionary into nodes")
+		return
 	doc.node_index = 1
 	memory = MemoryInterface.new()
 	memory.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
@@ -65,15 +68,15 @@ func get_current_node():
 
 
 func select_block(block_name : String = ""):
-	assert(!block_name.is_empty() && anchors.has(block_name),
-		"Block name was given but no such block exists!")
+	#assert(!block_name.is_empty() && anchors.has(block_name),
+	#	"Block name was given but no such block exists!")
 	if anchors.has(block_name):
 		stack.initialise_stack(anchors[block_name])
 	else:
 		stack.initialise_stack(doc)
 
 
-func get_variable(name):
+func get_variable(name : String):
 	return memory.get_variable(name)
 
 
@@ -89,16 +92,16 @@ func set_variable(name, value):
 	return memory.set_variable(name, value)
 
 
-func get_data():
+func get_data() -> MemoryInterface.InternalMemory:
 	return memory.get_all()
 
 
-func load_data(data):
-	return memory.load_data(data)
+func load_data(data : MemoryInterface.InternalMemory) -> void:
+	memory.load_data(data)
 
 
-func clear_data():
-	return memory.clear()
+func clear_data() -> void:
+	memory.clear()
 
 
 func _initialise_blocks(doc : DocumentNode) -> void:
@@ -107,13 +110,14 @@ func _initialise_blocks(doc : DocumentNode) -> void:
 		anchors[doc.blocks[i].block_name] = doc.blocks[i]
 
 
-func handle_next_node(node : ClydeNode):
+func handle_next_node(node : ClydeNode) -> ClydeNode:
 	for type in _handlers.keys():
 		
 		if is_instance_of(node, type):
 			return _handlers[type].call(node)
 	
 	printerr("Unkown node type '%s'" % node.type)
+	return null
 
 
 func _trigger_variable_changed(name, value, previous_value):

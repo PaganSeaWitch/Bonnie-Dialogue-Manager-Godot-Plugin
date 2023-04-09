@@ -41,8 +41,8 @@ syntax_token : String) -> Array[Token]:
 func handle_logic_block(lexer : Lexer) -> Array[Token]:
 	if (lexer.input[lexer.position] == '"' 
 	|| lexer.input[lexer.position] == "'"):
-		if lexer._current_quote.is_empty():
-			lexer._current_quote = lexer.input[lexer.position]
+		if lexer.current_quote.is_empty():
+			lexer.current_quote = lexer.input[lexer.position]
 		return handle_logic_string(lexer)
 	
 	# Rule : if } in logic block, end logic block
@@ -68,7 +68,7 @@ func handle_logic_block(lexer : Lexer) -> Array[Token]:
 				logic_symbol_tokens_side_operator_without_side_effects.get(
 				lexer.input.substr(lexer.position,i)))
 			return [MiscLexerFunctions.create_simple_token(lexer, 
-				token_dict["token"], token_dict["length"])]
+				token_dict["token"], token_dict["length"], token_dict["length"])]
 	
 	# Rule : if ! in logic block, consume logic not
 	
@@ -116,10 +116,10 @@ value : String, initial_column : int) -> Array[Token]:
 
 # Consume logical not
 func handle_logic_not(lexer : Lexer) -> Array[Token]:
-	var setup_dict : Dictionary = MiscLexerFunctions._internal_setup(lexer)
+	var setup_dict : Dictionary = MiscLexerFunctions.internal_setup(lexer)
 	
 	#move past !
-	MiscLexerFunctions._increase_lexer_position(lexer)
+	MiscLexerFunctions.increase_lexer_position(lexer)
 	return [Token.new(Syntax.TOKEN_NOT, lexer.line, setup_dict["initial_column"])]
 
 

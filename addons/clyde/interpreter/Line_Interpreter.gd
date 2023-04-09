@@ -20,8 +20,10 @@ func handle_content_node(content_node : ContentNode) -> DialogueNode:
 
 	var current_node : InterpreterStack.StackElement = stack.stack_head()
 	# Get all new nodes
+	
 	var node : DialogueNode = get_all_content_nodes(current_node)
-	if(node != null): return node
+	if(node != null): 
+		return node
 	stack.stack_pop()
 	return interpreter.handle_next_node(stack.stack_head().node);
 
@@ -70,6 +72,6 @@ func replace_variables(text : String) -> String:
 	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
 	for result in regex.search_all(text):
 		var value = memory.get_variable(result.get_string("variable"))
-		text = text.replace(result.get_string(), value if value else "")
+		text = text.replace(result.get_string(), str(value) if value != null else "")
 
 	return text

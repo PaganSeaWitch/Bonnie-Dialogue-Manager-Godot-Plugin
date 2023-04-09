@@ -4,9 +4,9 @@ extends RefCounted
 
 # Creates a simple token without a value
 static func create_simple_token(lexer : Lexer, token_name : String, 
-length : int = 1) -> Token:
+pos_length : int = 1, col_length : int = 0) -> Token:
 	var setupDict : Dictionary = internal_setup(lexer)
-	increase_lexer_position(lexer, length)
+	increase_lexer_position(lexer, pos_length, col_length)
 	return Token.new(token_name, lexer.line, setupDict["initial_column"])
 
 

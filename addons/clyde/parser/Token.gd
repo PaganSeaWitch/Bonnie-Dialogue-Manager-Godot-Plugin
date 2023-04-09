@@ -20,3 +20,5 @@ func _init(_name, _line, _column, _value = ""):
 	line = _line
 	column = _column
 
+static func to_JSON_object(token : Token) -> Dictionary:
+	return { "name": token.name, "value": token.value, "line": token.line, "column": token.column, }

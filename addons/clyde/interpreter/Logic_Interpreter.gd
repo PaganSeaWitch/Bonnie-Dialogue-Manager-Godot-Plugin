@@ -32,7 +32,7 @@ func _handle_assignment_operation(assignment : AssignmentNode, var_name : String
 
 func _get_node_value(node : ClydeNode):
 	match node.get_node_class():
-		"LiteralNode","NumberNode", "BooleanNode":
+		"LiteralNode","NumberNode", "BooleanNode", "StringNode":
 			return node.value
 		"VariableNode":
 			return memory.get_variable(node.name)
@@ -117,7 +117,7 @@ func check_expression(node : ExpressionNode):
 			if (a == null || b == null):
 				return null
 			return a + b
-		Syntax.TOKEN_MULT:
+		Syntax.TOKEN_POWER:
 			var a = _get_node_value(node.elements[0])
 			var b = _get_node_value(node.elements[1])
 			if (a == null || b == null):

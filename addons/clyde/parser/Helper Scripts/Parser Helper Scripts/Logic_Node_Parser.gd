@@ -46,12 +46,12 @@ func _logic_block(token_walker : TokenWalker) -> ContentNode:
 	if token_walker.peek(TokenArray.set) != null:
 		var assignments : AssignmentsNode = _assignments(token_walker)
 		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT,
-			{"action"= [assignments]})
+			{"actions"= [assignments]})
 
 	if token_walker.peek(TokenArray.trigger) != null:
 		var events : EventsNode = _events(token_walker)
 		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT,
-			{"action"= events})
+			{"actions"= [events]})
 
 	if token_walker.peek(TokenArray.when) != null:
 		token_walker.consume(TokenArray.when)
@@ -139,10 +139,10 @@ func _assignment_expression(token_walker : TokenWalker) -> AssignmentNode:
 	var assignment : ClydeNode = _assignment_expression_internal(token_walker)
 
 	if assignment is VariableNode:
-		return nodeFactory.Create_node(NodeFactory.NODE_TYPES.ASSIGNMENT, 
+		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ASSIGNMENT, 
 			{"variable" = assignment, 
 			"operation"= Syntax.TOKEN_ASSIGN, 
-			"value" = nodeFactory.Create_node(NodeFactory.NODE_TYPES.BOOLEANLITERAL,
+			"value" = nodeFactory.create_node(NodeFactory.NODE_TYPES.BOOLEAN_LITERAL,
 				{"value"= 'true'})})
 	if assignment is AssignmentNode:
 		return assignment
@@ -211,13 +211,13 @@ func _operand(token_walker : TokenWalker) -> ClydeNode:
 			return nodeFactory.create_node(NodeFactory.NODE_TYPES.VARIABLE, 
 				{"name" = token_walker.current_token.value})
 		Syntax.TOKEN_NUMBER_LITERAL:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.NUMBERLITERAL, 
+			return nodeFactory.create_node(NodeFactory.NODE_TYPES.NUMBER_LITERAL, 
 				{"value" = token_walker.current_token.value})
 		Syntax.TOKEN_STRING_LITERAL:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.STRINGLITERAL, 
+			return nodeFactory.create_node(NodeFactory.NODE_TYPES.STRING_LITERAL, 
 				{"value" =token_walker.current_token.value})
 		Syntax.TOKEN_BOOLEAN_LITERAL:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.BOOLEANLITERAL, 
+			return nodeFactory.create_node(NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, 
 				{"value" =token_walker.current_token.value})
 		Syntax.TOKEN_NULL_TOKEN:
 			return nodeFactory.create_node(NodeFactory.NODE_TYPES.NULL, {})
@@ -248,7 +248,7 @@ func line_with_action(token_walker: TokenWalker, line : ClydeNode = null) -> Con
 				{"conditions" = expression, "content" = [content]})
 
 		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT, 
-			{"action"= [expression], "content"= [content]})
+			{"actions"= [expression], "content"= [content]})
 
 	if token_walker.peek(TokenArray.lineBreak) != null:
 		token_walker.consume(TokenArray.lineBreak)
@@ -263,7 +263,7 @@ func line_with_action(token_walker: TokenWalker, line : ClydeNode = null) -> Con
 			return nodeFactory.create_node(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, 
 				{"conditions" = expression, "content" = [line_with_action(token_walker)]})
 		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT,
-			{"action"= [expression], "content"= [line_with_action(token_walker)]})
+			{"actions"= [expression], "content"= [line_with_action(token_walker)]})
 
 	token_walker.consume(TokenArray.dialogue)
 
@@ -271,4 +271,4 @@ func line_with_action(token_walker: TokenWalker, line : ClydeNode = null) -> Con
 		return nodeFactory.create_node(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, 
 			{"conditions" = expression, "content" = [DialogueNodeParser.new().dialogue_line(token_walker)]})
 	return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		{"action"= [expression], "content"= [DialogueNodeParser.new().dialogue_line(token_walker)]})
+		{"actions"= [expression], "content"= [DialogueNodeParser.new().dialogue_line(token_walker)]})
