@@ -72,21 +72,19 @@ func _setup_gui(show_gui):
 	if(opts.background_color != null and opts.background_color.is_valid_html_color()):
 		_gui.set_background_color(Color(opts.background_color))
 
-	#_tester.set_modulate(Color(1.0, 1.0, 1.0, min(1.0, float(opts.opacity) / 100)))
+	_gui.set_opacity(min(1.0, float(opts.opacity) / 100))
 	# if(opts.should_maximize):
 	# 	_tester.maximize()
-	#if(opts.compact_mode):
-	#	_tester.get_gui().compact_mode(true)
+	_gui.use_compact_mode(opts.compact_mode)
 
 
 
 func _write_results():
-	var content = _gui.get_textbox().text #_gut.logger.get_gui_bbcode()
-
+	var content = _gui.get_textbox().get_parsed_text() #_gut.logger.get_gui_bbcode()
 	var f = FileAccess.open(RESULT_FILE, FileAccess.WRITE)
 	if(f != null):
 		f.store_string(content)
-		f.close()
+		f = null # closes file
 	else:
 		push_error('Could not save bbcode, result = ', FileAccess.get_open_error())
 
