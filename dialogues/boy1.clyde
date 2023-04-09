@@ -1,0 +1,60 @@
+
+{when DanielLove == 0} -> FirstMeeting
+{when DanielLove != 0} -> HallwayEncounter
+
+
+== FirstMeeting
+Narration: WHAM! #se_wham #ve_shake #b_school
+Player: [b]Oh sorry! didn't see you there![/b]
+Daniel: Oh, its alright, its my fault. wasn't paying attention.  #enters_daniel #e_bored_daniel  #hidden
+Player: well, anyway, I'm PLAYER, nice to meet you! #enters_boy2
+Daniel: oh... my name is Daniel, i'll... #enters_boy
+Narration: he stares akwardly around. #e_embarressed_daniel 
+Daniel: I'll be going now... 
+Narration: He walks away. #exits_daniel
+
+-- Order of operations tags -> characters drawn -> dialogue show
+
+== HallwayEncounter
+( cycle
+    - -> CarryingALot
+    - -> SleepingInAnUnusedClassroom
+    - -> Options
+)
+
+
+== CarryingALot
+Narration: In between classes I see Daniel barely lifting a giant stack of papers. {set DanielLove = 0 }
+Player: Hey Daniel, do you need any help? #enters_daniel
+Daniel: Oh uh hi PLAYER, no i'm good {when DanielLove > 2} 
+-> BoyCantRememberNames{when DanielLove <= 2}
+
+
+== BoyCantRememberNames
+Daniel: oh hi um... #e_embarressed_daniel
+Daniel: .... #e_thinking_daniel
+Daniel: ....... 
+Narration: He has totally forgotten my name #thoughts 
+Daniel: I sa bel?? # #e_excited_daniel
+Player: No sorry I'm PLAYER. 
+Daniel: oh um... #e_embarressed_daniel
+Daniel: I'll be going now. #exits_daniel
+Narration: I guess I didn't make a lasting impression on him. #thoughts
+
+
+== SleepingInAnUnusedClassroom
+Narration: I was walking to my next class when I see Daniel in one of the storage classrooms 
+Narration: I enter the class and to my surprise I see he has fallen aslsep. #sc_danielSleep #se_snoring
+Narration: He looks so peaceful laying there. #thoughts
+Narration: I leave the room quitely as to not disturb him.
+
+
+== Options
+Narration: What do you want to talk about?
+  + Your love Life #affection_daniel_increase
+        Narration: die bitch
+  + Your poo life #affection_daniel_decrease
+        Narration: die bitch
+  + Your sandiwch life 
+        Narration: die bitch
+
