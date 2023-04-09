@@ -1,0 +1,94 @@
+[gd_scene load_steps=8 format=3 uid="uid://cbsibkt8wc2tv"]
+
+[ext_resource type="Script" path="res://dialogue/DialogueController.gd" id="1"]
+[ext_resource type="Script" path="res://dialogue/BackgroundController.gd" id="2"]
+[ext_resource type="Script" path="res://dialogue/StageController.gd" id="3"]
+[ext_resource type="Script" path="res://dialogue/soundEffectController.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://cj7d8vg5wwxmw" path="res://dialogue/dialogue_container.tscn" id="5_rwij0"]
+[ext_resource type="Script" path="res://dialogue/optionsController.gd" id="8"]
+
+[sub_resource type="SpriteFrames" id="1"]
+
+[node name="DialogueController" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="soundEffectPlayer" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4")
+
+[node name="Background" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(512, 299)
+scale = Vector2(15.875, 9.28125)
+sprite_frames = SubResource("1")
+script = ExtResource("2")
+
+[node name="StageController" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3")
+
+[node name="center" type="Marker2D" parent="StageController"]
+unique_name_in_owner = true
+position = Vector2(544, 283)
+
+[node name="leftSide" type="Marker2D" parent="StageController"]
+unique_name_in_owner = true
+position = Vector2(219, 288)
+
+[node name="rightSide" type="Marker2D" parent="StageController"]
+unique_name_in_owner = true
+position = Vector2(884, 282)
+
+[node name="dialogueContainer" parent="." instance=ExtResource("5_rwij0")]
+layout_mode = 1
+
+[node name="optionsContainer" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 0.2
+anchor_top = 0.091
+anchor_right = 0.8
+anchor_bottom = 0.627
+size_flags_vertical = 3
+alignment = 1
+script = ExtResource("8")
+
+[node name="option1" type="Button" parent="optionsContainer"]
+visible = false
+layout_mode = 2
+
+[node name="option2" type="Button" parent="optionsContainer"]
+visible = false
+layout_mode = 2
+text = "legit wtf "
+
+[node name="option3" type="Button" parent="optionsContainer"]
+visible = false
+layout_mode = 2
+text = "legit wtf"
+
+[node name="option4" type="Button" parent="optionsContainer"]
+visible = false
+layout_mode = 2
+text = "legit wtf"
+
+[node name="option5" type="Button" parent="optionsContainer"]
+visible = false
+layout_mode = 2
+
+[connection signal="finishedText" from="dialogueContainer" to="." method="_on_dialogue_container_finished_text"]
+[connection signal="pressed" from="optionsContainer/option1" to="optionsContainer" method="_on_option_pressed"]
+[connection signal="pressed" from="optionsContainer/option2" to="optionsContainer" method="_on_option_pressed"]
+[connection signal="pressed" from="optionsContainer/option3" to="optionsContainer" method="_on_option_pressed"]
+[connection signal="pressed" from="optionsContainer/option4" to="optionsContainer" method="_on_option_pressed"]
+[connection signal="pressed" from="optionsContainer/option5" to="optionsContainer" method="_on_option_pressed"]

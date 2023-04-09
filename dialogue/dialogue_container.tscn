@@ -1,0 +1,49 @@
+[gd_scene load_steps=2 format=3 uid="uid://cj7d8vg5wwxmw"]
+
+[ext_resource type="Script" path="res://dialogue/lineController.gd" id="1_3f5dp"]
+
+[node name="dialogueContainer" type="Control"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3f5dp")
+
+[node name="TextBox" type="Panel" parent="."]
+layout_mode = 0
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="dialogueText" type="RichTextLabel" parent="TextBox"]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 0.037
+anchor_top = 0.098
+anchor_right = 0.933
+anchor_bottom = 0.939
+bbcode_enabled = true
+
+[node name="NameBox" type="Panel" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_top = 0.64
+anchor_right = 0.238
+anchor_bottom = 0.733
+
+[node name="nameText" type="RichTextLabel" parent="NameBox"]
+unique_name_in_owner = true
+layout_mode = 0
+anchor_left = 0.037
+anchor_top = 0.098
+anchor_right = 0.933
+anchor_bottom = 0.939
+
+[node name="textTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.05
+
+[connection signal="timeout" from="textTimer" to="." method="_on_Timer_timeout"]
