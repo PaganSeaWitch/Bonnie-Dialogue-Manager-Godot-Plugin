@@ -69,7 +69,7 @@ func _actionContent(actionContent):
 		"id_suffixes" : actionContent.get("id_suffixes") if actionContent.get("id_suffixes") != null else [],
 		"mode": "once",
 		"content": content,
-		"action": [],
+		"actions": [],
 	}
 
 func _get_next_options_content(dialogue):
@@ -307,22 +307,22 @@ func test_blocks_and_diverts():
 		if(q.has("content")):
 			q.content[0].content = []
 			q.content[1].content = []
+			q.content[2].content = []
 		assert_eq_deep(q, line)
 	dialogue.choose(1)
 
 	for line in everything_option:
 		var q = Parser.new().to_JSON_object(dialogue.get_content())
 		if(q.has("content")):
-			q.content[0].content = []
-			q.content[1].content = []
+			q.content = []
 		assert_eq_deep(q, line)
 	dialogue.choose(0)
 
 	for line in universe_option:
 		var q = Parser.new().to_JSON_object(dialogue.get_content())
 		if(q.has("content")):
-			q.content[0].content = []
-
+			q.content = []
+			pass
 		assert_eq_deep(q, line)
 	dialogue.choose(0)
 
@@ -331,7 +331,7 @@ func test_blocks_and_diverts():
 		if(line_dic.keys().size() == 0):
 			assert_eq_deep(null, line)
 		else:
-			assert_eq_deep(Parser.new().to_JSON_object(dialogue.get_content()), line)
+			assert_eq_deep(line_dic, line)
 
 
 func test_variations():
@@ -449,7 +449,7 @@ func test_variables():
 	
 	j.content[0].content = []
 	j.content[1].content = []
-	j.content[0].action = []
+	j.content[0].actions = []
 	assert_eq_deep(
 		Parser.new().to_JSON_object(j),
 		_options({ "content": [_actionContent({ "name": "Life" }), _option({ "name": "The universe" })] })
@@ -601,6 +601,7 @@ func test_file_path_without_extension():
 
 	for line in lines:
 		assert_eq_deep(Parser.new().to_JSON_object(dialogue.get_content()), line)
+
 
 func test_uses_configured_dialogue_folder():
 	var dialogue = ClydeDialogue.new()

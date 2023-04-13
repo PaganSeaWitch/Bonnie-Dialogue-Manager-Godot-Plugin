@@ -16,17 +16,13 @@ func test_simple_variations():
 """)
 
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"blocks": [],
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'variations', "mode": 'sequence', "content": [
-						{ "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-						{ "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-				],},
-			],
-		},
+		"content": [
+			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
+					[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
+					[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
+			]},
 		],
 	}
 
@@ -42,17 +38,13 @@ func test_simple_variations_with_no_indentation():
 """)
 
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"blocks": [],
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'variations', "mode": 'sequence', "content": [
-						{ "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-						{ "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-				],},
-			],
-		},
+		"content": [
+			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
+					[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
+					[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
+			],},
 		],
 	}
 
@@ -71,22 +63,16 @@ func test_nested_variations():
 """)
 
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"blocks": [],
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'variations', "mode": 'sequence', "content": [
-						{ "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-						{ "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-						{ "type": 'content', "content": [
-							{ "type": 'variations', "mode": 'sequence', "content": [
-									{ "type": 'content', "content": [ { "type": 'line', "value": 'nested 1', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-							],},
-						], },
-				],},
-			],
-		},
+		"content":  [
+			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
+				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
+				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
+				[{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', 
+					"content": 
+						[[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'nested 1', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }]]}],
+			]},
 		],
 	}
 
@@ -106,17 +92,13 @@ func _mode_test(mode):
 """ % mode)
 
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"blocks": [],
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'variations', "mode": mode, "content": [
-						{ "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-						{ "type": 'content', "content": [ { "type": 'line', "value": 'no', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-				],},
-			],
-		},
+		"content":  [
+			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": mode, "content": [
+				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
+				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
+			]},
 		],
 	}
 
@@ -140,35 +122,33 @@ func test_variations_with_options():
 """)
 
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"blocks": [],
-		"content": [{
-			"type": 'content',
-			"content": [
-				{ "type": 'variations', "mode": 'sequence', "content": [
-					{ "type": 'content', "content": [
-						{ "type": 'options', "name": null, "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": [
-							{ "type": 'option', "name": 'works?', "mode": 'once', "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": {
-									"type": 'content', "content": [ { "type": 'line', "value": 'works?', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ],
-								},
-							},
-							{ "type": 'option', "name": 'yep?', "mode": 'once', "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], }, },
-						]},
-					], },
-					{ "type": 'content', "content": [ { "type": 'line', "value": 'nice', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], },
-					{ "type": 'content', "content": [
-						{ "type": 'options', "name": null, "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": [
-							{ "type": 'option', "name": 'works?', "mode": 'once', "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": {
-									"type": 'content', "content": [ { "type": 'line', "value": 'works?', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ],
-								},
-							},
-							{ "type": 'option', "name": 'yep?', "mode": 'once', "id": null, "speaker": null, "tags": null, "id_suffixes": null, "content": { "type": 'content', "content": [ { "type": 'line', "value": 'yes', "id": null, "speaker": null, "tags": null, "id_suffixes": null, }, ], }, },
-						]},
-					], },
-				],},
-			],
-		},
-		],
+		"content": [
+			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
+				[{ "type": NodeFactory.NODE_TYPES.OPTIONS, "name": "", "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
+					{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'works?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": 
+						[ 
+							{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'works?', "id": "", "speaker": "", "tags": [], "id_suffixes": []}, 
+							{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}
+						],
+					},
+					{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'yep?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
+						{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
+					}
+				]}],
+				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'nice', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
+				[{ "type": NodeFactory.NODE_TYPES.OPTIONS, "name": "", "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
+					{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'works?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
+						{"type": NodeFactory.NODE_TYPES.LINE, "value": 'works?', "id": "", "speaker": "", "tags": [], "id_suffixes": []},
+						{"type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []},
+					]},
+					{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'yep?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": 
+						[ { "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
+					},
+				]}]
+			]}
+		]
 	}
 
 	assert_eq_deep(result, expected)

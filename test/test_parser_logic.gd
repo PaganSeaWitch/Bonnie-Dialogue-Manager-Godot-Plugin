@@ -507,13 +507,13 @@ func test_conditional_indented_block():
 
 
 const assignments = [
-	[ '=', 'assign'],
-	[ '+=', 'assign_sum'],
-	[ '-=', 'assign_sub'],
-	[ '*=', 'assign_mult'],
-	[ '/=', 'assign_div'],
-	[ '%=', 'assign_mod'],
-	[ '^=', 'assign_pow'],
+	[ '=', '='],
+	[ '+=', '+='],
+	[ '-=', '-='],
+	[ '*=', '*='],
+	[ '/=', '/='],
+	[ '%=', '%='],
+	[ '^=', '^='],
 ]
 
 func test_assignments():
@@ -525,8 +525,14 @@ func _assignment_tests(token, node_name):
 	var result = parse("{ set a %s 2 } let's go" % token)
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"action": {
-			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
+			"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
@@ -535,8 +541,8 @@ func _assignment_tests(token, node_name):
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
-		},
-		"content": { "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+		}],
+		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -545,7 +551,13 @@ func test_assignment_with_expression():
 	var result = parse('{ set a -= 4 ^ 2 } let\'s go')
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"action": {
+		"speaker": "",
+		"id": "", 
+		"tags": [], 
+		"name": "",
+		"id_suffixes": [],
+		"mode": "",
+		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
@@ -554,27 +566,26 @@ func test_assignment_with_expression():
 						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
-					"operation": 'assign_sub',
+					"operation": '-=',
 					"value": {
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": 'pow',
+						"name": '^',
 						"elements": [
 							{
-								"type": 'literal',
-								"name": 'number',
+								"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 								"value": 4.0,
 							},
 							{
-								"type": 'literal',
-								"name": 'number',
+								"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 								"value": 2.0,
 							},
 						],
 					},
 				},
 			],
-		},
-		"content": { "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+		}],
+		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
+	
 	}])
 	assert_eq_deep(result, expected)
 
@@ -777,17 +788,23 @@ func test_assignment_after_line():
 	var result = parse("let's go { set a = 2 }")
 	var expected = _create_doc_payload([{
 		"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"action": {
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
 			"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
 					"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
-					"operation": 'assign',
+					"operation": '=',
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
-		},
+		}],
 		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'let\'s go', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 	}])
 	assert_eq_deep(result, expected)
@@ -832,54 +849,63 @@ func test_options_assignment():
 *= { set c = 4 } option 3
 """)
 	var expected = _create_doc_payload([{
-		"type": 'options',
+		"type": NodeFactory.NODE_TYPES.OPTIONS,
 		"name": "",
 		"speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		"content": [
 			{
-				"type": "action_content",
-				"action": {
+				"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
-					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 2.0, }, }, ],
-				},
-				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-					"content": {
-						"type": 'content',
-						"content": [
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', }, "operation": '=', "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, }, }, ],
+				}],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					"content":  [
 							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
-					},
-				},
+				}],
 			},
 			{
-				"type": "action_content",
-				"action": {
+				"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
-					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 3.0, }, }, ],
-				},
-				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-					"content": {
-						"type": 'content',
-						"content": [
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', }, "operation": '=', "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 3.0, }, }, ],
+				}],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					"content":  [
 							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
-					},
-				},
+				}],
 			},
 			{
-				"type": "action_content",
-				"action": {
+				"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
-					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'c', }, "operation": 'assign', "value": { "type": 'literal', "name": 'number', "value": 4.0, }, }, ],
-				},
-				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-					"content": {
-						"type": 'content',
-						"content": [
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'c', }, "operation": '=', "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 4.0, }, }, ],
+				}],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					"content": [
 							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
-					},
-				},
+				}],
 			},
 		],
 		}
@@ -891,18 +917,24 @@ func test_divert_with_assignment():
 	var result = parse("-> go { set a = 2 }")
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"action": {
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
-					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 2.0, },
+					"operation": '=',
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
-		},
-		"content": { "type": 'divert', "target": 'go' },
+		}],
+		"content": [{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'go' }],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -912,13 +944,13 @@ func test_standalone_assignment_with_standalone_variable():
 
 	var expected = _create_doc_payload([
 		{
-			"type": "assignments",
+			"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [
 				{
-					"type": "assignment",
+					"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "a", },
-					"operation": "assign",
-					"value": { "type": "literal", "name": "boolean", "value": true, },
+					"operation": "=",
+					"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 				},
 			],
 		},
@@ -930,14 +962,20 @@ func test_trigger_event():
 	var result = parse("{ trigger some_event } trigger")
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"action": {
-			"type": 'events',
-			"events": [{ "type": 'event', "name": 'some_event' }],
-		},
-		"content": {
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
+			"type": NodeFactory.NODE_TYPES.EVENTS,
+			"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'some_event' }],
+		}],
+		"content": [{
 			"type":  NodeFactory.NODE_TYPES.LINE,
 			"value": 'trigger', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-		},
+		}],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -946,17 +984,23 @@ func test_trigger_multiple_events_in_one_block():
 	var result = parse("{ trigger some_event, another_event } trigger")
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"action": {
-			"type": 'events',
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
+			"type": NodeFactory.NODE_TYPES.EVENTS,
 			"events": [
-				{ "type": 'event', "name": 'some_event' },
-				{ "type": 'event', "name": 'another_event' }
+				{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'some_event' },
+				{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'another_event' }
 		],
-		},
-		"content": {
+		}],
+		"content": [{
 			"type":  NodeFactory.NODE_TYPES.LINE,
 			"value": 'trigger', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-		},
+		}],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -964,9 +1008,9 @@ func test_trigger_multiple_events_in_one_block():
 func test_standalone_trigger_event():
 	var result = parse("{ trigger some_event }")
 	var expected = _create_doc_payload([{
-		"type": 'events',
+		"type": NodeFactory.NODE_TYPES.EVENTS,
 		"events": [
-			{ "type": 'event', "name": 'some_event' },
+			{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'some_event' },
 		],
 	}])
 	assert_eq_deep(result, expected)
@@ -976,14 +1020,20 @@ func test_trigger_event_after_line():
 	var result = parse("trigger { trigger some_event }")
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"action": {
-			"type": 'events',
-			"events": [{ "type": 'event', "name": 'some_event' }],
-		},
-		"content": {
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
+			"type": NodeFactory.NODE_TYPES.EVENTS,
+			"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'some_event' }],
+		}],
+		"content": [{
 			"type":  NodeFactory.NODE_TYPES.LINE,
 			"value": 'trigger', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-		},
+		}],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -995,54 +1045,60 @@ func test_options_trigger():
 *= { trigger c } option 3
 """)
 	var expected = _create_doc_payload([{
-		"type": 'options',
-		"name": null,
+		"type": NodeFactory.NODE_TYPES.OPTIONS,
+		"name": "",
 		"speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		"content": [
 			{
-				"type": "action_content",
-				"action": {
-					"type": 'events',
-					"events": [{ "type": 'event', "name": 'a' }],
-				},
-				"content": { "type": 'option', "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-					"content": {
-						"type": 'content',
-						"content": [
-							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-						],
-					},
-				},
+				"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
+					"type": NodeFactory.NODE_TYPES.EVENTS,
+					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'a' }],
+				}],
+				"content": 
+					[{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+						"content": [ { "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },],
+					}],
 			},
 			{
-				"type": "action_content",
-				"action": {
-					"type": 'events',
-					"events": [{ "type": 'event', "name": 'b' }],
-				},
-				"content": { "type": 'option', "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-					"content": {
-						"type": 'content',
-						"content": [
-							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-						],
-					},
-				},
+				"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
+					"type": NodeFactory.NODE_TYPES.EVENTS,
+					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'b' }],
+				}],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },],
+				}],
 			},
 			{
-				"type": "action_content",
-				"action": {
-					"type": 'events',
-					"events": [{ "type": 'event', "name": 'c' }],
-				},
-				"content": { "type": 'option', "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-					"content": {
-						"type": 'content',
-						"content": [
+				"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
+					"type": NodeFactory.NODE_TYPES.EVENTS,
+					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'c' }],
+				}],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					"content": [
 							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
-					},
-				},
+				}],
 			},
 		],
 		}
@@ -1055,22 +1111,28 @@ func test_multiple_logic_blocks_in_the_same_line():
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
-		"content": {
+		"content": [{
 			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-			"action": {
+			"mode": "",
+			"id": "",
+			"id_suffixes" : [],
+			"tags" : [],
+			"name" : "",
+			"speaker": "",
+			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
+					"operation": '=',
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 				}],
-			},
-			"content": {
-				"type": 'events',
-				"events": [{ "type": 'event', "name": 'event' } ],
-			},
-		},
+			}],
+			"content": [{
+				"type": NodeFactory.NODE_TYPES.EVENTS,
+				"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'event' } ],
+			}],
+		}],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -1080,29 +1142,41 @@ func test_multiple_logic_blocks_in_the_same_line_before():
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
-		"content": {
+		"content": [{
 			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-			"action": {
+			"mode": "",
+			"id": "",
+			"id_suffixes" : [],
+			"tags" : [],
+			"name" : "",
+			"speaker": "",
+			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
+					"operation": '=',
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 				}],
-			},
-			"content": {
+			}],
+			"content": [{
 				"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-				"action": {
-					"type": 'events',
-					"events": [{ "type": 'event', "name": 'event' } ],
-				},
-				"content": {
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
+					"type": NodeFactory.NODE_TYPES.EVENTS,
+					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'event' } ],
+				}],
+				"content": [{
 					"type":  NodeFactory.NODE_TYPES.LINE,
 					"value": 'hello', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-				},
-			},
-		},
+				}],
+			}],
+		}],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -1112,29 +1186,41 @@ func test_multiple_logic_blocks_in_the_same_line_after():
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
-		"content": {
+		"content": [{
 			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-			"action": {
+			"mode": "",
+			"id": "",
+			"id_suffixes" : [],
+			"tags" : [],
+			"name" : "",
+			"speaker": "",
+			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
+					"operation": '=',
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 				}],
-			},
-			"content": {
+			}],
+			"content": [{
 				"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-				"action": {
-					"type": 'events',
-					"events": [{ "type": 'event', "name": 'event' } ],
-				},
-				"content": {
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
+					"type": NodeFactory.NODE_TYPES.EVENTS,
+					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'event' } ],
+				}],
+				"content": [{
 					"type":  NodeFactory.NODE_TYPES.LINE,
 					"value": 'hello', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-				},
-			},
-		},
+				}],
+			}],
+		}],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -1144,29 +1230,41 @@ func test_multiple_logic_blocks_in_the_same_line_around():
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 		"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
-		"content": {
+		"content": [{
 			"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-			"action": {
+			"mode": "",
+			"id": "",
+			"id_suffixes" : [],
+			"tags" : [],
+			"name" : "",
+			"speaker": "",
+			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 				"assignments": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-					"operation": 'assign',
-					"value": { "type": 'literal', "name": 'number', "value": 1.0 },
+					"operation": '=',
+					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 				}],
-			},
-			"content": {
+			}],
+			"content": [{
 				"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-				"action": {
-					"type": 'events',
-					"events": [{ "type": 'event', "name": 'event' } ],
-				},
-				"content": {
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
+					"type": NodeFactory.NODE_TYPES.EVENTS,
+					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'event' } ],
+				}],
+				"content": [{
 					"type":  NodeFactory.NODE_TYPES.LINE,
 					"value": 'hello', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-				},
-			},
-		},
+				}],
+			}],
+		}],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -1175,30 +1273,42 @@ func test_multiple_logic_blocks_with_condition_after():
 	var result = parse("{set something = 1} { some_var } { trigger event } hello")
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"action": {
+		"mode": "",
+		"id": "",
+		"id_suffixes" : [],
+		"tags" : [],
+		"name" : "",
+		"speaker": "",
+		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 				"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-				"operation": 'assign',
-				"value": { "type": 'literal', "name": 'number', "value": 1.0 },
+				"operation": '=',
+				"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 			}],
-		},
-		"content": {
+		}],
+		"content": [{
 			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
-			"content": {
+			"content": [{
 				"type":  NodeFactory.NODE_TYPES.ACTION_CONTENT,
-				"action": {
-					"type": 'events',
-					"events": [{ "type": 'event', "name": 'event' } ],
-				},
-				"content": {
+				"mode": "",
+				"id": "",
+				"id_suffixes" : [],
+				"tags" : [],
+				"name" : "",
+				"speaker": "",
+				"actions": [{
+					"type": NodeFactory.NODE_TYPES.EVENTS,
+					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'event' } ],
+				}],
+				"content": [{
 					"type":  NodeFactory.NODE_TYPES.LINE,
 					"value": 'hello', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
-				},
-			},
-		},
+				}],
+			}],
+		}],
 	}])
 	assert_eq_deep(result, expected)
 
@@ -1207,8 +1317,8 @@ func test_empty_block():
 	var result = parse("{} empty")
 	var expected = _create_doc_payload([{
 		"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
-		"content": { "type":  NodeFactory.NODE_TYPES.LINE, "value": 'empty', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-		"conditions": null,
+		"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'empty', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
+		"conditions": {},
 	}])
 	assert_eq_deep(result, expected)
 

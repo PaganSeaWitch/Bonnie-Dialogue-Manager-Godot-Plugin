@@ -6,7 +6,7 @@ const SAMPLES_FOLDER = "res://test/dialogue_samples/"
 
 func parse(input):
 	var parser = Parser.new()
-	return parser.to_JSON_object(parser.parse(input))
+	return parser.to_JSON_object(parser.parse(input), true)
 
 
 func test_samples():
@@ -36,8 +36,8 @@ func test_samples():
 			FileAccess.READ)
 
 		var result = result_file.get_as_text()
-
-		expect(parse(source), JSON.parse_string(result).get_result())
+		var pased = parse(source)
+		expect(pased, JSON.parse_string(result))
 		pass_test("passed")
 
 

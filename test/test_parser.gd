@@ -6,7 +6,7 @@ func test_parse_empty_document():
 	var parser = Parser.new()
 	var result = parser.to_JSON_object(parser.parse(''));
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"content": [],
 		"blocks": []
 	};
@@ -17,7 +17,7 @@ func test_parse_document_with_multiple_line_breaks():
 	var parser = Parser.new()
 	var result = parser.to_JSON_object(parser.parse('\n\n\n\n\n\n\n\n\n\n\n\n\n\n'))
 	var expected = {
-		"type": 'document',
+		"type": NodeFactory.NODE_TYPES.DOCUMENT,
 		"content": [],
 		"blocks": []
 	};

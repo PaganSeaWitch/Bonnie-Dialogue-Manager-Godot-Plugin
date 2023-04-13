@@ -1,1 +1,161 @@
-{"type":"document","content":[],"blocks":[{"type":"block","name":"initial_dialog","content":{"type":"content","content":[{"type":"line","value":"what do you want to talk about?","speaker":"npc"},{"type":"options","content":[{"type":"option","name":"Life","mode":"once","content":{"type":"content","content":[{"type":"divert","target":"about_life"},{"type":"divert","target":"<parent>"}]}},{"type":"option","name":"The universe","mode":"once","content":{"type":"content","content":[{"type":"divert","target":"about_universe"},{"type":"divert","target":"<parent>"}]}},{"type":"option","name":"Everything else...","mode":"once","content":{"type":"content","content":[{"type":"divert","target":"about_everything_else"},{"type":"divert","target":"<parent>"}]}},{"type":"option","name":"Goodbye!","mode":"once","content":{"type":"content","content":[{"type":"divert","target":"goodbye"},{"type":"divert","target":"<parent>"}]}}]},{"type":"divert","target":"<end>"}]}},{"type":"block","name":"about_life","content":{"type":"content","content":[{"type":"line","value":"I want to talk about life!","speaker":"player"},{"type":"line","value":"Well! That's too complicated...","speaker":"npc"},{"type":"divert","target":"<parent>"}]}},{"type":"block","name":"about_universe","content":{"type":"content","content":[{"type":"line","value":"I want to talk about the universe!","speaker":"player"},{"type":"line","value":"That's too complex!","speaker":"npc"},{"type":"divert","target":"<parent>"}]}},{"type":"block","name":"about_everything_else","content":{"type":"content","content":[{"type":"line","value":"What about everything else?","speaker":"player"},{"type":"line","value":"I don't have time for this...","speaker":"npc"},{"type":"divert","target":"<parent>"}]}},{"type":"block","name":"goodbye","content":{"type":"content","content":[{"type":"line","value":"See you next time!","speaker":"player"},{"type":"divert","target":"<parent>"}]}}]}
+{
+	"type": "Document",
+	"content": [],
+	"blocks": [
+		{
+			"type": "Block",
+			"block_name": "initial_dialog",
+			"content": [
+				{
+					"type": "Line",
+					"value": "what do you want to talk about?",
+					"speaker": "npc"
+				},
+				{
+					"type": "Options",
+					"content": [
+						{
+							"type": "Option",
+							"name": "Life",
+							"mode": "once",
+							"content": [
+								{
+									"type": "Divert",
+									"target": "about_life"
+								},
+								{
+									"type": "Divert",
+									"target": "<parent>"
+								}
+							]
+						},
+						{
+							"type": "Option",
+							"name": "The universe",
+							"mode": "once",
+							"content": [
+								{
+									"type": "Divert",
+									"target": "about_universe"
+								},
+								{
+									"type": "Divert",
+									"target": "<parent>"
+								}
+							]
+						},
+						{
+							"type": "Option",
+							"name": "Everything else...",
+							"mode": "once",
+							"content": [
+								{
+									"type": "Divert",
+									"target": "about_everything_else"
+								},
+								{
+									"type": "Divert",
+									"target": "<parent>"
+								}
+							]
+						},
+						{
+							"type": "Option",
+							"name": "Goodbye!",
+							"mode": "once",
+							"content": [
+								{
+									"type": "Divert",
+									"target": "goodbye"
+								},
+								{
+									"type": "Divert",
+									"target": "<parent>"
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "Divert",
+					"target": "<end>"
+				}
+			]
+		},
+		{
+			"type": "Block",
+			"block_name": "about_life",
+			"content": [
+				{
+					"type": "Line",
+					"value": "I want to talk about life!",
+					"speaker": "player"
+				},
+				{
+					"type": "Line",
+					"value": "Well! That's too complicated...",
+					"speaker": "npc"
+				},
+				{
+					"type": "Divert",
+					"target": "<parent>"
+				}
+			]
+		},
+		{
+			"type": "Block",
+			"block_name": "about_universe",
+			"content": [
+				{
+					"type": "Line",
+					"value": "I want to talk about the universe!",
+					"speaker": "player"
+				},
+				{
+					"type": "Line",
+					"value": "That's too complex!",
+					"speaker": "npc"
+				},
+				{
+					"type": "Divert",
+					"target": "<parent>"
+				}
+			]
+		},
+		{
+			"type": "Block",
+			"block_name": "about_everything_else",
+			"content": [
+				{
+					"type": "Line",
+					"value": "What about everything else?",
+					"speaker": "player"
+				},
+				{
+					"type": "Line",
+					"value": "I don't have time for this...",
+					"speaker": "npc"
+				},
+				{
+					"type": "Divert",
+					"target": "<parent>"
+				}
+			]
+		},
+		{
+			"type": "Block",
+			"block_name": "goodbye",
+			"content": [
+				{
+					"type": "Line",
+					"value": "See you next time!",
+					"speaker": "player"
+				},
+				{
+					"type": "Divert",
+					"target": "<parent>"
+				}
+			]
+		}
+	]
+}

@@ -1,1 +1,114 @@
-{"type":"document","content":[{"type":"content","content":[{"type":"variations","mode":"sequence","content":[{"type":"content","content":[{"type":"line","value":"Hello"}]},{"type":"content","content":[{"type":"line","value":"Hi"}]},{"type":"content","content":[{"type":"line","value":"Hey"}]}]},{"type":"variations","mode":"shuffle sequence","content":[{"type":"content","content":[{"type":"line","value":"Hello"}]},{"type":"content","content":[{"type":"line","value":"Hi"}]},{"type":"content","content":[{"type":"line","value":"Hey"}]}]},{"type":"variations","mode":"once","content":[{"type":"content","content":[{"type":"line","value":"nested example"}]},{"type":"content","content":[{"type":"variations","mode":"sequence","content":[{"type":"content","content":[{"type":"line","value":"here I am"}]}]}]}]},{"type":"variations","mode":"shuffle cycle","content":[{"type":"content","content":[{"type":"line","value":"multiline example do you think it works?"}]},{"type":"content","content":[{"type":"line","value":"yep"}]}]},{"type":"variations","mode":"sequence","content":[{"type":"content","content":[{"type":"divert","target":"one"}]},{"type":"content","content":[{"type":"divert","target":"two"}]}]}]}],"blocks":[]}
+{
+    "type": "Document",
+    "content": [
+        {
+            "type": "Variations",
+            "mode": "sequence",
+            "content": [
+                [
+                    {
+                        "type": "Line",
+                        "value": "Hello"
+                    }
+                ],
+                [
+                    {
+                        "type": "Line",
+                        "value": "Hi"
+                    }
+                ],
+                [
+                    {
+                        "type": "Line",
+                        "value": "Hey"
+                    }
+                ]
+            ]
+        },
+        {
+            "type": "Variations",
+            "mode": "shuffle sequence",
+            "content": [
+                [
+                    {
+                        "type": "Line",
+                        "value": "Hello"
+                    }
+                ],
+                [
+                    {
+                        "type": "Line",
+                        "value": "Hi"
+                    }
+                ],
+                [
+                    {
+                        "type": "Line",
+                        "value": "Hey"
+                    }
+                ]
+            ]
+        },
+        {
+            "type": "Variations",
+            "mode": "once",
+            "content": [
+                [
+                    {
+                        "type": "Line",
+                        "value": "nested example"
+                    }
+                ],
+                [
+                    {
+                        "type": "Variations",
+                        "mode": "sequence",
+                        "content": [
+                            [{
+                                "type": "Line",
+                                "value": "here I am"
+                            }]
+                        ]
+                    }
+                ]
+            ]
+        },
+        {
+            "type": "Variations",
+            "mode": "shuffle cycle",
+            "content": [
+                [
+                    {
+                        "type": "Line",
+                        "value": "multiline example do you think it works?"
+                    }
+                ],
+                [
+                    {
+                        "type": "Line",
+                        "value": "yep"
+                    }
+                ]
+            ]
+        },
+        {
+            "type": "Variations",
+            "mode": "sequence",
+            "content": [
+                [
+                    {
+                        "type": "Divert",
+                        "target": "one"
+                    }
+                ],
+                [
+                    {
+                        "type": "Divert",
+                        "target": "two"
+                    }
+                ]
+            ]
+        }
+    ],
+    "blocks": []
+}
