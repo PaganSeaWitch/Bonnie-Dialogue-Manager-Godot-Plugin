@@ -93,14 +93,19 @@ func create_node_tree(json_dictionary : Dictionary) -> ClydeNode:
 				
 				TYPE_ARRAY:
 					var array : Array = []
-					if(!current_val.is_empty() 
-					&& typeof(current_val[0]) == TYPE_DICTIONARY):
-						for dic in current_val:
-							array.append(create_node_tree(dic))
+					if(!current_val.is_empty()):
+						for val in current_val:
+							if(val is Dictionary):
+								array.append(create_node_tree(val))
+							elif(val is Array):
+								var inner_array = []
+								for second_val in val:
+									inner_array.append(create_node_tree(second_val))
+								array.append(inner_array)
+							else:
+								array.append(val)
 						node[property.name] = array
-					else:
-						node[property.name] = current_val
-				
+
 				TYPE_DICTIONARY:
 					if(current_val.size() != 0):
 						node[property.name] = create_node_tree(current_val)

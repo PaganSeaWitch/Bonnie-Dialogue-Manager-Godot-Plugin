@@ -157,11 +157,11 @@ func variations(tokenWalker : TokenWalker) -> VariationsNode:
 			starts_next_line = true
 
 
-		variations.content.append(NodeFactory.new().create_node(NodeFactory.NODE_TYPES.CONTENT,
-			{"content" = lines(tokenWalker)}))
-			
+		variations.content.append(lines(tokenWalker))
+
+		
 		if starts_next_line:
-			var lastVariation : Array[ClydeNode] = variations.content[variations.content.size() - 1].content
+			var lastVariation : Array = variations.content[variations.content.size() - 1]
 			var lastContent : ClydeNode= lastVariation[lastVariation.size() - 1]
 			if !(lastContent is OptionsNode):
 				tokenWalker.consume(TokenArray.dedent)

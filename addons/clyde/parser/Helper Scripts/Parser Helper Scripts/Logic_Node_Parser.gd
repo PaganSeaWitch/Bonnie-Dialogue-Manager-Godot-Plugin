@@ -22,8 +22,8 @@ func _logic_element(token_walker : TokenWalker) -> ClydeNode:
 
 
 func nested_logic_block(token_walker : TokenWalker) -> Dictionary:
-	var root : ContentNode
-	var wrapper : ContentNode
+	var root : ClydeNode
+	var wrapper : ClydeNode
 	while token_walker.current_token.name == Syntax.TOKEN_BRACE_OPEN:
 		if root == null:
 			root = _logic_block(token_walker)

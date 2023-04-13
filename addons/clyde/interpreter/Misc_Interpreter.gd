@@ -21,7 +21,7 @@ func handle_action_content_node(action_node : ActionContentNode):
 
 
 func handle_action(action_node : ActionContentNode):
-	for action in action_node.action:
+	for action in action_node.actions:
 		if action is EventsNode:
 			for event in action.events:
 				interpreter.emit_signal("event_triggered", event.name)

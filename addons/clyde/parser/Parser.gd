@@ -46,7 +46,13 @@ func to_JSON_object(node : ClydeNode, to_print : bool = false) -> Dictionary:
 				var array : Array = []
 				if(name != "tags" && name != "id_suffixes"):
 					for val in node[name]:
-						array.append(to_JSON_object(val,to_print))
+						if(val is ClydeNode):
+							array.append(to_JSON_object(val,to_print))
+						if(val is Array):
+							var inner_array = []
+							for second_val in val:
+								inner_array.append((to_JSON_object(second_val,to_print)))
+							array.append(inner_array)
 					json_dictionary[name] = array
 				else:
 					json_dictionary[name] = node[name]
@@ -82,10 +88,16 @@ func _validate_json_object(json_dictionary : Dictionary) -> bool:
 	for value in json_dictionary.values():
 		match(typeof(value)):
 			TYPE_ARRAY:
-				if(!value.is_empty() && typeof(value[0]) == TYPE_DICTIONARY):
-					for dic in value:
-						is_not_broken = is_not_broken && _validate_json_object(dic)
-
+				if(!value.is_empty()):
+					
+					for val in value:
+						if(val is Dictionary):
+							is_not_broken = is_not_broken && _validate_json_object(val)
+						
+						if(val is Array):
+							var inner_array = []
+							for second_val in val:
+								is_not_broken = is_not_broken && _validate_json_object(second_val)
 			TYPE_DICTIONARY:
 				if(value.size() != 0):
 					is_not_broken = is_not_broken && _validate_json_object(value)

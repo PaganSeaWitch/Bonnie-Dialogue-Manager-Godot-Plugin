@@ -137,7 +137,7 @@ func _option(token_walker : TokenWalker) -> ClydeNode:
 	var type : String = SyntaxDictionaries.option_types[token_walker.current_token.name]
 	var acceptable_next : Array[String]= TokenArray.options_acceptable_next
 	var lines : Array= []
-	var main_item : LineNode = LineNode.new()
+	var main_item : LineNode
 	var include_label_as_content : bool = false
 	var root : ClydeNode
 	var wrapper : ClydeNode
@@ -181,7 +181,7 @@ func _option(token_walker : TokenWalker) -> ClydeNode:
 			token_walker.consume(TokenArray.indent)
 
 		lines.append_array(MiscNodeParser.new().lines(token_walker))
-		if !main_item:
+		if main_item == null:
 			main_item = lines[0]
 
 		token_walker.consume(TokenArray.end)

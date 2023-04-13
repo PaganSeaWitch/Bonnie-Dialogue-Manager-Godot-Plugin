@@ -19,19 +19,23 @@ func handle_variations_node(variations : VariationsNode, attempt : int = 0):
 	if (variations.node_index == ClydeInterpreter.DEFAULT_INDEX):
 		variations.node_index = stack.generate_index()
 		for node_index in range(variations.content.size()):
-			var node : ClydeNode = variations.content[node_index]
-			node.node_index = stack.generate_index() * 100 + node_index
+			var node_array : Array = variations.content[node_index]
+			for node in node_array:
+				node.node_index = stack.generate_index() * 100 + node_index
 
 	var next_index : int = _handle_variation_mode(variations)
 	if next_index == -1 || attempt > variations.content.size():
 		return interpreter.handle_next_node(stack.stack_head().node)
 
-	if (variations.content[next_index].content.size() == 1 
-	&& is_instance_of(variations.content[next_index].content[0], ConditionalContentNode)):
-		if !interpreter.logic_interpreter.check_condition(variations.content[next_index].content[0].conditions):
+	var next_array = variations.content[next_index]
+	
+	if (next_array.size() == 1 
+	&& is_instance_of(next_array[0], ConditionalContentNode)):
+		if !interpreter.logic_interpreter.check_condition(next_array[0].conditions):
 			return handle_variations_node(variations, attempt + 1)
-
-	return interpreter.handle_next_node(variations.content[next_index]);
+	var content_node = ContentNode.new()
+	content_node.content = next_array
+	return interpreter.handle_next_node(content_node);
 
 
 func _handle_variation_mode(variations : VariationsNode):
@@ -76,9 +80,10 @@ func _handle_shuffle_variation(variations : VariationsNode, mode : String = 'cyc
 	var LAST_VISITED_KEY : String = "%s_last_index" % variations.node_index;
 	var visited_items : Array = memory.get_internal_variable(SHUFFLE_VISITED_KEY, []);
 	var remaining_options : Array = []
-	for o in variations.content:
-		if !visited_items.has(o.node_index):
-			remaining_options.push_back(o)
+	for node_array in variations.content:
+		for node in node_array:
+			if !visited_items.has(node.node_index):
+				remaining_options.push_back(node_array)
 
 	if remaining_options.size() == 0:
 		if mode == 'once':
@@ -93,7 +98,7 @@ func _handle_shuffle_variation(variations : VariationsNode, mode : String = 'cyc
 	var random = randi() % remaining_options.size()
 	var node_index = variations.content.find(remaining_options[random]);
 
-	visited_items.push_back(remaining_options[random].node_index);
+	visited_items.push_back(remaining_options[random][0].node_index);
 
 	memory.set_internal_variable(LAST_VISITED_KEY, node_index);
 	memory.set_internal_variable(SHUFFLE_VISITED_KEY, visited_items);
