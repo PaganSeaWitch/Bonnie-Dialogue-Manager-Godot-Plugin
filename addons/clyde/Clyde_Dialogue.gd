@@ -42,18 +42,18 @@ func get_content() -> ClydeNode:
 
 
 # Choose one of the available options.
-func choose(option_index) -> ClydeDialogue:
+func choose(option_index : int) -> ClydeDialogue:
 	return _interpreter.choose(option_index)
 
 
 # Set variable to be used in the dialogue
-func set_variable(name, value):
+func set_variable(name : String, value):
 	_interpreter.set_variable(name, value)
 
 
 # Get current value of a variable inside the dialogue.
 # name: variable name
-func get_variable(name):
+func get_variable(name : String):
 	return _interpreter.get_variable(name)
 
 
@@ -68,7 +68,7 @@ func get_data() -> MemoryInterface.InternalMemory:
 
 
 # Load internal data
-func load_data(data) -> void:
+func load_data(data : MemoryInterface.InternalMemory) -> void:
 	_interpreter.load_data(data)
 
 
