@@ -19,46 +19,30 @@ signal event_triggered(event_name)
 #            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
 # block: block name to run. This allows keeping
 #        multiple dialogues in the same file.
-func load_dialogue(file_name, block = null)
+func load_dialogue(file_name : String, block  : String= "") -> void:
 
 
 # Start or restart dialogue. Variables are not reset.
-func start(block_name = null)
+func start(block_name : String = ""):
 
 
 # Get next dialogue content.
 # The content may be a line, options or null.
 # If null, it means the dialogue reached an end.
-func get_content():
+func get_content() -> ClydeNode:
 
 
 # Choose one of the available options.
-# option_index: index starting in 0.
-func choose(option_index)
+func choose(option_index : int) -> ClydeDialogue:
 
 
 # Set variable to be used in the dialogue
-# name: variable name
-# value: variable value
-func set_variable(name, value)
+func set_variable(name : String, value):
 
 
 # Get current value of a variable inside the dialogue.
 # name: variable name
-func get_variable(name)
-
-
-# Return all variables and internal variables. Useful for persisting the dialogue's internal
-# data, such as options already choosen and random variations states.
-func get_data()
-
-
-# Load internal data
-func load_data(data)
-
-
-# Clear all internal data
-func clear_data()
+func get_variable(name : String):
 
 ```
 
@@ -108,40 +92,50 @@ Restarting a dialogue won't reset the variables already set.
 
 You should use `dialogue.get_content()` to get the next available content.
 
-This method may return one of the following values:
+This method may return one of the following values that are child classes of `DialogueNode`:
 
 #### Line
 
-A dialogue line (`Dictionary`).
+A dialogue line (`LineNode`).
 
 ```gdscript
 {
-    "type": "line",
-    "text": "Ahoy!",
-    "speaker": "Captain", # optional
-    "id": "123", # optional
-    "tags": ["happy"] # optional
+class_name LineNode
+    var value : String      # The value of the line
+    var id : String         # The ID of the  line
+    var speaker : String    # The speaker of the  line
+    
+    var tags : Array        # The tags of the line
+    var id_suffixes : Array # The id_suffixes of the line 
 }
 ```
 
 #### Options
 
-Options list with options/topics the player may choose from (`Dictionary`).
+Options list with options/topics the player may choose from (`OptionsNode`).
 
 ```gdscript
-{
-    "type": "options",
-    "name": "What do you want to talk about?", # optional
-    "speaker": "NPC", # optional
-    "options": [
-      {
-        "label": "option display text",
-        "speaker": "NPC", # optional
-        "id": "abc", # optional
-        "tags": [ "some_tag" ], # optional
-      },
-      ...
-    ]
+    class_name OptionsNode
+
+    var id : String                         # The ID of the  Options
+    var speaker : String                    # The speaker of the  Options
+    
+    var tags : Array                        # The tags of the Options
+    var id_suffixes : Array                 # The id_suffixes of the Options 
+    var content : Array[OptionNode] = []    # The option set that the options holds
+    var name : String = ""                  # the name of the options
+    
+    
+    class_name OptionNode
+    
+    var id : String                         # The ID of the  Option
+    var speaker : String                    # The speaker of the  Option
+    
+    var tags : Array                        # The tags of the Option
+    var id_suffixes : Array                 # The id_suffixes of the Options
+    var content : Array[ClydeNode] = []     # The nodes that will be parsed if this option is chosen
+    var name : String = ""                  # the name of the option
+    var mode : String = ""                  # the mode of the option: 'Once, sticky, fallback'
 }
 ```
 
@@ -191,6 +185,14 @@ If you create a new `ClydeDialogue` without doing it so, the interpreter will sh
 
 You can use `dialogue.get_data()` to retrieve all internal data, and then later use `dialogue.load_data(data)` to re-populate the internal memory.
 
+Data is the `MemoryInterface.InternalMemory` class.
+
+``` gdscript
+    class InternalMemory:
+        var access    : Dictionary = {}
+        var	variables : Dictionary =  {}
+        var	internal  : Dictionary = {}
+```
 
 Here is a simplified implementation:
 
