@@ -99,7 +99,6 @@ This method may return one of the following values that are child classes of `Di
 A dialogue line (`LineNode`).
 
 ```gdscript
-{
 class_name LineNode
     var value : String      # The value of the line
     var id : String         # The ID of the  line
@@ -107,7 +106,6 @@ class_name LineNode
     
     var tags : Array        # The tags of the line
     var id_suffixes : Array # The id_suffixes of the line 
-}
 ```
 
 #### Options
@@ -136,7 +134,6 @@ Options list with options/topics the player may choose from (`OptionsNode`).
     var content : Array[ClydeNode] = []     # The nodes that will be parsed if this option is chosen
     var name : String = ""                  # the name of the option
     var mode : String = ""                  # the mode of the option: 'Once, sticky, fallback'
-}
 ```
 
 #### Null
