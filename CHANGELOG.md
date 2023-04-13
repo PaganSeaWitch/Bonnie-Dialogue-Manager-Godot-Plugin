@@ -107,8 +107,8 @@ TEXT: This is a #quoted text
 ### Changed
 
 - support single quotes for logic block string literals and escaping dialogues.
-    - `{ set string_literal = 'valid string' }`
-    - `'This is a valid escaped dialogue line # $ '`
+	- `{ set string_literal = 'valid string' }`
+	- `'This is a valid escaped dialogue line # $ '`
 
 ### Thanks
 

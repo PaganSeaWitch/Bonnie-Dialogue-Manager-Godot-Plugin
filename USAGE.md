@@ -19,30 +19,46 @@ signal event_triggered(event_name)
 #            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
 # block: block name to run. This allows keeping
 #        multiple dialogues in the same file.
-func load_dialogue(file_name : String, block  : String= "") -> void:
+func load_dialogue(file_name, block = null)
 
 
 # Start or restart dialogue. Variables are not reset.
-func start(block_name : String = ""):
+func start(block_name = null)
 
 
 # Get next dialogue content.
 # The content may be a line, options or null.
 # If null, it means the dialogue reached an end.
-func get_content() -> ClydeNode:
+func get_content():
 
 
 # Choose one of the available options.
-func choose(option_index : int) -> ClydeDialogue:
+# option_index: index starting in 0.
+func choose(option_index)
 
 
 # Set variable to be used in the dialogue
-func set_variable(name : String, value):
+# name: variable name
+# value: variable value
+func set_variable(name, value)
 
 
 # Get current value of a variable inside the dialogue.
 # name: variable name
-func get_variable(name : String):
+func get_variable(name)
+
+
+# Return all variables and internal variables. Useful for persisting the dialogue's internal
+# data, such as options already choosen and random variations states.
+func get_data()
+
+
+# Load internal data
+func load_data(data)
+
+
+# Clear all internal data
+func clear_data()
 
 ```
 
@@ -92,50 +108,40 @@ Restarting a dialogue won't reset the variables already set.
 
 You should use `dialogue.get_content()` to get the next available content.
 
-This method may return one of the following values that are child classes of `DialogueNode`:
+This method may return one of the following values:
 
 #### Line
 
-A dialogue line (`LineNode`).
+A dialogue line (`Dictionary`).
 
 ```gdscript
 {
-class_name LineNode
-    var value : String      # The value of the line
-    var id : String         # The ID of the  line
-    var speaker : String    # The speaker of the  line
-    
-    var tags : Array        # The tags of the line
-    var id_suffixes : Array # The id_suffixes of the line 
+	"type": "line",
+	"text": "Ahoy!",
+	"speaker": "Captain", # optional
+	"id": "123", # optional
+	"tags": ["happy"] # optional
 }
 ```
 
 #### Options
 
-Options list with options/topics the player may choose from (`OptionsNode`).
+Options list with options/topics the player may choose from (`Dictionary`).
 
 ```gdscript
-    class_name OptionsNode
-
-    var id : String                         # The ID of the  Options
-    var speaker : String                    # The speaker of the  Options
-    
-    var tags : Array                        # The tags of the Options
-    var id_suffixes : Array                 # The id_suffixes of the Options 
-    var content : Array[OptionNode] = []    # The option set that the options holds
-    var name : String = ""                  # the name of the options
-    
-    
-    class_name OptionNode
-    
-    var id : String                         # The ID of the  Option
-    var speaker : String                    # The speaker of the  Option
-    
-    var tags : Array                        # The tags of the Option
-    var id_suffixes : Array                 # The id_suffixes of the Options
-    var content : Array[ClydeNode] = []     # The nodes that will be parsed if this option is chosen
-    var name : String = ""                  # the name of the option
-    var mode : String = ""                  # the mode of the option: 'Once, sticky, fallback'
+{
+	"type": "options",
+	"name": "What do you want to talk about?", # optional
+	"speaker": "NPC", # optional
+	"options": [
+	  {
+		"label": "option display text",
+		"speaker": "NPC", # optional
+		"id": "abc", # optional
+		"tags": [ "some_tag" ], # optional
+	  },
+	  ...
+	]
 }
 ```
 
@@ -155,8 +161,8 @@ You can listen to variable changes by observing the `variable_changed` signal.
 
 
 func _on_variable_changed(variable_name, value, previous_vale):
-    if variable_name == 'hp' and value < previous_value:
-        print('damage taken')
+	if variable_name == 'hp' and value < previous_value:
+		print('damage taken')
 
 ```
 
@@ -171,9 +177,9 @@ You can listen to events triggered by the dialogue by observing the `event_trigg
 
 
 func _on_event_triggered(event_name):
-    if event_name == 'self_destruction_activated':
-        _shake_screen()
-        _play_explosion()
+	if event_name == 'self_destruction_activated':
+		_shake_screen()
+		_play_explosion()
 
 ```
 
@@ -185,14 +191,6 @@ If you create a new `ClydeDialogue` without doing it so, the interpreter will sh
 
 You can use `dialogue.get_data()` to retrieve all internal data, and then later use `dialogue.load_data(data)` to re-populate the internal memory.
 
-Data is the `MemoryInterface.InternalMemory` class.
-
-``` gdscript
-    class InternalMemory:
-        var access    : Dictionary = {}
-        var	variables : Dictionary =  {}
-        var	internal  : Dictionary = {}
-```
 
 Here is a simplified implementation:
 
@@ -201,22 +199,22 @@ var _dialogue_filename = 'first_dialogue'
 var _dialogue
 
 func _ready():
-    _dialogue = ClydeDialogue.new()
-    _dialogue.load_dialogue(_dialogue_filename)
-    _dialogue.load_data(persistence.dialogues[_dialogue_filename]) # load data
+	_dialogue = ClydeDialogue.new()
+	_dialogue.load_dialogue(_dialogue_filename)
+	_dialogue.load_data(persistence.dialogues[_dialogue_filename]) # load data
 
 
 func _get_next_content():
-    var content = _dialogue.get_content()
+	var content = _dialogue.get_content()
 
-    # ...
+	# ...
 
-    if content == null:
-        _dialogue_ended()
+	if content == null:
+		_dialogue_ended()
 
 
 func _dialogue_ended():
-    persistence.dialogues[_dialogue_filename] = _dialogue.get_data() # retrieve data for persistence
+	persistence.dialogues[_dialogue_filename] = _dialogue.get_data() # retrieve data for persistence
 
 ```
 
@@ -229,12 +227,12 @@ Note that the data is saved in in the dictionary under the dialogue filename key
 You should not change this object manually. If you want't to change a variable used in the previous execution, you should use `dialogue.set_variable(name, value)`.
 
 ``` gdscript
-    # ...
-    _dialogue = ClydeDialogue.new()
-    _dialogue.load_dialogue(_dialogue_filename)
-    _dialogue.load_data(persistence.dialogues[_dialogue_filename])
+	# ...
+	_dialogue = ClydeDialogue.new()
+	_dialogue.load_dialogue(_dialogue_filename)
+	_dialogue.load_data(persistence.dialogues[_dialogue_filename])
 
-    _dialogue.set_variable("health", character.health)
+	_dialogue.set_variable("health", character.health)
 ```
 
 
