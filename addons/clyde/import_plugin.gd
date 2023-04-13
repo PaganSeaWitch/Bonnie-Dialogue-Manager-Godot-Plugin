@@ -7,7 +7,7 @@ func _get_importer_name():
 
 
 func _get_visible_name():
-	return "Clyde Dialogue Importer"
+	return "Super Clyde Dialogue Importer"
 
 
 func _get_recognized_extensions():
