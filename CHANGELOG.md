@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 4.0.0 (2022-04-12)
+
+- Implemented the entire project in Classes
+- Added ability to randomly select blocks
+
+
 ## 3.2.0 (2022-08-25)
 
 ### Added
