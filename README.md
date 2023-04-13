@@ -1,4 +1,4 @@
-# Clyde Dialogue Plugin for Godot
+# Super Clyde Dialogue Plugin for Godot
 
 <p align="center"><img src="icon.png" alt=/></p>
 
