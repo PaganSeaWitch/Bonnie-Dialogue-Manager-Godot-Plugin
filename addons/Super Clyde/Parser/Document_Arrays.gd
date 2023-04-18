@@ -11,7 +11,7 @@ const expected  : Array[String] = [
 	Syntax.TOKEN_DIVERT,
 	Syntax.TOKEN_DIVERT_PARENT,
 	Syntax.TOKEN_BRACKET_OPEN,
-	Syntax.TOKEN_BRACE_OPEN,
+	Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,
 	Syntax.TOKEN_LINE_BREAK,
 	Syntax.TOKEN_BLOCK
 ]
@@ -25,14 +25,14 @@ const acceptable_next : Array[String] = [
 	Syntax.TOKEN_DIVERT,
 	Syntax.TOKEN_DIVERT_PARENT,
 	Syntax.TOKEN_BRACKET_OPEN,
-	Syntax.TOKEN_BRACE_OPEN,
+	Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,
 	Syntax.TOKEN_LINE_BREAK,
 ]
 
 
 const options_acceptable_next  : Array[String] = [Syntax.TOKEN_SPEAKER, 
 	Syntax.TOKEN_TEXT, Syntax.TOKEN_INDENT, 
-	Syntax.TOKEN_ASSIGN, Syntax.TOKEN_BRACE_OPEN]
+	Syntax.TOKEN_ASSIGN, Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN]
 
 
 const operators_and_bracket_close  : Array[String] = [
@@ -84,7 +84,7 @@ const operator_mathamatic_symbols : Array[String] =[
 
 const block  : Array[String] = [Syntax.TOKEN_BLOCK]
 
-const brace_open  : Array[String] = [Syntax.TOKEN_BRACE_OPEN]
+const brace_open  : Array[String] = [Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN]
 
 const bracket_open : Array[String]  = [Syntax.TOKEN_BRACKET_OPEN]
 
@@ -132,7 +132,7 @@ const trigger : Array[String]  = [Syntax.TOKEN_KEYWORD_TRIGGER]
 
 const comma : Array[String]  = [Syntax.TOKEN_COMMA]
 
-const brace_close : Array[String]  = [Syntax.TOKEN_BRACE_CLOSE]
+const brace_close : Array[String]  = [Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE]
 
 const identifier : Array[String]  = [Syntax.TOKEN_IDENTIFIER]
 

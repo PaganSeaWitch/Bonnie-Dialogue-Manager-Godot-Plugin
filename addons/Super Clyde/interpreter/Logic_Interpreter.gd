@@ -1,4 +1,4 @@
-class_name ClydeLogicInterpreter
+class_name LogicInterpreter
 extends MiscInterpreter
 
 
@@ -8,6 +8,46 @@ func handle_assignment(assignment : AssignmentNode):
 	var value = _get_node_value(source);
 
 	return _handle_assignment_operation(assignment, variable.name, value)
+
+
+func handle_action_content_node(action_node : ActionContentNode):
+	handle_action(action_node)
+	var content = ContentNode.new()
+	content.content = action_node.content
+	return interpreter.line_interpreter.handle_content_node(content)
+
+
+func handle_conditional_content_node(conditional_node : ConditionalContentNode, 
+fallback_node : ClydeNode = stack.stack_head().node):
+	if check_condition(conditional_node.conditions):
+		var content = ContentNode.new()
+		content.content = conditional_node.content
+		return interpreter.line_interpreter.handle_content_node(content)
+	return interpreter.handle_next_node(fallback_node)
+
+
+func handle_assignments_node(assignments_node : AssignmentsNode):
+	for assignment in assignments_node.assignments:
+		handle_assignment(assignment)
+	return interpreter.handle_next_node(stack.stack_head().node);
+
+
+func handle_events_node(events : EventsNode):
+	for event in events.events:
+		interpreter.emit_signal("event_triggered", event.name)
+	return interpreter.handle_next_node(stack.stack_head().node);
+
+
+func handle_action(action_node : ActionContentNode):
+	for action in action_node.actions:
+		if action is EventsNode:
+			for event in action.events:
+				interpreter.emit_signal("event_triggered", event.name)
+		if action is AssignmentNode:
+			handle_assignment(action)
+		if action is AssignmentsNode:
+			for assignment in action.assignments:
+				handle_assignment(assignment)
 
 
 func _handle_assignment_operation(assignment : AssignmentNode, var_name : String, value):

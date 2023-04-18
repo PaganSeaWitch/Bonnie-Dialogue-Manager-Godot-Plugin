@@ -17,7 +17,7 @@ func choose(option_index : int):
 
 		if content[option_index] is ActionContentNode:
 			content[option_index].content[0].content[0].node_index = content[option_index].content[0].node_index
-			interpreter.misc_interpreter.handle_action(content[option_index]);
+			interpreter.logic_interpreter.handle_action(content[option_index]);
 			stack.add_to_stack(content[option_index].content[0]);
 			var newContent : ContentNode = ContentNode.new()
 			newContent.content = content[option_index].content[0].content

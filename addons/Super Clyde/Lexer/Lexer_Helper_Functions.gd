@@ -1,4 +1,4 @@
-class_name MiscLexerFunctions
+class_name LexerHelperFunctions
 extends RefCounted
 
 

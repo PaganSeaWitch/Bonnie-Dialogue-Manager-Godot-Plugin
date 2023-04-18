@@ -16,7 +16,6 @@ const SPECIAL_VARIABLE_NAMES : Array[String]= [ 'OPTIONS_COUNT' ];
 var internalMemory : InternalMemory = InternalMemory.new()
 
 
-
 # Sets the id for a block in access as a key for true
 # This will be used to check for whether it has already been accessed
 func set_as_accessed(id) -> void:

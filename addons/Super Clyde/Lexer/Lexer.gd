@@ -2,9 +2,12 @@ class_name Lexer
 extends RefCounted
 
 # The handlers for lines recieved 
-var line_handler : LineHandler = LineHandler.new()
-var _nonline_handler : NonLineHandler = NonLineHandler.new()
-var _logic_handler : LogicHandler = LogicHandler.new()
+var line_lexer : LineLexer = LineLexer.new()
+var misc_lexer : MiscLexer = MiscLexer.new()
+var logic_lexer : LogicLexer = LogicLexer.new()
+var option_lexer : OptionLexer = OptionLexer.new()
+var variations_lexer : VariationsLexer = VariationsLexer.new()
+
 
 # The data recieved
 var input : String = ""
@@ -27,7 +30,11 @@ func init(_input : String) -> Lexer:
 	column = 0
 	length = _input.length()
 	_pending_tokens = []
-
+	line_lexer.init(self)
+	misc_lexer.init(self)
+	logic_lexer.init(self)
+	option_lexer.init(self)
+	variations_lexer.init(self)
 	return self
 
 
@@ -101,27 +108,27 @@ func _get_next_tokens() -> Array[Token]:
 	# Rule : If -- in not quote mode, consume as comment
 	if  (input.substr(position, 2) == '--' 
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
-		return line_handler.handle_comments(self)
+		return line_lexer.handle_comments()
 	
 	# Rule : If \n in not quote mode, consume line break
 	if (input[position] == '\n'
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
-		return _nonline_handler.handle_line_breaks(self)
+		return misc_lexer.handle_line_breaks()
 
 	# Rule : If tab at the zeroth columm in not logic mode, consume the indents
-	if (((column == 0 && MiscLexerFunctions.is_tab_char(input[position])) 
+	if (((column == 0 && LexerHelperFunctions.is_tab_char(input[position])) 
 	|| (column == 0 && indent.size() > 1))
 	&&  !is_current_mode(Syntax.MODE_LOGIC)):
-		return _nonline_handler.handle_indent(self)
+		return misc_lexer.handle_indent()
 
 	# Rule : if { in not quote mode, start logic mode
 	if (input[position] == '{'
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
-		return _logic_handler.handle_logic_block_start(self)
+		return logic_lexer.handle_logic_block_start()
 
 	# Rule : if we are in logic mode, consume as a logic block
 	if is_current_mode(Syntax.MODE_LOGIC):
-		var response : Array[Token] = _logic_handler.handle_logic_block(self)
+		var response : Array[Token] = logic_lexer.handle_logic_block()
 		if !response.is_empty():
 			return response
  
@@ -130,30 +137,30 @@ func _get_next_tokens() -> Array[Token]:
 	|| input[position] == "'"):
 		if !current_quote.is_empty():
 			if input[position] == current_quote:
-				return line_handler.handle_quote(self)
+				return line_lexer.handle_quote()
 		else:
 			current_quote = input[position]
-			return line_handler.handle_quote(self)
+			return line_lexer.handle_quote()
 
 	# Rule : if we are in quote mode, consume text
 	if is_current_mode(Syntax.MODE_QSTRING):
-		return line_handler.handle_qtext(self)
+		return line_lexer.handle_qtext()
 
 	# Rule : ignore and consume spaces
 	if input[position] == ' ':
-		return _nonline_handler.handle_space(self)
+		return misc_lexer.handle_space()
 
 	# Rule : ignore and consume non logic tabs
-	if MiscLexerFunctions.is_tab_char(input[position]):
-		return _nonline_handler.handle_rogue_tab(self)
+	if LexerHelperFunctions.is_tab_char(input[position]):
+		return misc_lexer.handle_rogue_tab()
 	
 	# Rule : if (, start variations mode
 	if input[position] == '(':
-		return _nonline_handler.handle_start_variations(self)
+		return variations_lexer.handle_start_variations()
 
 	# Rule : if ), end variations mode
 	if input[position] == ')':
-		return _nonline_handler.handle_stop_variations(self)
+		return variations_lexer.handle_stop_variations()
 
 	# Rule : if == at zeroth column, consume block
 	if ((input.substr(position, 2) == '==' 
@@ -161,40 +168,40 @@ func _get_next_tokens() -> Array[Token]:
 	|| input.substr(position, 2) == '=*'
 	|| input.substr(position, 2) == '=>') 
 	&& column == 0):
-		return _nonline_handler.handle_block(self)
+		return misc_lexer.handle_block()
 
 	# Rule : if ->, consume divert
 	if input.substr(position, 2) == '->':
-		return _nonline_handler.handle_divert(self)
+		return misc_lexer.handle_divert()
 
 	# Rule : if <-, consume parent divert
 	if input.substr(position, 2) == '<-':
-		return _nonline_handler.handle_divert_parent(self)
+		return misc_lexer.handle_divert_parent()
 
 	# Rule : if - in variations mode, consume variation  
 	if (input[position] == '-' 
 	&& is_current_mode(Syntax.MODE_VARIATIONS)):
-		return _nonline_handler.handle_variation_item(self)
+		return variations_lexer.handle_variation_item()
 
 
 	# Rule : if *, +, >, start option mode
 	if (input[position] == '*' 
 	|| input[position] == '+' 
 	|| input[position] == '>'):
-		return line_handler.handle_options(self)
+		return option_lexer.handle_options()
 
 	# Rule : if = in option mode, consume assign
 	if (input[position] == '=' 
 	&& is_current_mode(Syntax.MODE_OPTION)):
-		return line_handler.handle_option_display_char(self)
+		return option_lexer.handle_option_display_char()
 
 	# Rule : if $, consume line id
 	if input[position] == '$':
-		return line_handler.handle_line_id(self)
+		return line_lexer.handle_line_id()
 
 	# Rule : if #, consume tag
 	if input[position] == '#':
-		return line_handler.handle_tag(self)
+		return line_lexer.handle_tag()
 
 	# Rule : base case, handle as regular text
-	return line_handler.handle_text(self)
+	return line_lexer.handle_text()

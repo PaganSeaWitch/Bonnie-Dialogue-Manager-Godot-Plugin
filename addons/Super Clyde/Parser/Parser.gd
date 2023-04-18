@@ -2,14 +2,22 @@ class_name Parser
 extends RefCounted
 
 var _lexer : Lexer = Lexer.new()
-
+var misc_parser : MiscParser = MiscParser.new()
+var logic_parser : LogicParser = LogicParser.new()
+var line_parser : LineParser = LineParser.new()
+var variations_parser : VariationsParser = VariationsParser.new()
+var options_parser : OptionsParser = OptionsParser.new()
 
 # Parses given string data into a DocumentNode
 func parse(doc : String) -> DocumentNode:
 	var token_walker = TokenWalker.new()
 	token_walker.set_lexer(_lexer.init(doc))
-
-	var result : DocumentNode = MiscNodeParser.new().document(token_walker)
+	misc_parser.init(self, token_walker)
+	logic_parser.init(self, token_walker)
+	line_parser.init(self, token_walker)
+	variations_parser.init(self, token_walker)
+	options_parser.init(self, token_walker)
+	var result : DocumentNode = misc_parser.document()
 	if token_walker.peek() != null:
 		token_walker.consume(TokenArray.eof)
 

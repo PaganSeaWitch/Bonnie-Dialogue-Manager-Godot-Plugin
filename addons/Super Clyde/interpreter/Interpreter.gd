@@ -7,7 +7,7 @@ signal variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
 var memory : MemoryInterface
-var logic_interpreter : ClydeLogicInterpreter = ClydeLogicInterpreter.new()
+var logic_interpreter : LogicInterpreter = LogicInterpreter.new()
 var variations_interpreter : VariationsInterpreter = VariationsInterpreter.new()
 var misc_interpreter : MiscInterpreter = MiscInterpreter.new()
 var line_interpreter : LineInterpreter = LineInterpreter.new()
@@ -22,8 +22,8 @@ var doc : DocumentNode
 var stack : InterpreterStack = InterpreterStack.new()
 
 var _handlers = {
-		ActionContentNode: misc_interpreter.handle_action_content_node,
-		ConditionalContentNode: misc_interpreter.handle_conditional_content_node,
+		ActionContentNode: logic_interpreter.handle_action_content_node,
+		ConditionalContentNode: logic_interpreter.handle_conditional_content_node,
 		BlockNode: misc_interpreter.handle_block_node,
 		DocumentNode: misc_interpreter.handle_document_node,
 		OptionNode: options_interpreter.handle_option_node,
@@ -31,9 +31,9 @@ var _handlers = {
 		OptionsNode: options_interpreter.handle_options_node,
 		VariationsNode: variations_interpreter.handle_variations_node,
 		DivertNode: misc_interpreter.handle_divert_node,
-		AssignmentsNode: misc_interpreter.handle_assignments_node,
-		EventsNode: misc_interpreter.handle_events_node,
-		ContentNode: line_interpreter.handle_content_node}
+		AssignmentsNode: logic_interpreter.handle_assignments_node,
+		EventsNode: logic_interpreter.handle_events_node,
+		ContentNode: line_interpreter.handle_content_node }
 
 
 var anchors = {}

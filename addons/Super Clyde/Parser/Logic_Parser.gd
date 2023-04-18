@@ -1,35 +1,33 @@
-class_name LogicNodeParser
-extends RefCounted
-
-var nodeFactory : NodeFactory = NodeFactory.new()
+class_name LogicParser
+extends MiscParser
 
 
-func _logic_element(token_walker : TokenWalker) -> ClydeNode:
+func _logic_element() -> ClydeNode:
 	if token_walker.peek(TokenArray.set):
-		var assignments = _assignments(token_walker)
+		var assignments = _assignments()
 		return assignments
 
 
 	if token_walker.peek(TokenArray.trigger):
-		var events = _events(token_walker)
+		var events = _events()
 		return events
 
 	if token_walker.peek(TokenArray.when):
 		token_walker.consume(TokenArray.when)
 
-	var condition = _condition(token_walker)
+	var condition = _condition()
 	return condition
 
 
-func nested_logic_block(token_walker : TokenWalker) -> Dictionary:
+func nested_logic_block() -> Dictionary:
 	var root : ClydeNode
 	var wrapper : ClydeNode
-	while token_walker.current_token.name == Syntax.TOKEN_BRACE_OPEN:
+	while token_walker.current_token.name == Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN:
 		if root == null:
-			root = _logic_block(token_walker)
+			root = _logic_block()
 			wrapper = root
 		else:
-			var next = _logic_block(token_walker)
+			var next = _logic_block()
 			wrapper.content = [next]
 			wrapper = next
 
@@ -42,36 +40,36 @@ func nested_logic_block(token_walker : TokenWalker) -> Dictionary:
 	}
 
 
-func _logic_block(token_walker : TokenWalker) -> ContentNode:
+func _logic_block() -> ContentNode:
 	if token_walker.peek(TokenArray.set) != null:
-		var assignments : AssignmentsNode = _assignments(token_walker)
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT,
+		var assignments : AssignmentsNode = _assignments()
+		return node_factory.create_node(node_factory.NODE_TYPES.ACTION_CONTENT,
 			{"actions"= [assignments]})
 
 	if token_walker.peek(TokenArray.trigger) != null:
-		var events : EventsNode = _events(token_walker)
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT,
+		var events : EventsNode = _events()
+		return node_factory.create_node(node_factory.NODE_TYPES.ACTION_CONTENT,
 			{"actions"= [events]})
 
 	if token_walker.peek(TokenArray.when) != null:
 		token_walker.consume(TokenArray.when)
 
-	var condition : ClydeNode = _condition(token_walker)
-	return nodeFactory.create_node(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
+	var condition : ClydeNode = _condition()
+	return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT,
 		{"conditions" = condition})
 
 
-func _events(token_walker : TokenWalker) -> EventsNode:
+func _events() -> EventsNode:
 	token_walker.consume(TokenArray.trigger)
 	token_walker.consume(TokenArray.identifier)
-	var eventsNode : EventsNode = nodeFactory.create_node(NodeFactory.NODE_TYPES.EVENTS, 
-		{"events" = [nodeFactory.create_node(NodeFactory.NODE_TYPES.EVENT, 
+	var eventsNode : EventsNode = node_factory.create_node(node_factory.NODE_TYPES.EVENTS, 
+		{"events" = [node_factory.create_node(node_factory.NODE_TYPES.EVENT, 
 			{name = token_walker.current_token.value})]})
 
 	while token_walker.peek(TokenArray.comma):
 		token_walker.consume(TokenArray.comma)
 		token_walker.consume(TokenArray.identifier)
-		eventsNode.events.push_back(nodeFactory.create_node(NodeFactory.NODE_TYPES.EVENT, 
+		eventsNode.events.push_back(node_factory.create_node(node_factory.NODE_TYPES.EVENT, 
 			{name = token_walker.current_token.value}))
 
 	token_walker.consume(TokenArray.brace_close)
@@ -79,70 +77,70 @@ func _events(token_walker : TokenWalker) -> EventsNode:
 	return eventsNode
 
 
-func conditional_line(token_walker : TokenWalker) -> ConditionalContentNode :
-	var expression : NamedNode = _condition(token_walker)
+func conditional_line() -> ConditionalContentNode :
+	var expression : NamedNode = _condition()
 	var content
 
 	if token_walker.peek(TokenArray.divert):
-		content = MiscNodeParser.new().divert(token_walker)
+		content = parser.misc_parser.divert()
 	elif token_walker.peek(TokenArray.lineBreak):
 		token_walker.consume(TokenArray.lineBreak)
 		token_walker.consume(TokenArray.indent)
-		content = MiscNodeParser.new().lines(token_walker)
+		content = parser.misc_parser.lines()
 		token_walker.consume(TokenArray.end)
 	elif token_walker.peek(TokenArray.brace_open):
 		token_walker.consume(TokenArray.brace_open)
-		content = line_with_action(token_walker)
+		content = line_with_action()
 	else:
 		token_walker.consume(TokenArray.dialogue)
-		content = DialogueNodeParser.new().dialogue_line(token_walker)
+		content = parser.line_parser.dialogue_line()
 		if token_walker.peek(TokenArray.brace_open):
 			token_walker.consume(TokenArray.brace_open)
-			content = line_with_action(token_walker, content)
+			content = line_with_action(content)
 
 	if(typeof(content) == TYPE_ARRAY):
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, 
+		return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
 			{"conditions" = expression, "content" = content})
-	return nodeFactory.create_node(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, 
+	return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
 		{"conditions" = expression, "content" = [content]})
 
 
-func _condition(token_walker : TokenWalker) -> ClydeNode:
+func _condition() -> ClydeNode:
 	var token : Token = token_walker.peek([
 		Syntax.TOKEN_IDENTIFIER,
 		Syntax.TOKEN_NOT,
 	])
 	var expression : ClydeNode
 	if token != null:
-		expression = _expression(token_walker)
+		expression = _expression()
 
 	token_walker.consume(TokenArray.brace_close)
 	return expression
 
 
-func _assignments(token_walker : TokenWalker) -> AssignmentsNode:
+func _assignments() -> AssignmentsNode:
 	token_walker.consume(TokenArray.set)
-	var assignments : Array[AssignmentNode] = [_assignment_expression(token_walker)]
+	var assignments : Array[AssignmentNode] = [_assignment_expression()]
 	while token_walker.peek(TokenArray.comma) != null:
 		token_walker.consume(TokenArray.comma)
-		assignments.push_back(_assignment_expression(token_walker))
+		assignments.push_back(_assignment_expression())
 
 	token_walker.consume(TokenArray.brace_close)
 	if(typeof(assignments) == TYPE_ARRAY):
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ASSIGNMENTS,
+		return node_factory.create_node(node_factory.NODE_TYPES.ASSIGNMENTS,
 			{"assignments"= assignments})
-	return nodeFactory.create_node(NodeFactory.NODE_TYPES.ASSIGNMENTS,
+	return node_factory.create_node(node_factory.NODE_TYPES.ASSIGNMENTS,
 		{"assignments"= [assignments]})
 
 
-func _assignment_expression(token_walker : TokenWalker) -> AssignmentNode:
-	var assignment : ClydeNode = _assignment_expression_internal(token_walker)
+func _assignment_expression() -> AssignmentNode:
+	var assignment : ClydeNode = _assignment_expression_internal()
 
 	if assignment is VariableNode:
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ASSIGNMENT, 
+		return node_factory.create_node(node_factory.NODE_TYPES.ASSIGNMENT, 
 			{"variable" = assignment, 
 			"operation"= Syntax.TOKEN_ASSIGN, 
-			"value" = nodeFactory.create_node(NodeFactory.NODE_TYPES.BOOLEAN_LITERAL,
+			"value" = node_factory.create_node(node_factory.NODE_TYPES.BOOLEAN_LITERAL,
 				{"value"= 'true'})})
 	if assignment is AssignmentNode:
 		return assignment
@@ -152,9 +150,9 @@ func _assignment_expression(token_walker : TokenWalker) -> AssignmentNode:
 	
 
 
-func _assignment_expression_internal(token_walker : TokenWalker) -> ClydeNode:
+func _assignment_expression_internal() -> ClydeNode:
 	token_walker.consume(TokenArray.identifier)
-	var variable : VariableNode = nodeFactory.create_node(NodeFactory.NODE_TYPES.VARIABLE, 
+	var variable : VariableNode = node_factory.create_node(node_factory.NODE_TYPES.VARIABLE, 
 		{"name" : token_walker.current_token.value})
 
 	if token_walker.peek(TokenArray.brace_close) != null:
@@ -165,17 +163,17 @@ func _assignment_expression_internal(token_walker : TokenWalker) -> ClydeNode:
 
 	if (token_walker.peek(TokenArray.identifier) != null
 	&& token_walker.peek(TokenArray.operators_and_bracket_close, 1) != null):
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ASSIGNMENT, 
+		return node_factory.create_node(node_factory.NODE_TYPES.ASSIGNMENT, 
 			{"variable" = variable,"operation"= token_walker.current_token.name,
-			"value" = _assignment_expression_internal(token_walker)})
+			"value" = _assignment_expression_internal()})
 	
-	return nodeFactory.create_node(NodeFactory.NODE_TYPES.ASSIGNMENT, 
+	return node_factory.create_node(node_factory.NODE_TYPES.ASSIGNMENT, 
 		{"variable" = variable,"operation"= token_walker.current_token.name,
-		"value" = _expression(token_walker)})
+		"value" = _expression()})
 
 
-func _expression(token_walker : TokenWalker, min_precedence : int = 1) -> ClydeNode:
-	var lhs : ClydeNode = _operand(token_walker)
+func _expression(min_precedence : int = 1) -> ClydeNode:
+	var lhs : ClydeNode = _operand()
 
 	if token_walker.peek(TokenArray.operator_mathamatic_symbols) == null:
 		return lhs
@@ -194,60 +192,60 @@ func _expression(token_walker : TokenWalker, min_precedence : int = 1) -> ClydeN
 			break
 
 		var next_min_precedence : int = precedence + 1 if associative == 'LEFT' else precedence
-		var rhs = _expression(token_walker, next_min_precedence)
+		var rhs = _expression(next_min_precedence)
 		lhs = _operator(operator_name, lhs, rhs)
 
 	return lhs
 
 
-func _operand(token_walker : TokenWalker) -> ClydeNode:
+func _operand() -> ClydeNode:
 	token_walker.consume(TokenArray.operator_literals)
 
 	match token_walker.current_token.name:
 		Syntax.TOKEN_NOT:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.EXPRESSION, 
-				{"name"=token_walker.current_token.name,"elements"= [_operand(token_walker)]})
+			return node_factory.create_node(node_factory.NODE_TYPES.EXPRESSION, 
+				{"name"=token_walker.current_token.name,"elements"= [_operand()]})
 		Syntax.TOKEN_IDENTIFIER:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.VARIABLE, 
+			return node_factory.create_node(node_factory.NODE_TYPES.VARIABLE, 
 				{"name" = token_walker.current_token.value})
 		Syntax.TOKEN_NUMBER_LITERAL:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.NUMBER_LITERAL, 
+			return node_factory.create_node(node_factory.NODE_TYPES.NUMBER_LITERAL, 
 				{"value" = token_walker.current_token.value})
 		Syntax.TOKEN_STRING_LITERAL:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.STRING_LITERAL, 
+			return node_factory.create_node(node_factory.NODE_TYPES.STRING_LITERAL, 
 				{"value" =token_walker.current_token.value})
 		Syntax.TOKEN_BOOLEAN_LITERAL:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, 
+			return node_factory.create_node(node_factory.NODE_TYPES.BOOLEAN_LITERAL, 
 				{"value" =token_walker.current_token.value})
 		Syntax.TOKEN_NULL_TOKEN:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.NULL, {})
+			return node_factory.create_node(node_factory.NODE_TYPES.NULL, {})
 	assert(false, 'Token type not found : ' + token_walker.current_token.name)
 	return null
 
 func _operator(operator, lhs, rhs) -> ExpressionNode:
-	return nodeFactory.create_node(NodeFactory.NODE_TYPES.EXPRESSION,
+	return node_factory.create_node(node_factory.NODE_TYPES.EXPRESSION,
 		{"name"= operator,"elements"= [lhs, rhs] })
 
 
-func line_with_action(token_walker: TokenWalker, line : ClydeNode = null) -> ContentNode:
+func line_with_action(line : ClydeNode = null) -> ContentNode:
 	var token = token_walker.peek(TokenArray.set_trigger)
-	var expression : ClydeNode = _logic_element(token_walker)
+	var expression : ClydeNode = _logic_element()
 
 	if line != null:
 		var content : ClydeNode = line
 
 		if token_walker.peek(TokenArray.brace_open) != null:
 			token_walker.consume(TokenArray.brace_open)
-			content = line_with_action(token_walker, line)
+			content = line_with_action(line)
 
 		if token_walker.peek(TokenArray.lineBreak) != null:
 			token_walker.consume(TokenArray.lineBreak)
 
 		if token == null || token.name == Syntax.TOKEN_KEYWORD_WHEN:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, 
+			return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
 				{"conditions" = expression, "content" = [content]})
 
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT, 
+		return node_factory.create_node(node_factory.NODE_TYPES.ACTION_CONTENT, 
 			{"actions"= [expression], "content"= [content]})
 
 	if token_walker.peek(TokenArray.lineBreak) != null:
@@ -260,15 +258,15 @@ func line_with_action(token_walker: TokenWalker, line : ClydeNode = null) -> Con
 	if token_walker.peek(TokenArray.brace_open) != null:
 		token_walker.consume(TokenArray.brace_open)
 		if !token:
-			return nodeFactory.create_node(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, 
-				{"conditions" = expression, "content" = [line_with_action(token_walker)]})
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT,
-			{"actions"= [expression], "content"= [line_with_action(token_walker)]})
+			return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
+				{"conditions" = expression, "content" = [line_with_action()]})
+		return node_factory.create_node(node_factory.NODE_TYPES.ACTION_CONTENT,
+			{"actions"= [expression], "content"= [line_with_action()]})
 
 	token_walker.consume(TokenArray.dialogue)
 
 	if token == null:
-		return nodeFactory.create_node(NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT, 
-			{"conditions" = expression, "content" = [DialogueNodeParser.new().dialogue_line(token_walker)]})
-	return nodeFactory.create_node(NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		{"actions"= [expression], "content"= [DialogueNodeParser.new().dialogue_line(token_walker)]})
+		return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
+			{"conditions" = expression, "content" = [parser.line_parser.dialogue_line()]})
+	return node_factory.create_node(node_factory.NODE_TYPES.ACTION_CONTENT,
+		{"actions"= [expression], "content"= [parser.line_parser.dialogue_line()]})
