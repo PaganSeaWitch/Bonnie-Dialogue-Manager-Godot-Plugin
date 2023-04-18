@@ -1,1054 +1,1054 @@
 {
-    "type": "Document",
-    "content": [
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Variable",
-                "name": "first_time"
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "what do you want to talk about?",
-                    "speaker": "npc"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "NOT",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "first_time"
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "not",
-                    "speaker": "npc"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "AND",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "first_time"
-                    },
-                    {
-                        "type": "Variable",
-                        "name": "second_time"
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "what do you want to talk about?",
-                    "speaker": "npc"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "OR",
-                "elements": [
-                    {
-                        "type": "Expression",
-                        "name": "AND",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "first_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "second_time"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "Variable",
-                        "name": "third_time"
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "what do you want to talk about?",
-                    "speaker": "npc"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "AND",
-                "elements": [
-                    {
-                        "type": "Expression",
-                        "name": "OR",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "first_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "second_time"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "Variable",
-                        "name": "third_time"
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "what do you want to talk about?",
-                    "speaker": "npc"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "AND",
-                "elements": [
-                    {
-                        "type": "Expression",
-                        "name": "OR",
-                        "elements": [
-                            {
-                                "type": "Expression",
-                                "name": "AND",
-                                "elements": [
-                                    {
-                                        "type": "Variable",
-                                        "name": "first_time"
-                                    },
-                                    {
-                                        "type": "Variable",
-                                        "name": "second_time"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "third_time"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "Variable",
-                        "name": "fourth_time"
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "what do you want to talk about?",
-                    "speaker": "npc"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "OR",
-                "elements": [
-                    {
-                        "type": "Expression",
-                        "name": "==, is",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "first_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "second_time"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "Expression",
-                        "name": "!=, isnt",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "third_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "fourth_time"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "equality"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "OR",
-                "elements": [
-                    {
-                        "type": "Expression",
-                        "name": "==, is",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "first_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "second_time"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "Expression",
-                        "name": "!=, isnt",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "third_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "fourth_time"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "alias equality"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "OR",
-                "elements": [
-                    {
-                        "type": "Expression",
-                        "name": "LESS",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "first_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "second_time"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "Expression",
-                        "name": "GREATER",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "third_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "fourth_time"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "alias equality"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "AND",
-                "elements": [
-                    {
-                        "type": "Expression",
-                        "name": "<=",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "first_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "second_time"
-                            }
-                        ]
-                    },
-                    {
-                        "type": "Expression",
-                        "name": ">=",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "third_time"
-                            },
-                            {
-                                "type": "Variable",
-                                "name": "fourth_time"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "alias equality"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "GREATER",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "first_time"
-                    },
-                    {
-                        "type": "Expression",
-                        "name": "-",
-                        "elements": [
-                            {
-                                "type": "Expression",
-                                "name": "+",
-                                "elements": [
-                                    {
-                                        "type": "Variable",
-                                        "name": "x"
-                                    },
-                                    {
-                                        "type": "Variable",
-                                        "name": "y"
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "Expression",
-                                "name": "%",
-                                "elements": [
-                                    {
-                                        "type": "Expression",
-                                        "name": "/",
-                                        "elements": [
-                                            {
-                                                "type": "Expression",
-                                                "name": "*",
-                                                "elements": [
-                                                    {
-                                                        "type": "Variable",
-                                                        "name": "z"
-                                                    },
-                                                    {
-                                                        "type": "Variable",
-                                                        "name": "d"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "type": "Variable",
-                                                "name": "e"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "Variable",
-                                        "name": "b"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "a"
-                }
-            ]
-        },
-        {
-            "type": "ActionContent",
-            "actions": [
-                {
-                    "type": "Assignments",
-                    "assignments": [
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "xx"
-                            },
-                            "operation": "=",
-                            "value": {
-                                "type": "Boolean",
-                                "value": true
-                            }
-                        }
-                    ]
-                }
-            ],
-            "content": [
-                {
-                    "type": "ConditionalContent",
-                    "conditions": {
-                        "type": "Expression",
-                        "name": "GREATER",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "first_time"
-                            },
-                            {
-                                "type": "Number",
-                                "value": 0
-                            }
-                        ]
-                    },
-                    "content": [
-                        {
-                            "type": "Line",
-                            "value": "hey"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "!=, isnt",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "first_time"
-                    },
-                    {
-                        "type": "NullToken"
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "ho"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "==, is",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "first_time"
-                    },
-                    {
-                        "type": "Boolean",
-                        "value": false
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "let's go"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "==, is",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "first_time"
-                    },
-                    {
-                        "type": "String",
-                        "value": "hello darkness >= my old friend"
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "let's go"
-                }
-            ]
-        },
-        {
-            "type": "Assignments",
-            "assignments": [
-                {
-                    "type": "Assignment",
-                    "variable": {
-                        "type": "Variable",
-                        "name": "first_time"
-                    },
-                    "operation": "=",
-                    "value": {
-                        "type": "Number",
-                        "value": 2
-                    }
-                }
-            ]
-        },
-        {
-            "type": "Assignments",
-            "assignments": [
-                {
-                    "type": "Assignment",
-                    "variable": {
-                        "type": "Variable",
-                        "name": "a"
-                    },
-                    "operation": "=",
-                    "value": {
-                        "type": "Assignment",
-                        "variable": {
-                            "type": "Variable",
-                            "name": "b"
-                        },
-                        "operation": "=",
-                        "value": {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "c"
-                            },
-                            "operation": "=",
-                            "value": {
-                                "type": "Assignment",
-                                "variable": {
-                                    "type": "Variable",
-                                    "name": "d"
-                                },
-                                "operation": "=",
-                                "value": {
-                                    "type": "Number",
-                                    "value": 3
-                                }
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "type": "Assignments",
-            "assignments": [
-                {
-                    "type": "Assignment",
-                    "variable": {
-                        "type": "Variable",
-                        "name": "a"
-                    },
-                    "operation": "+=",
-                    "value": {
-                        "type": "Variable",
-                        "name": "b"
-                    }
-                }
-            ]
-        },
-        {
-            "type": "Assignments",
-            "assignments": [
-                {
-                    "type": "Assignment",
-                    "variable": {
-                        "type": "Variable",
-                        "name": "a"
-                    },
-                    "operation": "-=",
-                    "value": {
-                        "type": "Expression",
-                        "name": "^",
-                        "elements": [
-                            {
-                                "type": "Number",
-                                "value": 4
-                            },
-                            {
-                                "type": "Number",
-                                "value": 2
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        {
-            "type": "ActionContent",
-            "actions": [
-                {
-                    "type": "Events",
-                    "events": [
-                        {
-                            "type": "Event",
-                            "name": "some_event"
-                        }
-                    ]
-                }
-            ],
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "trigger"
-                }
-            ]
-        },
-        {
-            "type": "Events",
-            "events": [
-                {
-                    "type": "Event",
-                    "name": "another_event"
-                }
-            ]
-        },
-        {
-            "type": "ActionContent",
-            "actions": [
-                {
-                    "type": "Assignments",
-                    "assignments": [
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "a"
-                            },
-                            "operation": "-=",
-                            "value": {
-                                "type": "Number",
-                                "value": 4
-                            }
-                        },
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "b"
-                            },
-                            "operation": "=",
-                            "value": {
-                                "type": "Number",
-                                "value": 1
-                            }
-                        },
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "c"
-                            },
-                            "operation": "=",
-                            "value": {
-                                "type": "String",
-                                "value": "hello"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "hey you"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "GREATER",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "first_time"
-                    },
-                    {
-                        "type": "Number",
-                        "value": 0
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "ActionContent",
-                    "actions": [
-                        {
-                            "type": "Assignments",
-                            "assignments": [
-                                {
-                                    "type": "Assignment",
-                                    "variable": {
-                                        "type": "Variable",
-                                        "name": "a"
-                                    },
-                                    "operation": "=",
-                                    "value": {
-                                        "type": "Number",
-                                        "value": 4
-                                    }
-                                }
-                            ]
-                        }
-                    ],
-                    "content": [
-                        {
-                            "type": "Line",
-                            "value": "hey {you}"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "Assignments",
-            "assignments": [
-                {
-                    "type": "Assignment",
-                    "variable": {
-                        "type": "Variable",
-                        "name": "hp"
-                    },
-                    "operation": "=",
-                    "value": {
-                        "type": "Number",
-                        "value": 5
-                    }
-                }
-            ]
-        },
-        {
-            "type": "Options",
-            "content": [
-                {
-                    "type": "ConditionalContent",
-                    "conditions": {
-                        "type": "Expression",
-                        "name": "LESS",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "hp"
-                            },
-                            {
-                                "type": "Number",
-                                "value": 40
-                            }
-                        ]
-                    },
-                    "content": [
-                        {
-                            "type": "ActionContent",
-                            "actions": [
-                                {
-                                    "type": "Assignments",
-                                    "assignments": [
-                                        {
-                                            "type": "Assignment",
-                                            "variable": {
-                                                "type": "Variable",
-                                                "name": "s"
-                                            },
-                                            "operation": "=",
-                                            "value": {
-                                                "type": "Boolean",
-                                                "value": false
-                                            }
-                                        }
-                                    ]
-                                }
-                            ],
-                            "content": [
-                                {
-                                    "type": "Option",
-                                    "name": "Life",
-                                    "mode": "once",
-                                    "content": [
-                                        {
-                                            "type": "ActionContent",
-                                            "actions": [
-                                                {
-                                                    "type": "Assignments",
-                                                    "assignments": [
-                                                        {
-                                                            "type": "Assignment",
-                                                            "variable": {
-                                                                "type": "Variable",
-                                                                "name": "x"
-                                                            },
-                                                            "operation": "=",
-                                                            "value": {
-                                                                "type": "Boolean",
-                                                                "value": true
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            ],
-                                            "content": [
-                                                {
-                                                    "type": "Line",
-                                                    "value": "I want to talk about life!",
-                                                    "speaker": "player"
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            "type": "Line",
-                                            "value": "Well! That's too complicated...",
-                                            "speaker": "npc"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "Option",
-                    "name": "The universe",
-                    "mode": "once",
-                    "content": [
-                        {
-                            "type": "Line",
-                            "value": "I want to talk about the universe!",
-                            "speaker": "player"
-                        },
-                        {
-                            "type": "ActionContent",
-                            "actions": [
-                                {
-                                    "type": "Assignments",
-                                    "assignments": [
-                                        {
-                                            "type": "Assignment",
-                                            "variable": {
-                                                "type": "Variable",
-                                                "name": "last_talk"
-                                            },
-                                            "operation": "=",
-                                            "value": {
-                                                "type": "String",
-                                                "value": "universe"
-                                            }
-                                        }
-                                    ]
-                                }
-                            ],
-                            "content": [
-                                {
-                                    "type": "Line",
-                                    "value": "That's too complex!",
-                                    "speaker": "npc"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "ConditionalContent",
-                    "conditions": {
-                        "type": "Expression",
-                        "name": "AND",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "first_time"
-                            },
-                            {
-                                "type": "Expression",
-                                "name": "GREATER",
-                                "elements": [
-                                    {
-                                        "type": "Variable",
-                                        "name": "hp"
-                                    },
-                                    {
-                                        "type": "Number",
-                                        "value": 10
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    "content": [
-                        {
-                            "type": "Option",
-                            "name": "Everything else...",
-                            "mode": "once",
-                            "content": [
-                                {
-                                    "type": "ConditionalContent",
-                                    "conditions": {
-                                        "type": "Expression",
-                                        "name": "OR",
-                                        "elements": [
-                                            {
-                                                "type": "Expression",
-                                                "name": "GREATER",
-                                                "elements": [
-                                                    {
-                                                        "type": "Variable",
-                                                        "name": "hp"
-                                                    },
-                                                    {
-                                                        "type": "Number",
-                                                        "value": 20
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "type": "Expression",
-                                                "name": "==, is",
-                                                "elements": [
-                                                    {
-                                                        "type": "Variable",
-                                                        "name": "count"
-                                                    },
-                                                    {
-                                                        "type": "Number",
-                                                        "value": 0
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    "content": [
-                                        {
-                                            "type": "Line",
-                                            "value": "What about everything else?",
-                                            "speaker": "player"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "Line",
-                                    "value": "I don't have time for this...",
-                                    "speaker": "npc"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "Variations",
-            "mode": "sequence",
-            "content": [
-                [
-                    {
-                        "type": "ConditionalContent",
-                        "conditions": {
-                            "type": "Expression",
-                            "name": "GREATER",
-                            "elements": [
-                                {
-                                    "type": "Variable",
-                                    "name": "hp"
-                                },
-                                {
-                                    "type": "Number",
-                                    "value": 50
-                                }
-                            ]
-                        },
-                        "content": [
-                            {
-                                "type": "Line",
-                                "value": "all good"
-                            }
-                        ]
-                    }
-                ],
-                [
-                    {
-                        "type": "ConditionalContent",
-                        "conditions": {
-                            "type": "Expression",
-                            "name": "LESS",
-                            "elements": [
-                                {
-                                    "type": "Variable",
-                                    "name": "hp"
-                                },
-                                {
-                                    "type": "Number",
-                                    "value": 10
-                                }
-                            ]
-                        },
-                        "content": [
-                            {
-                                "type": "Line",
-                                "value": "I'm in trouble"
-                            }
-                        ]
-                    }
-                ]
-            ]
-        }
-    ],
-    "blocks": []
+	"type": "Document",
+	"content": [
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Variable",
+				"name": "first_time"
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "what do you want to talk about?",
+					"speaker": "npc"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "NOT",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "first_time"
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "not",
+					"speaker": "npc"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "AND",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "first_time"
+					},
+					{
+						"type": "Variable",
+						"name": "second_time"
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "what do you want to talk about?",
+					"speaker": "npc"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "OR",
+				"elements": [
+					{
+						"type": "Expression",
+						"name": "AND",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "first_time"
+							},
+							{
+								"type": "Variable",
+								"name": "second_time"
+							}
+						]
+					},
+					{
+						"type": "Variable",
+						"name": "third_time"
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "what do you want to talk about?",
+					"speaker": "npc"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "AND",
+				"elements": [
+					{
+						"type": "Expression",
+						"name": "OR",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "first_time"
+							},
+							{
+								"type": "Variable",
+								"name": "second_time"
+							}
+						]
+					},
+					{
+						"type": "Variable",
+						"name": "third_time"
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "what do you want to talk about?",
+					"speaker": "npc"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "AND",
+				"elements": [
+					{
+						"type": "Expression",
+						"name": "OR",
+						"elements": [
+							{
+								"type": "Expression",
+								"name": "AND",
+								"elements": [
+									{
+										"type": "Variable",
+										"name": "first_time"
+									},
+									{
+										"type": "Variable",
+										"name": "second_time"
+									}
+								]
+							},
+							{
+								"type": "Variable",
+								"name": "third_time"
+							}
+						]
+					},
+					{
+						"type": "Variable",
+						"name": "fourth_time"
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "what do you want to talk about?",
+					"speaker": "npc"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "OR",
+				"elements": [
+					{
+						"type": "Expression",
+						"name": "LOGICAL_EQUAL",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "first_time"
+							},
+							{
+								"type": "Variable",
+								"name": "second_time"
+							}
+						]
+					},
+					{
+						"type": "Expression",
+						"name": "LOGICAL_NOT_EQUAL",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "third_time"
+							},
+							{
+								"type": "Variable",
+								"name": "fourth_time"
+							}
+						]
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "equality"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "OR",
+				"elements": [
+					{
+						"type": "Expression",
+						"name": "LOGICAL_EQUAL",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "first_time"
+							},
+							{
+								"type": "Variable",
+								"name": "second_time"
+							}
+						]
+					},
+					{
+						"type": "Expression",
+						"name": "LOGICAL_NOT_EQUAL",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "third_time"
+							},
+							{
+								"type": "Variable",
+								"name": "fourth_time"
+							}
+						]
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "alias equality"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "OR",
+				"elements": [
+					{
+						"type": "Expression",
+						"name": "LESS_THEN",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "first_time"
+							},
+							{
+								"type": "Variable",
+								"name": "second_time"
+							}
+						]
+					},
+					{
+						"type": "Expression",
+						"name": "GREATER_THEN",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "third_time"
+							},
+							{
+								"type": "Variable",
+								"name": "fourth_time"
+							}
+						]
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "alias equality"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "AND",
+				"elements": [
+					{
+						"type": "Expression",
+						"name": "LESS_OR_EQUAL_THEN",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "first_time"
+							},
+							{
+								"type": "Variable",
+								"name": "second_time"
+							}
+						]
+					},
+					{
+						"type": "Expression",
+						"name": "GREATER_OR_EQUAL_THEN",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "third_time"
+							},
+							{
+								"type": "Variable",
+								"name": "fourth_time"
+							}
+						]
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "alias equality"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "GREATER_THEN",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "first_time"
+					},
+					{
+						"type": "Expression",
+						"name": "MINUS",
+						"elements": [
+							{
+								"type": "Expression",
+								"name": "PLUS",
+								"elements": [
+									{
+										"type": "Variable",
+										"name": "x"
+									},
+									{
+										"type": "Variable",
+										"name": "y"
+									}
+								]
+							},
+							{
+								"type": "Expression",
+								"name": "MOD",
+								"elements": [
+									{
+										"type": "Expression",
+										"name": "DIVIDE",
+										"elements": [
+											{
+												"type": "Expression",
+												"name": "MULTIPLY",
+												"elements": [
+													{
+														"type": "Variable",
+														"name": "z"
+													},
+													{
+														"type": "Variable",
+														"name": "d"
+													}
+												]
+											},
+											{
+												"type": "Variable",
+												"name": "e"
+											}
+										]
+									},
+									{
+										"type": "Variable",
+										"name": "b"
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "a"
+				}
+			]
+		},
+		{
+			"type": "ActionContent",
+			"actions": [
+				{
+					"type": "Assignments",
+					"assignments": [
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "xx"
+							},
+							"operation": "ASSIGN",
+							"value": {
+								"type": "Boolean",
+								"value": true
+							}
+						}
+					]
+				}
+			],
+			"content": [
+				{
+					"type": "ConditionalContent",
+					"conditions": {
+						"type": "Expression",
+						"name": "GREATER_THEN",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "first_time"
+							},
+							{
+								"type": "Number",
+								"value": 0
+							}
+						]
+					},
+					"content": [
+						{
+							"type": "Line",
+							"value": "hey"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "LOGICAL_NOT_EQUAL",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "first_time"
+					},
+					{
+						"type": "NullToken"
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "ho"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "LOGICAL_EQUAL",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "first_time"
+					},
+					{
+						"type": "Boolean",
+						"value": false
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "let's go"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "LOGICAL_EQUAL",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "first_time"
+					},
+					{
+						"type": "String",
+						"value": "hello darkness >= my old friend"
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "let's go"
+				}
+			]
+		},
+		{
+			"type": "Assignments",
+			"assignments": [
+				{
+					"type": "Assignment",
+					"variable": {
+						"type": "Variable",
+						"name": "first_time"
+					},
+					"operation": "ASSIGN",
+					"value": {
+						"type": "Number",
+						"value": 2
+					}
+				}
+			]
+		},
+		{
+			"type": "Assignments",
+			"assignments": [
+				{
+					"type": "Assignment",
+					"variable": {
+						"type": "Variable",
+						"name": "a"
+					},
+					"operation": "ASSIGN",
+					"value": {
+						"type": "Assignment",
+						"variable": {
+							"type": "Variable",
+							"name": "b"
+						},
+						"operation": "ASSIGN",
+						"value": {
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "c"
+							},
+							"operation": "ASSIGN",
+							"value": {
+								"type": "Assignment",
+								"variable": {
+									"type": "Variable",
+									"name": "d"
+								},
+								"operation": "ASSIGN",
+								"value": {
+									"type": "Number",
+									"value": 3
+								}
+							}
+						}
+					}
+				}
+			]
+		},
+		{
+			"type": "Assignments",
+			"assignments": [
+				{
+					"type": "Assignment",
+					"variable": {
+						"type": "Variable",
+						"name": "a"
+					},
+					"operation": "SUM_ASSIGN",
+					"value": {
+						"type": "Variable",
+						"name": "b"
+					}
+				}
+			]
+		},
+		{
+			"type": "Assignments",
+			"assignments": [
+				{
+					"type": "Assignment",
+					"variable": {
+						"type": "Variable",
+						"name": "a"
+					},
+					"operation": "SUBTRACTION_ASSIGN",
+					"value": {
+						"type": "Expression",
+						"name": "POWER",
+						"elements": [
+							{
+								"type": "Number",
+								"value": 4
+							},
+							{
+								"type": "Number",
+								"value": 2
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"type": "ActionContent",
+			"actions": [
+				{
+					"type": "Events",
+					"events": [
+						{
+							"type": "Event",
+							"name": "some_event"
+						}
+					]
+				}
+			],
+			"content": [
+				{
+					"type": "Line",
+					"value": "trigger"
+				}
+			]
+		},
+		{
+			"type": "Events",
+			"events": [
+				{
+					"type": "Event",
+					"name": "another_event"
+				}
+			]
+		},
+		{
+			"type": "ActionContent",
+			"actions": [
+				{
+					"type": "Assignments",
+					"assignments": [
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "a"
+							},
+							"operation": "SUBTRACTION_ASSIGN",
+							"value": {
+								"type": "Number",
+								"value": 4
+							}
+						},
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "b"
+							},
+							"operation": "ASSIGN",
+							"value": {
+								"type": "Number",
+								"value": 1
+							}
+						},
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "c"
+							},
+							"operation": "ASSIGN",
+							"value": {
+								"type": "String",
+								"value": "hello"
+							}
+						}
+					]
+				}
+			],
+			"content": [
+				{
+					"type": "Line",
+					"value": "hey you"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "GREATER_THEN",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "first_time"
+					},
+					{
+						"type": "Number",
+						"value": 0
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "ActionContent",
+					"actions": [
+						{
+							"type": "Assignments",
+							"assignments": [
+								{
+									"type": "Assignment",
+									"variable": {
+										"type": "Variable",
+										"name": "a"
+									},
+									"operation": "ASSIGN",
+									"value": {
+										"type": "Number",
+										"value": 4
+									}
+								}
+							]
+						}
+					],
+					"content": [
+						{
+							"type": "Line",
+							"value": "hey {you}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "Assignments",
+			"assignments": [
+				{
+					"type": "Assignment",
+					"variable": {
+						"type": "Variable",
+						"name": "hp"
+					},
+					"operation": "ASSIGN",
+					"value": {
+						"type": "Number",
+						"value": 5
+					}
+				}
+			]
+		},
+		{
+			"type": "Options",
+			"content": [
+				{
+					"type": "ConditionalContent",
+					"conditions": {
+						"type": "Expression",
+						"name": "LESS_THEN",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "hp"
+							},
+							{
+								"type": "Number",
+								"value": 40
+							}
+						]
+					},
+					"content": [
+						{
+							"type": "ActionContent",
+							"actions": [
+								{
+									"type": "Assignments",
+									"assignments": [
+										{
+											"type": "Assignment",
+											"variable": {
+												"type": "Variable",
+												"name": "s"
+											},
+											"operation": "ASSIGN",
+											"value": {
+												"type": "Boolean",
+												"value": false
+											}
+										}
+									]
+								}
+							],
+							"content": [
+								{
+									"type": "Option",
+									"name": "Life",
+									"mode": "once",
+									"content": [
+										{
+											"type": "ActionContent",
+											"actions": [
+												{
+													"type": "Assignments",
+													"assignments": [
+														{
+															"type": "Assignment",
+															"variable": {
+																"type": "Variable",
+																"name": "x"
+															},
+															"operation": "ASSIGN",
+															"value": {
+																"type": "Boolean",
+																"value": true
+															}
+														}
+													]
+												}
+											],
+											"content": [
+												{
+													"type": "Line",
+													"value": "I want to talk about life!",
+													"speaker": "player"
+												}
+											]
+										},
+										{
+											"type": "Line",
+											"value": "Well! That's too complicated...",
+											"speaker": "npc"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "Option",
+					"name": "The universe",
+					"mode": "once",
+					"content": [
+						{
+							"type": "Line",
+							"value": "I want to talk about the universe!",
+							"speaker": "player"
+						},
+						{
+							"type": "ActionContent",
+							"actions": [
+								{
+									"type": "Assignments",
+									"assignments": [
+										{
+											"type": "Assignment",
+											"variable": {
+												"type": "Variable",
+												"name": "last_talk"
+											},
+											"operation": "ASSIGN",
+											"value": {
+												"type": "String",
+												"value": "universe"
+											}
+										}
+									]
+								}
+							],
+							"content": [
+								{
+									"type": "Line",
+									"value": "That's too complex!",
+									"speaker": "npc"
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "ConditionalContent",
+					"conditions": {
+						"type": "Expression",
+						"name": "AND",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "first_time"
+							},
+							{
+								"type": "Expression",
+								"name": "GREATER_THEN",
+								"elements": [
+									{
+										"type": "Variable",
+										"name": "hp"
+									},
+									{
+										"type": "Number",
+										"value": 10
+									}
+								]
+							}
+						]
+					},
+					"content": [
+						{
+							"type": "Option",
+							"name": "Everything else...",
+							"mode": "once",
+							"content": [
+								{
+									"type": "ConditionalContent",
+									"conditions": {
+										"type": "Expression",
+										"name": "OR",
+										"elements": [
+											{
+												"type": "Expression",
+												"name": "GREATER_THEN",
+												"elements": [
+													{
+														"type": "Variable",
+														"name": "hp"
+													},
+													{
+														"type": "Number",
+														"value": 20
+													}
+												]
+											},
+											{
+												"type": "Expression",
+												"name": "LOGICAL_EQUAL",
+												"elements": [
+													{
+														"type": "Variable",
+														"name": "count"
+													},
+													{
+														"type": "Number",
+														"value": 0
+													}
+												]
+											}
+										]
+									},
+									"content": [
+										{
+											"type": "Line",
+											"value": "What about everything else?",
+											"speaker": "player"
+										}
+									]
+								},
+								{
+									"type": "Line",
+									"value": "I don't have time for this...",
+									"speaker": "npc"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "Variations",
+			"mode": "sequence",
+			"content": [
+				[
+					{
+						"type": "ConditionalContent",
+						"conditions": {
+							"type": "Expression",
+							"name": "GREATER_THEN",
+							"elements": [
+								{
+									"type": "Variable",
+									"name": "hp"
+								},
+								{
+									"type": "Number",
+									"value": 50
+								}
+							]
+						},
+						"content": [
+							{
+								"type": "Line",
+								"value": "all good"
+							}
+						]
+					}
+				],
+				[
+					{
+						"type": "ConditionalContent",
+						"conditions": {
+							"type": "Expression",
+							"name": "LESS_THEN",
+							"elements": [
+								{
+									"type": "Variable",
+									"name": "hp"
+								},
+								{
+									"type": "Number",
+									"value": 10
+								}
+							]
+						},
+						"content": [
+							{
+								"type": "Line",
+								"value": "I'm in trouble"
+							}
+						]
+					}
+				]
+			]
+		}
+	],
+	"blocks": []
 }

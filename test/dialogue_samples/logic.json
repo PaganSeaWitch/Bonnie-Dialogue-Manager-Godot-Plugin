@@ -1,256 +1,256 @@
 {
-    "type": "Document",
-    "content": [
-        {
-            "type": "ActionContent",
-            "actions": [
-                {
-                    "type": "Assignments",
-                    "assignments": [
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "some_value"
-                            },
-                            "operation": "=",
-                            "value": {
-                                "type": "Number",
-                                "value": 1
-                            }
-                        }
-                    ]
-                }
-            ],
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "variable was initialized with %some_value%"
-                }
-            ]
-        },
-        {
-            "type": "ActionContent",
-            "actions": [
-                {
-                    "type": "Assignments",
-                    "assignments": [
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "a"
-                            },
-                            "operation": "=",
-                            "value": {
-                                "type": "Number",
-                                "value": 1
-                            }
-                        },
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "b"
-                            },
-                            "operation": "=",
-                            "value": {
-                                "type": "Number",
-                                "value": 2
-                            }
-                        },
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "c"
-                            },
-                            "operation": "=",
-                            "value": {
-                                "type": "Number",
-                                "value": 3
-                            }
-                        }
-                    ]
-                }
-            ],
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "setting multiple variables"
-                }
-            ]
-        },
-        {
-            "type": "ActionContent",
-            "actions": [
-                {
-                    "type": "Assignments",
-                    "assignments": [
-                        {
-                            "type": "Assignment",
-                            "variable": {
-                                "type": "Variable",
-                                "name": "some_value"
-                            },
-                            "operation": "+=",
-                            "value": {
-                                "type": "Assignment",
-                                "variable": {
-                                    "type": "Variable",
-                                    "name": "a"
-                                },
-                                "operation": "+=",
-                                "value": {
-                                    "type": "Variable",
-                                    "name": "b"
-                                }
-                            }
-                        }
-                    ]
-                }
-            ],
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "%some_value% == 4.  %a% == 3"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "==, is",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "a"
-                    },
-                    {
-                        "type": "Number",
-                        "value": 1
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "Hello!"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "OR",
-                "elements": [
-                    {
-                        "type": "Expression",
-                        "name": "==, is",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "a"
-                            },
-                            {
-                                "type": "Number",
-                                "value": 2
-                            }
-                        ]
-                    },
-                    {
-                        "type": "Expression",
-                        "name": "!=, isnt",
-                        "elements": [
-                            {
-                                "type": "Variable",
-                                "name": "a"
-                            },
-                            {
-                                "type": "Number",
-                                "value": 3
-                            }
-                        ]
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "Hi!"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "==, is",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "a"
-                    },
-                    {
-                        "type": "Number",
-                        "value": 2
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "Hello"
-                }
-            ]
-        },
-        {
-            "type": "ConditionalContent",
-            "conditions": {
-                "type": "Expression",
-                "name": "NOT",
-                "elements": [
-                    {
-                        "type": "Variable",
-                        "name": "bl"
-                    }
-                ]
-            },
-            "content": [
-                {
-                    "type": "Line",
-                    "value": "This is a block"
-                },
-                {
-                    "type": "Line",
-                    "value": "inside a condition"
-                }
-            ]
-        },
-        {
-            "type": "Events",
-            "events": [
-                {
-                    "type": "Event",
-                    "name": "some_event"
-                }
-            ]
-        },
-        {
-            "type": "Events",
-            "events": [
-                {
-                    "type": "Event",
-                    "name": "some_event"
-                },
-                {
-                    "type": "Event",
-                    "name": "another_event"
-                }
-            ]
-        }
-    ],
-    "blocks": []
+	"type": "Document",
+	"content": [
+		{
+			"type": "ActionContent",
+			"actions": [
+				{
+					"type": "Assignments",
+					"assignments": [
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "some_value"
+							},
+							"operation": "ASSIGN",
+							"value": {
+								"type": "Number",
+								"value": 1
+							}
+						}
+					]
+				}
+			],
+			"content": [
+				{
+					"type": "Line",
+					"value": "variable was initialized with %some_value%"
+				}
+			]
+		},
+		{
+			"type": "ActionContent",
+			"actions": [
+				{
+					"type": "Assignments",
+					"assignments": [
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "a"
+							},
+							"operation": "ASSIGN",
+							"value": {
+								"type": "Number",
+								"value": 1
+							}
+						},
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "b"
+							},
+							"operation": "ASSIGN",
+							"value": {
+								"type": "Number",
+								"value": 2
+							}
+						},
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "c"
+							},
+							"operation": "ASSIGN",
+							"value": {
+								"type": "Number",
+								"value": 3
+							}
+						}
+					]
+				}
+			],
+			"content": [
+				{
+					"type": "Line",
+					"value": "setting multiple variables"
+				}
+			]
+		},
+		{
+			"type": "ActionContent",
+			"actions": [
+				{
+					"type": "Assignments",
+					"assignments": [
+						{
+							"type": "Assignment",
+							"variable": {
+								"type": "Variable",
+								"name": "some_value"
+							},
+							"operation": "SUM_ASSIGN",
+							"value": {
+								"type": "Assignment",
+								"variable": {
+									"type": "Variable",
+									"name": "a"
+								},
+								"operation": "SUM_ASSIGN",
+								"value": {
+									"type": "Variable",
+									"name": "b"
+								}
+							}
+						}
+					]
+				}
+			],
+			"content": [
+				{
+					"type": "Line",
+					"value": "%some_value% == 4.  %a% == 3"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "LOGICAL_EQUAL",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "a"
+					},
+					{
+						"type": "Number",
+						"value": 1
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "Hello!"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "OR",
+				"elements": [
+					{
+						"type": "Expression",
+						"name": "LOGICAL_EQUAL",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "a"
+							},
+							{
+								"type": "Number",
+								"value": 2
+							}
+						]
+					},
+					{
+						"type": "Expression",
+						"name": "LOGICAL_NOT_EQUAL",
+						"elements": [
+							{
+								"type": "Variable",
+								"name": "a"
+							},
+							{
+								"type": "Number",
+								"value": 3
+							}
+						]
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "Hi!"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "LOGICAL_EQUAL",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "a"
+					},
+					{
+						"type": "Number",
+						"value": 2
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "Hello"
+				}
+			]
+		},
+		{
+			"type": "ConditionalContent",
+			"conditions": {
+				"type": "Expression",
+				"name": "NOT",
+				"elements": [
+					{
+						"type": "Variable",
+						"name": "bl"
+					}
+				]
+			},
+			"content": [
+				{
+					"type": "Line",
+					"value": "This is a block"
+				},
+				{
+					"type": "Line",
+					"value": "inside a condition"
+				}
+			]
+		},
+		{
+			"type": "Events",
+			"events": [
+				{
+					"type": "Event",
+					"name": "some_event"
+				}
+			]
+		},
+		{
+			"type": "Events",
+			"events": [
+				{
+					"type": "Event",
+					"name": "some_event"
+				},
+				{
+					"type": "Event",
+					"name": "another_event"
+				}
+			]
+		}
+	],
+	"blocks": []
 }

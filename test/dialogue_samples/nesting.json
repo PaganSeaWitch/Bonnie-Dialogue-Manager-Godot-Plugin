@@ -1,181 +1,181 @@
 {
-    "type": "Document",
-    "content": [
-        {
-            "type": "Line",
-            "value": "what do you want to talk about?",
-            "speaker": "npc"
-        },
-        {
-            "type": "Options",
-            "content": [
-                {
-                    "type": "Option",
-                    "name": "Life",
-                    "mode": "once",
-                    "content": [
-                        {
-                            "type": "Options",
-                            "name": "I want to talk about life!",
-                            "content": [
-                                {
-                                    "type": "Option",
-                                    "name": "nested life",
-                                    "mode": "once",
-                                    "content": [
-                                        {
-                                            "type": "Line",
-                                            "value": "Well! That's too complicated...",
-                                            "speaker": "npc"
-                                        }
-                                    ]
-                                }
-                            ],
-                            "speaker": "player"
-                        }
-                    ]
-                },
-                {
-                    "type": "Option",
-                    "name": "The universe",
-                    "mode": "once",
-                    "content": [
-                        {
-                            "type": "Variations",
-                            "mode": "sequence",
-                            "content": [
-                                [
-                                    {
-                                        "type": "Line",
-                                        "value": "I want to talk about the universe!",
-                                        "speaker": "player"
-                                    }
-                                ],
-                                [
-                                    {
-                                        "type": "Line",
-                                        "value": "That's too complex!",
-                                        "speaker": "npc"
-                                    }
-                                ]
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "type": "Option",
-                    "name": "Everything else...",
-                    "mode": "once",
-                    "content": [
-                        {
-                            "type": "Variations",
-                            "mode": "sequence",
-                            "content": [
-                                [
-                                    {
-                                        "type": "Line",
-                                        "value": "option 1"
-                                    },
-                                    {
-                                        "type": "Line",
-                                        "value": "What about everything else?",
-                                        "speaker": "player"
-                                    },
-                                    {
-                                        "type": "Options",
-                                        "content": [
-                                            {
-                                                "type": "Option",
-                                                "name": "nested option 1",
-                                                "mode": "once",
-                                                "content": [
-                                                    {
-                                                        "type": "Line",
-                                                        "value": "nested option 1"
-                                                    },
-                                                    {
-                                                        "type": "Line",
-                                                        "value": "yep"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "type": "Option",
-                                                "name": "nested option 2",
-                                                "mode": "once",
-                                                "content": [
-                                                    {
-                                                        "type": "Line",
-                                                        "value": "nested option 2"
-                                                    },
-                                                    {
-                                                        "type": "Line",
-                                                        "value": "nope"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ],
-                                [
-                                    {
-                                        "type": "Line",
-                                        "value": "option 2"
-                                    },
-                                    {
-                                        "type": "Line",
-                                        "value": "I don't have time for this...",
-                                        "speaker": "npc"
-                                    }
-                                ]
-                            ]
-                        },
-                        {
-                            "type": "Variations",
-                            "mode": "cycle",
-                            "content": [
-                                [
-                                    {
-                                        "type": "Options",
-                                        "content": [
-                                            {
-                                                "type": "Option",
-                                                "name": "nested option 1",
-                                                "mode": "once",
-                                                "content": [
-                                                    {
-                                                        "type": "Line",
-                                                        "value": "nested option 1"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "type": "Option",
-                                                "name": "nested option 2",
-                                                "mode": "once",
-                                                "content": [
-                                                    {
-                                                        "type": "Line",
-                                                        "value": "nested option 2"
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-                                ],
-                                [
-                                    {
-                                        "type": "Line",
-                                        "value": "option 2"
-                                    }
-                                ]
-                            ]
-                        }
-                    ]
-                }
-                
-            ]
-        }
-    ],
-    "blocks": []
+	"type": "Document",
+	"content": [
+		{
+			"type": "Line",
+			"value": "what do you want to talk about?",
+			"speaker": "npc"
+		},
+		{
+			"type": "Options",
+			"content": [
+				{
+					"type": "Option",
+					"name": "Life",
+					"mode": "once",
+					"content": [
+						{
+							"type": "Options",
+							"name": "I want to talk about life!",
+							"content": [
+								{
+									"type": "Option",
+									"name": "nested life",
+									"mode": "once",
+									"content": [
+										{
+											"type": "Line",
+											"value": "Well! That's too complicated...",
+											"speaker": "npc"
+										}
+									]
+								}
+							],
+							"speaker": "player"
+						}
+					]
+				},
+				{
+					"type": "Option",
+					"name": "The universe",
+					"mode": "once",
+					"content": [
+						{
+							"type": "Variations",
+							"mode": "sequence",
+							"content": [
+								[
+									{
+										"type": "Line",
+										"value": "I want to talk about the universe!",
+										"speaker": "player"
+									}
+								],
+								[
+									{
+										"type": "Line",
+										"value": "That's too complex!",
+										"speaker": "npc"
+									}
+								]
+							]
+						}
+					]
+				},
+				{
+					"type": "Option",
+					"name": "Everything else...",
+					"mode": "once",
+					"content": [
+						{
+							"type": "Variations",
+							"mode": "sequence",
+							"content": [
+								[
+									{
+										"type": "Line",
+										"value": "option 1"
+									},
+									{
+										"type": "Line",
+										"value": "What about everything else?",
+										"speaker": "player"
+									},
+									{
+										"type": "Options",
+										"content": [
+											{
+												"type": "Option",
+												"name": "nested option 1",
+												"mode": "once",
+												"content": [
+													{
+														"type": "Line",
+														"value": "nested option 1"
+													},
+													{
+														"type": "Line",
+														"value": "yep"
+													}
+												]
+											},
+											{
+												"type": "Option",
+												"name": "nested option 2",
+												"mode": "once",
+												"content": [
+													{
+														"type": "Line",
+														"value": "nested option 2"
+													},
+													{
+														"type": "Line",
+														"value": "nope"
+													}
+												]
+											}
+										]
+									}
+								],
+								[
+									{
+										"type": "Line",
+										"value": "option 2"
+									},
+									{
+										"type": "Line",
+										"value": "I don't have time for this...",
+										"speaker": "npc"
+									}
+								]
+							]
+						},
+						{
+							"type": "Variations",
+							"mode": "cycle",
+							"content": [
+								[
+									{
+										"type": "Options",
+										"content": [
+											{
+												"type": "Option",
+												"name": "nested option 1",
+												"mode": "once",
+												"content": [
+													{
+														"type": "Line",
+														"value": "nested option 1"
+													}
+												]
+											},
+											{
+												"type": "Option",
+												"name": "nested option 2",
+												"mode": "once",
+												"content": [
+													{
+														"type": "Line",
+														"value": "nested option 2"
+													}
+												]
+											}
+										]
+									}
+								],
+								[
+									{
+										"type": "Line",
+										"value": "option 2"
+									}
+								]
+							]
+						}
+					]
+				}
+				
+			]
+		}
+	],
+	"blocks": []
 }

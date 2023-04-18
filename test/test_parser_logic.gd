@@ -1,6 +1,5 @@
 extends "res://addons/gut/test.gd"
 
-var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()
@@ -113,7 +112,7 @@ func test_multiple_equality_check():
 				"elements": [
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '==, is',
+						"name": "LOGICAL_EQUAL",
 						"elements": [
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
@@ -121,7 +120,7 @@ func test_multiple_equality_check():
 					},
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '!=, isnt',
+						"name": "LOGICAL_NOT_EQUAL",
 						"elements": [
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'fourth_time', },
@@ -147,7 +146,7 @@ func test_multiple_alias_equality_check():
 				"elements": [
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '==, is',
+						"name": "LOGICAL_EQUAL",
 						"elements": [
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
@@ -155,7 +154,7 @@ func test_multiple_alias_equality_check():
 					},
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '!=, isnt',
+						"name": "LOGICAL_NOT_EQUAL",
 						"elements": [
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'fourth_time', },
@@ -181,7 +180,7 @@ func test_less_or_greater():
 				"elements": [
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": 'LESS',
+						"name": "LESS_THEN",
 						"elements": [
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
@@ -189,7 +188,7 @@ func test_less_or_greater():
 					},
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": 'GREATER',
+						"name": "GREATER_THEN",
 						"elements": [
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'fourth_time', },
@@ -215,7 +214,7 @@ func test_less_or_equal_and_greater_or_equal():
 				"elements": [
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '<=',
+						"name": "LESS_OR_EQUAL_THEN",
 						"elements": [
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'second_time', },
@@ -223,7 +222,7 @@ func test_less_or_equal_and_greater_or_equal():
 					},
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '>=',
+						"name": "GREATER_OR_EQUAL_THEN",
 						"elements": [
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'third_time', },
 							{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'fourth_time', },
@@ -246,16 +245,16 @@ func test__complex_precendence_case():
 			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
 				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-				"name": 'GREATER',
+				"name": "GREATER_THEN",
 				"elements": [
 					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 					{
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '-',
+						"name": "MINUS",
 						"elements": [
 							{
 								"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-								"name": '+',
+								"name": "PLUS",
 								"elements": [
 									{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'x', },
 									{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'y', },
@@ -263,15 +262,15 @@ func test__complex_precendence_case():
 							},
 							{
 								"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-								"name": '%',
+								"name": "MOD",
 								"elements": [
 									{
 										"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-										"name": '/',
+										"name": "DIVIDE",
 										"elements": [
 											{
 												"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-												"name": '*',
+												"name": "MULTIPLY",
 												"elements": [
 													{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'z', },
 													{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'd', },
@@ -302,7 +301,7 @@ func test_number_literal():
 			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
 				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-				"name": 'GREATER',
+				"name": "GREATER_THEN",
 				"elements": [
 					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 					{ "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 0.0, },
@@ -323,7 +322,7 @@ func test__null_token():
 			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
 				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-				"name": '!=, isnt',
+				"name": "LOGICAL_NOT_EQUAL",
 				"elements": [
 					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 					{ "type": NodeFactory.NODE_TYPES.NULL},
@@ -344,7 +343,7 @@ func test_boolean_literal():
 			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
 				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-				"name": '==, is',
+				"name": "LOGICAL_EQUAL",
 				"elements": [
 					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 					{ "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": false, },
@@ -364,7 +363,7 @@ func test_string_literal():
 			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": {
 				"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-				"name": '==, is',
+				"name": "LOGICAL_EQUAL",
 				"elements": [
 					{ "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'first_time', },
 					{ "type": NodeFactory.NODE_TYPES.STRING_LITERAL, "value": 'hello darkness >= my old friend', },
@@ -507,13 +506,13 @@ func test_conditional_indented_block():
 
 
 const assignments = [
-	[ '=', '='],
-	[ '+=', '+='],
-	[ '-=', '-='],
-	[ '*=', '*='],
-	[ '/=', '/='],
-	[ '%=', '%='],
-	[ '^=', '^='],
+	[ "=", "ASSIGN"],
+	[ "+=", "SUM_ASSIGN"],
+	[ "-=", "SUBTRACTION_ASSIGN"],
+	[ "*=", "MULITPLICATION_ASSIGN"],
+	[ "/=", "DIVISION_ASSIGN"],
+	[ "%=", "MOD_ASSIGN"],
+	[ "^=", "POWER_ASSIGN"],
 ]
 
 func test_assignments():
@@ -566,10 +565,10 @@ func test_assignment_with_expression():
 						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
-					"operation": '-=',
+					"operation": "SUBTRACTION_ASSIGN",
 					"value": {
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '^',
+						"name": "POWER",
 						"elements": [
 							{
 								"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
@@ -609,10 +608,10 @@ func test_assignment_with_expression_after():
 						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": {
 						"type":  NodeFactory.NODE_TYPES.EXPRESSION,
-						"name": '*',
+						"name": "MULTIPLY",
 						"elements": [
 							{
 								"type":  NodeFactory.NODE_TYPES.VARIABLE,
@@ -651,28 +650,28 @@ func test_chaining_assigments():
 						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": {
 						"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 						"variable": {
 							"type":  NodeFactory.NODE_TYPES.VARIABLE,
 							"name": 'b',
 						},
-						"operation": '=',
+						"operation": "ASSIGN",
 						"value": {
 							"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 							"variable": {
 								"type":  NodeFactory.NODE_TYPES.VARIABLE,
 								"name": 'c',
 							},
-							"operation": '=',
+							"operation": "ASSIGN",
 							"value": {
 								"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 								"variable": {
 									"type":  NodeFactory.NODE_TYPES.VARIABLE,
 									"name": 'd',
 								},
-								"operation": '=',
+								"operation": "ASSIGN",
 								"value": {
 									"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 									"value": 3.0,
@@ -707,14 +706,14 @@ func test_chaining_assigment_ending_with_variable():
 							"type":  NodeFactory.NODE_TYPES.VARIABLE,
 							"name": 'a',
 						},
-						"operation": '=',
+						"operation": "ASSIGN",
 						"value": {
 							"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 							"variable": {
 								"type":  NodeFactory.NODE_TYPES.VARIABLE,
 								"name": 'b',
 							},
-							"operation": '=',
+							"operation": "ASSIGN",
 							"value": {
 								"type":  NodeFactory.NODE_TYPES.VARIABLE,
 								"name": 'c',
@@ -747,7 +746,7 @@ func test_multiple_assigments_block():
 						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'a',
 					},
-					"operation": '-=',
+					"operation": "SUBTRACTION_ASSIGN",
 					"value": {
 						"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 						"value": 4.0,
@@ -759,7 +758,7 @@ func test_multiple_assigments_block():
 						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'b',
 					},
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": {
 						"type": NodeFactory.NODE_TYPES.NUMBER_LITERAL,
 						"value": 1.0,
@@ -771,7 +770,7 @@ func test_multiple_assigments_block():
 						"type":  NodeFactory.NODE_TYPES.VARIABLE,
 						"name": 'c',
 					},
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": {
 						"type": NodeFactory.NODE_TYPES.STRING_LITERAL,
 						"value": 'hello',
@@ -800,7 +799,7 @@ func test_assignment_after_line():
 				{
 					"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
@@ -822,7 +821,7 @@ func test_standalone_assignment():
 				{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
@@ -833,7 +832,7 @@ func test_standalone_assignment():
 				{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', },
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 3.0, },
 				},
 			],
@@ -863,7 +862,7 @@ func test_options_assignment():
 				"speaker": "",
 				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
-					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', }, "operation": '=', "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, }, }, ],
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', }, "operation": "ASSIGN", "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, }, }, ],
 				}],
 				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content":  [
@@ -881,7 +880,7 @@ func test_options_assignment():
 				"speaker": "",
 				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
-					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', }, "operation": '=', "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 3.0, }, }, ],
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', }, "operation": "ASSIGN", "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 3.0, }, }, ],
 				}],
 				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content":  [
@@ -899,7 +898,7 @@ func test_options_assignment():
 				"speaker": "",
 				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
-					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'c', }, "operation": '=', "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 4.0, }, }, ],
+					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'c', }, "operation": "ASSIGN", "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 4.0, }, }, ],
 				}],
 				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": [
@@ -929,7 +928,7 @@ func test_divert_with_assignment():
 				{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', },
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, },
 				},
 			],
@@ -949,7 +948,7 @@ func test_standalone_assignment_with_standalone_variable():
 				{
 					"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "a", },
-					"operation": "=",
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 				},
 			],
@@ -1124,7 +1123,7 @@ func test_multiple_logic_blocks_in_the_same_line():
 				"assignments": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 				}],
 			}],
@@ -1155,7 +1154,7 @@ func test_multiple_logic_blocks_in_the_same_line_before():
 				"assignments": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 				}],
 			}],
@@ -1199,7 +1198,7 @@ func test_multiple_logic_blocks_in_the_same_line_after():
 				"assignments": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 				}],
 			}],
@@ -1243,7 +1242,7 @@ func test_multiple_logic_blocks_in_the_same_line_around():
 				"assignments": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 					"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-					"operation": '=',
+					"operation": "ASSIGN",
 					"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 				}],
 			}],
@@ -1284,7 +1283,7 @@ func test_multiple_logic_blocks_with_condition_after():
 			"assignments": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENT,
 				"variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'something' },
-				"operation": '=',
+				"operation": "ASSIGN",
 				"value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 1.0 },
 			}],
 		}],

@@ -1,37 +1,37 @@
 {
-    "type": "Document",
-    "content": [
-        {
-            "type": "Line",
-            "value": "Dinner at Jack Rabbit Slim's:"
-        },
-        {
-            "type": "Line",
-            "value": "Don’t you hate that?",
-            "speaker": "Mia"
-        },
-        {
-            "type": "Line",
-            "value": "What?",
-            "speaker": "Vincent"
-        },
-        {
-            "type": "Line",
-            "value": "Uncomfortable silences. Why do we feel it’s necessary to yak about bullshit in order to be comfortable?",
-            "speaker": "Mia",
-            "id": "145"
-        },
-        {
-            "type": "Line",
-            "value": "I don’t know. That’s a good question.",
-            "speaker": "Vincent"
-        },
-        {
-            "type": "Line",
-            "value": "That’s when you know you’ve found somebody special. When you can just shut the fuck up for a minute and comfortably enjoy the silence.",
-            "speaker": "Mia",
-            "id": "123"
-        }
-    ],
-    "blocks": []
+	"type": "Document",
+	"content": [
+		{
+			"type": "Line",
+			"value": "Dinner at Jack Rabbit Slim's:"
+		},
+		{
+			"type": "Line",
+			"value": "Don’t you hate that?",
+			"speaker": "Mia"
+		},
+		{
+			"type": "Line",
+			"value": "What?",
+			"speaker": "Vincent"
+		},
+		{
+			"type": "Line",
+			"value": "Uncomfortable silences. Why do we feel it’s necessary to yak about bullshit in order to be comfortable?",
+			"speaker": "Mia",
+			"id": "145"
+		},
+		{
+			"type": "Line",
+			"value": "I don’t know. That’s a good question.",
+			"speaker": "Vincent"
+		},
+		{
+			"type": "Line",
+			"value": "That’s when you know you’ve found somebody special. When you can just shut the fuck up for a minute and comfortably enjoy the silence.",
+			"speaker": "Mia",
+			"id": "123"
+		}
+	],
+	"blocks": []
 }

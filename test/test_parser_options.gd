@@ -1,6 +1,5 @@
 extends "res://addons/gut/test.gd"
 
-var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()
@@ -460,7 +459,7 @@ func test_ensures_option_item_ending_worked():
 								{
 									"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 									"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'yes', },
-									"operation": "=",
+									"operation": "ASSIGN",
 									"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 								},
 							],
@@ -520,7 +519,7 @@ func test_options_with_blocks_both_sides():
 								{
 									"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 									"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'yes', },
-									"operation": "=",
+									"operation": "ASSIGN",
 									"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 								},
 							],
@@ -549,7 +548,7 @@ func test_options_with_blocks_both_sides():
 								{
 									"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 									"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'no', },
-									"operation": "=",
+									"operation": "ASSIGN",
 									"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 								},
 							],
@@ -609,7 +608,7 @@ func test_options_with_multiple_blocks_on_same_side():
 									{
 										"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 										"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'yes', },
-										"operation": '=',
+										"operation": "ASSIGN",
 										"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 									},
 								],
@@ -638,7 +637,7 @@ func test_options_with_multiple_blocks_on_same_side():
 								{
 									"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 									"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'no', },
-									"operation": '=',
+									"operation": "ASSIGN",
 									"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 								},
 							],
@@ -673,7 +672,7 @@ func test_options_with_multiple_blocks_on_same_side():
 									{
 										"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 										"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'yes', },
-										"operation": '=',
+										"operation": "ASSIGN",
 										"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 									},
 								],
@@ -702,7 +701,7 @@ func test_options_with_multiple_blocks_on_same_side():
 								{
 									"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 									"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'no', },
-									"operation": "=",
+									"operation": "ASSIGN",
 									"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 								},
 							],
@@ -734,7 +733,7 @@ func test_options_with_multiple_blocks_on_same_side():
 								{
 									"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 									"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'yes', },
-									"operation": '=',
+									"operation": "ASSIGN",
 									"value": { "type":NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 								},
 							],
@@ -756,7 +755,7 @@ func test_options_with_multiple_blocks_on_same_side():
 										{
 											"type": NodeFactory.NODE_TYPES.ASSIGNMENT,
 											"variable": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": 'one_more', },
-											"operation": '=',
+											"operation": "ASSIGN",
 											"value": { "type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL, "value": true, },
 										},
 									],

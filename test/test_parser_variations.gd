@@ -1,6 +1,5 @@
 extends "res://addons/gut/test.gd"
 
-const Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()

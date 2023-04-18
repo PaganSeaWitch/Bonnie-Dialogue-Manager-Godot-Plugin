@@ -1,114 +1,114 @@
 {
-    "type": "Document",
-    "content": [
-        {
-            "type": "Variations",
-            "mode": "sequence",
-            "content": [
-                [
-                    {
-                        "type": "Line",
-                        "value": "Hello"
-                    }
-                ],
-                [
-                    {
-                        "type": "Line",
-                        "value": "Hi"
-                    }
-                ],
-                [
-                    {
-                        "type": "Line",
-                        "value": "Hey"
-                    }
-                ]
-            ]
-        },
-        {
-            "type": "Variations",
-            "mode": "shuffle sequence",
-            "content": [
-                [
-                    {
-                        "type": "Line",
-                        "value": "Hello"
-                    }
-                ],
-                [
-                    {
-                        "type": "Line",
-                        "value": "Hi"
-                    }
-                ],
-                [
-                    {
-                        "type": "Line",
-                        "value": "Hey"
-                    }
-                ]
-            ]
-        },
-        {
-            "type": "Variations",
-            "mode": "once",
-            "content": [
-                [
-                    {
-                        "type": "Line",
-                        "value": "nested example"
-                    }
-                ],
-                [
-                    {
-                        "type": "Variations",
-                        "mode": "sequence",
-                        "content": [
-                            [{
-                                "type": "Line",
-                                "value": "here I am"
-                            }]
-                        ]
-                    }
-                ]
-            ]
-        },
-        {
-            "type": "Variations",
-            "mode": "shuffle cycle",
-            "content": [
-                [
-                    {
-                        "type": "Line",
-                        "value": "multiline example do you think it works?"
-                    }
-                ],
-                [
-                    {
-                        "type": "Line",
-                        "value": "yep"
-                    }
-                ]
-            ]
-        },
-        {
-            "type": "Variations",
-            "mode": "sequence",
-            "content": [
-                [
-                    {
-                        "type": "Divert",
-                        "target": "one"
-                    }
-                ],
-                [
-                    {
-                        "type": "Divert",
-                        "target": "two"
-                    }
-                ]
-            ]
-        }
-    ],
-    "blocks": []
+	"type": "Document",
+	"content": [
+		{
+			"type": "Variations",
+			"mode": "sequence",
+			"content": [
+				[
+					{
+						"type": "Line",
+						"value": "Hello"
+					}
+				],
+				[
+					{
+						"type": "Line",
+						"value": "Hi"
+					}
+				],
+				[
+					{
+						"type": "Line",
+						"value": "Hey"
+					}
+				]
+			]
+		},
+		{
+			"type": "Variations",
+			"mode": "shuffle sequence",
+			"content": [
+				[
+					{
+						"type": "Line",
+						"value": "Hello"
+					}
+				],
+				[
+					{
+						"type": "Line",
+						"value": "Hi"
+					}
+				],
+				[
+					{
+						"type": "Line",
+						"value": "Hey"
+					}
+				]
+			]
+		},
+		{
+			"type": "Variations",
+			"mode": "once",
+			"content": [
+				[
+					{
+						"type": "Line",
+						"value": "nested example"
+					}
+				],
+				[
+					{
+						"type": "Variations",
+						"mode": "sequence",
+						"content": [
+							[{
+								"type": "Line",
+								"value": "here I am"
+							}]
+						]
+					}
+				]
+			]
+		},
+		{
+			"type": "Variations",
+			"mode": "shuffle cycle",
+			"content": [
+				[
+					{
+						"type": "Line",
+						"value": "multiline example do you think it works?"
+					}
+				],
+				[
+					{
+						"type": "Line",
+						"value": "yep"
+					}
+				]
+			]
+		},
+		{
+			"type": "Variations",
+			"mode": "sequence",
+			"content": [
+				[
+					{
+						"type": "Divert",
+						"target": "one"
+					}
+				],
+				[
+					{
+						"type": "Divert",
+						"target": "two"
+					}
+				]
+			]
+		}
+	],
+	"blocks": []
 }

@@ -1,6 +1,5 @@
 extends "res://addons/gut/test.gd"
 
-var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 const SAMPLES_FOLDER = "res://test/dialogue_samples/"
 

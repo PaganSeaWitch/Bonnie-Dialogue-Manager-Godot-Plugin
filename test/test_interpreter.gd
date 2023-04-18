@@ -1,6 +1,5 @@
 extends "res://addons/gut/test.gd"
 
-var Parser = preload("res://addons/clyde/parser/Parser.gd")
 
 func parse(input):
 	var parser = Parser.new()
@@ -345,10 +344,10 @@ func test_variations():
 
 	for _i in range(4):
 		dialogue.start()
-
+		var thing = Parser.new().to_JSON_object(dialogue.get_content())
 		# sequence
 		assert_eq_deep(
-			Parser.new().to_JSON_object(dialogue.get_content()).value,
+			thing.value,
 			sequence[0]
 		)
 
