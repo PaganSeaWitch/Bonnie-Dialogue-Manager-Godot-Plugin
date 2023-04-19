@@ -2,9 +2,9 @@
 
 <p align="center"><img src="icon.png" alt=/></p>
 
-Importer and interpreter for [Clyde Dialogue Language](https://github.com/viniciusgerevini/clyde). Completely written in GDScript. No external dependencies.
+Importer and interpreter for Super Clyde based on [Clyde Dialogue Language](https://github.com/viniciusgerevini/clyde). Completely written in GDScript. No external dependencies. Super Clyde is entirely backwards campatiable with Clyde. 
 
-> Clyde is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events.
+> Super Clyde is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events.
 
 ```
 The Wolf:   Jimmie – lead the way, boys – get to work.
@@ -37,9 +37,8 @@ Check [USAGE.md](./USAGE.md) for how to use the interpreter.
 
 You can find a simple usage example on [/example/example.gd](./example/example.gd)
 
-For more about how to write dialogues using Clyde, check [clyde/LANGUAGE.md](https://github.com/viniciusgerevini/clyde/blob/master/LANGUAGE.md)
+For more about how to write dialogues using Super Clyde, check [LANGUAGE.md](https://github.com/PaganSeaWitch/Super-Clyde-Godot-Plugin/blob/master/Language.md)
 
-Check [sample project](https://github.com/viniciusgerevini/godot-clyde-sample)
 
 ## Instalation
 
