@@ -41,7 +41,7 @@ func _text_line() -> DialogueNode:
 		if token_walker.peek(TokenArray.options):
 			var options : OptionsNode = parser.options_parser.options()
 			options.id = line.id
-			options.name = line.value
+			options.value = line.value
 			options.tags = line.tags
 			options.id_suffixes = line.id_suffixes
 			line = options

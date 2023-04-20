@@ -1,9 +1,9 @@
 class_name OptionsNode
-extends DialogueNode
+extends LineNode
 
 
 var content : Array = []
-var name : String = ""
+
 
 
 func get_node_class() -> String:

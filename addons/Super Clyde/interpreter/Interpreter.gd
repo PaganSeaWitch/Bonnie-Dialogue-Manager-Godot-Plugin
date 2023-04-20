@@ -27,11 +27,11 @@ var _handlers = {
 		BlockNode: misc_interpreter.handle_block_node,
 		DocumentNode: misc_interpreter.handle_document_node,
 		OptionNode: options_interpreter.handle_option_node,
-		LineNode: line_interpreter.handle_line_node,
 		OptionsNode: options_interpreter.handle_options_node,
 		VariationsNode: variations_interpreter.handle_variations_node,
 		DivertNode: misc_interpreter.handle_divert_node,
 		AssignmentsNode: logic_interpreter.handle_assignments_node,
+		LineNode: line_interpreter.handle_line_node,
 		EventsNode: logic_interpreter.handle_events_node,
 		ContentNode: line_interpreter.handle_content_node }
 

@@ -26,7 +26,7 @@ func handle_block_node(block : BlockNode):
 
 func handle_divert_node(divert : DivertNode):
 	if divert.target == '<parent>':
-		var target_parents : Array = [DocumentNode, BlockNode, OptionNode, OptionsNode]
+		var target_parents : Array = [OptionNode,OptionsNode,BlockNode,DocumentNode]
 		var is_target_parent : bool = false
 		while !is_target_parent:
 			for target_parent in target_parents:

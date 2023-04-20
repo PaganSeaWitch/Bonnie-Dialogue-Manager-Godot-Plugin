@@ -8,7 +8,7 @@ LINE, BLOCK, VARIATIONS, VARIABLE,
 LITERAL, NULL, ASSIGNMENTS, CONDITIONAL_CONTENT, 
 ACTION_CONTENT, EVENTS, EVENT, CONTENT, 
 STRING_LITERAL, NUMBER_LITERAL, BOOLEAN_LITERAL, 
-RANDOM_BLOCK }
+RANDOM_BLOCK, LINE_PART }
 
 
 var node_factory_dictionary : Dictionary = {
@@ -32,7 +32,8 @@ var node_factory_dictionary : Dictionary = {
 	NODE_TYPES.CONDITIONAL_CONTENT : ConditionalContentNode,
 	NODE_TYPES.EVENTS : EventsNode,
 	NODE_TYPES.EVENT : EventNode,
-	NODE_TYPES.CONTENT : ContentNode }
+	NODE_TYPES.CONTENT : ContentNode,
+	NODE_TYPES.LINE_PART : LinePartNode }
 
 
 var node_factory_dictionary_reverse : Dictionary = {
@@ -56,7 +57,8 @@ var node_factory_dictionary_reverse : Dictionary = {
 	ConditionalContentNode : NODE_TYPES.CONDITIONAL_CONTENT,
 	EventsNode : NODE_TYPES.EVENTS,
 	EventNode : NODE_TYPES.EVENT,
-	ContentNode : NODE_TYPES.CONTENT }
+	ContentNode : NODE_TYPES.CONTENT,
+	LinePartNode : NODE_TYPES.LINE_PART }
 
 
 func create_node(type : NODE_TYPES, args : Dictionary) -> ClydeNode:

@@ -74,7 +74,7 @@ func _option() -> ClydeNode:
 		node_factory.NODE_TYPES.OPTION,{
 		"content" = lines,
 		"mode" = type,
-		"name" = main_item.value,
+		"value" = main_item.value,
 		"id" = main_item.id,
 		"speaker" = main_item.speaker,
 		"tags" = main_item.tags,

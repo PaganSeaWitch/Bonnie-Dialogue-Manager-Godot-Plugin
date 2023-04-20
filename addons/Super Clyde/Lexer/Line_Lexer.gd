@@ -11,7 +11,7 @@ func handle_text() -> Array[Token]:
 	while lexer.position < lexer.input.length():
 		var current_char : String = lexer.input[lexer.position]
 
-		if ['\n', '$', '#', '{' ].has(current_char):
+		if ['\n', '$', '#', '{', '[' ].has(current_char):
 			break
 
 		if (current_char == "\\" 

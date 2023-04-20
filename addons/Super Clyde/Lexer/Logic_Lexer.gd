@@ -48,6 +48,9 @@ func handle_logic_block() -> Array[Token]:
 	if lexer.input[lexer.position] == '}':
 		return handle_logic_block_stop()
 	
+	if lexer.input[lexer.position] == ']':
+		return lexer.dependent_logic_lexer.handle_dependent_logic_block_stop()
+	
 	# Rule : if number in logic block, return number
 	if lexer.input[lexer.position].is_valid_int():
 		return handle_logic_number()
@@ -116,7 +119,7 @@ func handle_logic_descriptive_operator(value : String, initial_column : int) -> 
 func handle_logic_not() -> Array[Token]:
 	var setup_dict : Dictionary = LexerHelperFunctions.internal_setup(lexer)
 	
-	#move past !
+	# move past !
 	LexerHelperFunctions.increase_lexer_position(lexer)
 	return [Token.new(Syntax.TOKEN_NOT, lexer.line, setup_dict["initial_column"])]
 
