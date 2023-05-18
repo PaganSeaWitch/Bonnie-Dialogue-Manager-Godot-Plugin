@@ -34,8 +34,7 @@ const acceptable_next : Array[String] = [
 
 const options_acceptable_next  : Array[String] = [Syntax.TOKEN_SPEAKER, 
 	Syntax.TOKEN_TEXT, Syntax.TOKEN_INDENT, 
-	Syntax.TOKEN_ASSIGN, Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,
-	Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN]
+	Syntax.TOKEN_ASSIGN, Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN]
 
 
 const operators_and_bracket_close  : Array[String] = [

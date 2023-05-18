@@ -35,12 +35,6 @@ func _option() -> ClydeNode:
 		root = block.root
 		wrapper = block.wrapper
 		token_walker.consume(acceptable_next)
-	
-	if token_walker.current_token.name == Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN:
-		var block : Dictionary = parser.logic_parser.nested_logic_block()
-		root = block.root
-		wrapper = block.wrapper
-		token_walker.consume(acceptable_next)
 
 	if (token_walker.current_token.name == Syntax.TOKEN_SPEAKER 
 	|| token_walker.current_token.name == Syntax.TOKEN_TEXT):
