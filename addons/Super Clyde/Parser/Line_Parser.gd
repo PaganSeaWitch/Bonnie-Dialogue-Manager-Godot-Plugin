@@ -24,7 +24,7 @@ func _text_line() -> DialogueNode:
 	var next_token : Token = token_walker.peek(TokenArray.tag_and_id)
 	var line : DialogueNode =  DialogueNode.new()
 
-	# Rule : If there is a tag or id token after linetoken, add values to line
+	# Rule : If there is a tag or id token after line token, add values to line
 	if next_token != null:
 		token_walker.consume(TokenArray.tag_and_id)
 		line = _line_with_metadata()
@@ -41,7 +41,7 @@ func _text_line() -> DialogueNode:
 		if token_walker.peek(TokenArray.options):
 			var options : OptionsNode = parser.options_parser.options()
 			options.id = line.id
-			options.name = line.value
+			options.value = line.value
 			options.tags = line.tags
 			options.id_suffixes = line.id_suffixes
 			line = options

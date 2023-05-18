@@ -7,7 +7,7 @@ var misc_lexer : MiscLexer = MiscLexer.new()
 var logic_lexer : LogicLexer = LogicLexer.new()
 var option_lexer : OptionLexer = OptionLexer.new()
 var variations_lexer : VariationsLexer = VariationsLexer.new()
-
+var dependent_logic_lexer : DependentLogicLexer = DependentLogicLexer.new()
 
 # The data recieved
 var input : String = ""
@@ -35,6 +35,7 @@ func init(_input : String) -> Lexer:
 	logic_lexer.init(self)
 	option_lexer.init(self)
 	variations_lexer.init(self)
+	dependent_logic_lexer.init(self)
 	return self
 
 
@@ -120,6 +121,10 @@ func _get_next_tokens() -> Array[Token]:
 	|| (column == 0 && indent.size() > 1))
 	&&  !is_current_mode(Syntax.MODE_LOGIC)):
 		return misc_lexer.handle_indent()
+
+	if (input[position] == '['
+	&& !is_current_mode(Syntax.MODE_QSTRING)):
+		return dependent_logic_lexer.handle_dependent_logic_block_start()
 
 	# Rule : if { in not quote mode, start logic mode
 	if (input[position] == '{'

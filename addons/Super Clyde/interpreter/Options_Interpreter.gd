@@ -50,9 +50,9 @@ func handle_options_node(options_node : OptionsNode) -> OptionsNode:
 		choose(0)
 		return interpreter.handle_next_node(stack.stack_head().node)
 	
-	options_node.name = interpreter.line_interpreter.replace_variables(
+	options_node.value = interpreter.line_interpreter.replace_variables(
 		interpreter.line_interpreter.translate_text(
-			options_node.id, options_node.name, options_node.id_suffixes))
+			options_node.id, options_node.value, options_node.id_suffixes))
 	options_node.content = options
 	return options_node
 
@@ -93,16 +93,16 @@ func _prepare_option(node : ClydeNode, node_index : int) -> ClydeNode:
 			if(content == null):
 				return null
 			else:
-				node.name = node.content[0].name
+				node.value = node.content[0].value
 				node.id = node.content[0].id
 				
 				node.mode = node.content[0].mode
 				node.tags = node.content[0].tags
 				node.id_suffixes = node.content[0].id_suffixes
 
-	node.name = interpreter.line_interpreter.replace_variables(
+	node.value = interpreter.line_interpreter.replace_variables(
 			interpreter.line_interpreter.translate_text(
-			node.id, node.name, node.id_suffixes))
+			node.id, node.value, node.id_suffixes))
 	return node;
 
 

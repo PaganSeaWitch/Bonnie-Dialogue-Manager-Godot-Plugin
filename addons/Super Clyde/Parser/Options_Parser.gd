@@ -35,6 +35,12 @@ func _option() -> ClydeNode:
 		root = block.root
 		wrapper = block.wrapper
 		token_walker.consume(acceptable_next)
+	
+	if token_walker.current_token.name == Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN:
+		var block : Dictionary = parser.logic_parser.nested_logic_block()
+		root = block.root
+		wrapper = block.wrapper
+		token_walker.consume(acceptable_next)
 
 	if (token_walker.current_token.name == Syntax.TOKEN_SPEAKER 
 	|| token_walker.current_token.name == Syntax.TOKEN_TEXT):
@@ -44,8 +50,8 @@ func _option() -> ClydeNode:
 		if include_label_as_content:
 			lines.push_back(main_item)
 
-	if token_walker.peek(TokenArray.brace_open):
-		token_walker.consume(TokenArray.brace_open)
+	if token_walker.peek(TokenArray.curly_brace_open):
+		token_walker.consume(TokenArray.curly_brace_open)
 		var block = parser.logic_parser.nested_logic_block()
 
 		if root == null:
@@ -74,7 +80,7 @@ func _option() -> ClydeNode:
 		node_factory.NODE_TYPES.OPTION,{
 		"content" = lines,
 		"mode" = type,
-		"name" = main_item.value,
+		"value" = main_item.value,
 		"id" = main_item.id,
 		"speaker" = main_item.speaker,
 		"tags" = main_item.tags,
