@@ -24,7 +24,7 @@ npc: what do you want to talk about?
 			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'what do you want to talk about?', "speaker": 'npc', "id": "", "tags": [], "id_suffixes": [], },
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -32,7 +32,7 @@ npc: what do you want to talk about?
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'Life',
+						"value": 'Life',
 						"speaker": 'speaker',
 						"id": "",
 						"tags": [],
@@ -46,7 +46,7 @@ npc: what do you want to talk about?
 					},
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'Everything else...',
+						"value": 'Everything else...',
 						"mode": 'once',
 						"speaker": "",
 						"id": "",
@@ -59,7 +59,7 @@ npc: what do you want to talk about?
 					},
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": "one more thing",
+						"value": "one more thing",
 						"mode": "once",
 						"speaker": "",
 						"tags": [],
@@ -89,7 +89,7 @@ npc: what do you want to talk about?
 			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'what do you want to talk about?', "speaker": 'npc', "id": "", "tags": [], "id_suffixes": [], },
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -97,7 +97,7 @@ npc: what do you want to talk about?
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'Life',
+						"value": 'Life',
 						"mode": 'once',
 						"speaker": "",
 						"id": "",
@@ -107,7 +107,7 @@ npc: what do you want to talk about?
 					},
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'Everything else...',
+						"value": 'Everything else...',
 						"mode": 'sticky',
 						"speaker": "",
 						"id": "",
@@ -137,7 +137,7 @@ npc: what do you want to talk about?
 			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'what do you want to talk about?', "speaker": 'npc', "id": "", "tags": [], "id_suffixes": [], },
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -145,7 +145,7 @@ npc: what do you want to talk about?
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'Life',
+						"value": 'Life',
 						"mode": 'once',
 						"speaker": "",
 						"id": "",
@@ -155,7 +155,7 @@ npc: what do you want to talk about?
 					},
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'Everything else...',
+						"value": 'Everything else...',
 						"mode": 'fallback',
 						"speaker": "",
 						"id": "",
@@ -188,7 +188,7 @@ npc: what do you want to talk about?
 			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'what do you want to talk about?', "speaker": 'npc', "id": "", "tags": [], "id_suffixes": [], },
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -196,7 +196,7 @@ npc: what do you want to talk about?
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'Life',
+						"value": 'Life',
 						"mode": 'once',
 						"id": "", "tags": [], "speaker": "",
 						"id_suffixes": [],
@@ -208,7 +208,7 @@ npc: what do you want to talk about?
 					},
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'Everything else...',
+						"value": 'Everything else...',
 						"mode": 'once', "id": "", "speaker": "",
 						"id_suffixes": [],
 						"content":  [
@@ -239,7 +239,7 @@ func test_use_first_line_as_label():
 		"content": [
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -247,7 +247,7 @@ func test_use_first_line_as_label():
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'life',
+						"value": 'life',
 						"mode": 'once', "id": "", "tags": [], "speaker": "",
 						"id_suffixes": [],
 						"content":[
@@ -258,7 +258,7 @@ func test_use_first_line_as_label():
 					},
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'the universe',
+						"value": 'the universe',
 						"mode": 'once', "id": "id", "tags": ["tag"], "speaker": "",
 						"id_suffixes": ["suffix"],
 						"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": "the universe", "id": "id", "speaker": "", "tags": ["tag"], "id_suffixes": ["suffix"], },],
@@ -291,11 +291,11 @@ spk: second try
 				"id": 'some_id',
 				"tags": ['some_tag'],
 				"id_suffixes": ["some_suffix"],
-				"name": 'this line will be the label',
+				"value": 'this line will be the label',
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'life',
+						"value": 'life',
 						"mode": 'once', "id": "", "speaker": "", "tags": [],
 						"id_suffixes": [],
 						"content":  [
@@ -308,14 +308,14 @@ spk: second try
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
 				"speaker": 'spk',
-				"name": 'second try',
+				"value": 'second try',
 				"id": "",
 				"tags": [],
 				"id_suffixes": [],
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'life',
+						"value": 'life',
 						"mode": 'once', "id": "", "speaker": "", "tags": [],
 						"id_suffixes": [],
 						"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'Well! That\'s too complicated...', "speaker": 'npc', "id": "", "tags": [], "id_suffixes": [], },],
@@ -347,11 +347,11 @@ func test_use_previous_line_in_quotes_as_label():
 				"id": "",
 				"tags": [],
 				"id_suffixes": [],
-				"name": 'spk: this line will be the label $some_id #some_tag',
+				"value": 'spk: this line will be the label $some_id #some_tag',
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'life',
+						"value": 'life',
 						"mode": 'once', "id": "", "tags": [], "speaker": "",
 						"id_suffixes": [],
 						"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'I want to talk about life!', "speaker": 'player', "id": "", "tags": [], "id_suffixes": [], }],
@@ -360,7 +360,7 @@ func test_use_previous_line_in_quotes_as_label():
 			},
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": 'spk: this line will be the label $some_id #some_tag',
+				"value": 'spk: this line will be the label $some_id #some_tag',
 				"tags": [],
 				"id_suffixes": [],
 				"speaker": "",
@@ -368,7 +368,7 @@ func test_use_previous_line_in_quotes_as_label():
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'universe',
+						"value": 'universe',
 						"mode": 'once', "id": "", "speaker": "", "tags": [],
 						"id_suffixes": [],
 						"content":[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'I want to talk about the universe!', "speaker": 'player', "id": "", "tags": [], "id_suffixes": [], }],
@@ -393,7 +393,7 @@ func test_ensures_options_ending_worked():
 		"content":  [
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -401,7 +401,7 @@ func test_ensures_options_ending_worked():
 				"content": [
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'yes',
+						"value": 'yes',
 						"mode": 'once',
 						"id": "", "speaker": "", "tags": [],
 						"id_suffixes": [],
@@ -409,7 +409,7 @@ func test_ensures_options_ending_worked():
 					},
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'no',
+						"value": 'no',
 						"mode": 'once',
 						"id": "", "speaker": "", "tags": [],
 						"id_suffixes": [],
@@ -439,7 +439,7 @@ func test_ensures_option_item_ending_worked():
 		"content": [
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -451,7 +451,7 @@ func test_ensures_option_item_ending_worked():
 						"id": "",
 						"id_suffixes" : [],
 						"tags" : [],
-						"name" : "",
+						"value" : "",
 						"speaker": "",
 						"actions": [{
 							"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -466,14 +466,14 @@ func test_ensures_option_item_ending_worked():
 						}],
 						"content": [{
 							"type": NodeFactory.NODE_TYPES.OPTION,
-							"name": 'yes',
+							"value": 'yes',
 							"mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [],
 							"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
 						}],
 					},
 					{
 						"type": NodeFactory.NODE_TYPES.OPTION,
-						"name": 'no',
+						"value": 'no',
 						"mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [],
 						"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no' , "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
 					},
@@ -496,7 +496,7 @@ func test_options_with_blocks_both_sides():
 		"content":  [
 			{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -511,7 +511,7 @@ func test_options_with_blocks_both_sides():
 						"id": "",
 						"id_suffixes" : [],
 						"tags" : [],
-						"name" : "",
+						"value" : "",
 						"speaker": "",
 						"actions": [{
 							"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -526,7 +526,7 @@ func test_options_with_blocks_both_sides():
 						}],
 						"content": [{
 							"type": NodeFactory.NODE_TYPES.OPTION,
-							"name": 'yes',
+							"value": 'yes',
 							"mode": 'once', "id": "", "speaker": "", "tags": [],
 							"id_suffixes": [],
 							"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
@@ -540,7 +540,7 @@ func test_options_with_blocks_both_sides():
 						"id": "",
 						"id_suffixes" : [],
 						"tags" : [],
-						"name" : "",
+						"value" : "",
 						"speaker": "",
 						"actions": [{
 							"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -558,7 +558,7 @@ func test_options_with_blocks_both_sides():
 							"conditions": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": "something" },
 							"content": [{
 								"type": NodeFactory.NODE_TYPES.OPTION,
-								"name": 'no',
+								"value": 'no',
 								"mode": 'once', "id": "", "speaker": "", "tags": [],
 								"id_suffixes": [],
 								"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
@@ -585,7 +585,7 @@ func test_options_with_multiple_blocks_on_same_side():
 		"type":  NodeFactory.NODE_TYPES.DOCUMENT,
 		"content": [{
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
-				"name": "",
+				"value": "",
 				"speaker": "",
 				"id": "",
 				"tags": [],
@@ -600,7 +600,7 @@ func test_options_with_multiple_blocks_on_same_side():
 							"id": "",
 							"id_suffixes" : [],
 							"tags" : [],
-							"name" : "",
+							"value" : "",
 							"speaker": "",
 							"actions": [{
 								"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -615,7 +615,7 @@ func test_options_with_multiple_blocks_on_same_side():
 							}],
 							"content": [{
 								"type": NodeFactory.NODE_TYPES.OPTION,
-								"name": 'yes',
+								"value": 'yes',
 								"mode":  'once', "id": "", "speaker": "", "tags": [],
 								"id_suffixes": [],
 								"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
@@ -629,7 +629,7 @@ func test_options_with_multiple_blocks_on_same_side():
 						"id": "",
 						"id_suffixes" : [],
 						"tags" : [],
-						"name" : "",
+						"value" : "",
 						"speaker": "",
 						"actions": [{
 							"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -647,7 +647,7 @@ func test_options_with_multiple_blocks_on_same_side():
 							"conditions": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": "something" },
 							"content": [{
 								"type": NodeFactory.NODE_TYPES.OPTION,
-								"name": 'no',
+								"value": 'no',
 								"mode":  'once', "id": "", "speaker": "", "tags": [],
 								"id_suffixes": [],
 								"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
@@ -664,7 +664,7 @@ func test_options_with_multiple_blocks_on_same_side():
 							"id": "",
 							"id_suffixes" : [],
 							"tags" : [],
-							"name" : "",
+							"value" : "",
 							"speaker": "",
 							"actions": [{
 								"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -679,7 +679,7 @@ func test_options_with_multiple_blocks_on_same_side():
 							}],
 							"content": [{
 								"type": NodeFactory.NODE_TYPES.OPTION,
-								"name": 'yes',
+								"value": 'yes',
 								"mode":  'once', "id": "", "speaker": "", "tags": [],
 								"id_suffixes": [],
 								"content":  [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
@@ -693,7 +693,7 @@ func test_options_with_multiple_blocks_on_same_side():
 						"id": "",
 						"id_suffixes" : [],
 						"tags" : [],
-						"name" : "",
+						"value" : "",
 						"speaker": "",
 						"actions": [{
 							"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -711,7 +711,7 @@ func test_options_with_multiple_blocks_on_same_side():
 							"conditions": { "type": NodeFactory.NODE_TYPES.VARIABLE, "name": "something" },
 							"content": [{
 								"type": NodeFactory.NODE_TYPES.OPTION,
-								"name": 'no',
+								"value": 'no',
 								"mode":  'once', "id": "", "speaker": "", "tags": [],
 								"id_suffixes": [],
 								"content": [{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
@@ -725,7 +725,7 @@ func test_options_with_multiple_blocks_on_same_side():
 						"id": "",
 						"id_suffixes" : [],
 						"tags" : [],
-						"name" : "",
+						"value" : "",
 						"speaker": "",
 						"actions": [{
 							"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -747,7 +747,7 @@ func test_options_with_multiple_blocks_on_same_side():
 								"id": "",
 								"id_suffixes" : [],
 								"tags" : [],
-								"name" : "",
+								"value" : "",
 								"speaker": "",
 								"actions": [{
 									"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -762,7 +762,7 @@ func test_options_with_multiple_blocks_on_same_side():
 								}],
 								"content":[{
 									"type": NodeFactory.NODE_TYPES.OPTION,
-									"name": 'yes',
+									"value": 'yes',
 									"mode":  'once', "id": "", "speaker": "", "tags": [],
 									"id_suffixes": [],
 									"content": [ { "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }, ],

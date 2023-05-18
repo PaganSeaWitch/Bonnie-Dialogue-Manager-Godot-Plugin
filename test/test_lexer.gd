@@ -321,7 +321,6 @@ this is something
 		hello
 *= hello
 		hi
-		this is just some text with [ brackets ]
 		and this is some text with * and + and >
 > this is a fallback
 """).get_all()
@@ -354,12 +353,11 @@ this is something
 		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 8, "column": 3 },
 		{ "name": Syntax.TOKEN_INDENT, "line": 9, "column": 0, "value": "" },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'hi', "line": 9, "column": 2 },
-		{ "name": Syntax.TOKEN_TEXT, "value": 'this is just some text with [ brackets ]', "line": 10, "column": 2 },
-		{ "name": Syntax.TOKEN_TEXT, "value": 'and this is some text with * and + and >', "line": 11, "column": 2 },
-		{ "name": Syntax.TOKEN_DEDENT, "line": 12, "column": 0, "value": "" },
-		{ "name": Syntax.TOKEN_FALLBACK_OPTION, "line": 12, "column": 0, "value": "" },
-		{ "name": Syntax.TOKEN_TEXT, "value": 'this is a fallback', "line": 12, "column": 2 },
-		{ "name": Syntax.TOKEN_EOF, "line": 13, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'and this is some text with * and + and >', "line": 10, "column": 2 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 11, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_FALLBACK_OPTION, "line": 11, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'this is a fallback', "line": 11, "column": 2 },
+		{ "name": Syntax.TOKEN_EOF, "line": 12, "column": 0, "value": "" },
 	])
 
 
@@ -1190,3 +1188,250 @@ Pick an option.
 		jsonTokens.append(Token.to_JSON_object(token))
 	assert_eq_deep(jsonTokens, json2Tokens)
 
+
+
+func test_variables_assignements_dependent():
+	var lexer = Lexer.new()
+	var tokens = lexer.init("""
+[ set variable = 1 ]
+[ set variable -= 1 ]
+[ set variable += 1 ]
+[ set variable *= 1 ]
+[ set variable /= 1 ]
+[ set variable ^= 1 ]
+[ set variable %= 1 ]
+[ set variable = a = b ]
+
+[ set variable = 1 + 2 ]
+[ set variable = 1 - 2 ]
+[ set variable = 1 * 2 ]
+[ set variable = 1 / 2 ]
+[ set variable = 1 ^ 2 ]
+[ set variable = 1 % 2 ]
+
+[ trigger event_name ]
+[ set a = 1, set b = 2 ]
+[ when a ]
+
+""").get_all()
+
+
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 1, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 1, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 1, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 1, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 1, "column": 17, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 1, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 20, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 2, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 2, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 2, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_SUB, "line": 2, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 2, "column": 18, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 2, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 21, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 3, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 3, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 3, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 3, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_SUM, "line": 3, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 3, "column": 18, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 3, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 3, "column": 21, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 4, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 4, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 4, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_MULT, "line": 4, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 4, "column": 18, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 4, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 21, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 5, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 5, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 5, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 5, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_DIV, "line": 5, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 5, "column": 18, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 5, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 5, "column": 21, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 6, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 6, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 6, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 6, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_POW, "line": 6, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 6, "column": 18, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 6, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 6, "column": 21, "value": "" },
+
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 7, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 7, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 7, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 7, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN_MOD, "line": 7, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 7, "column": 18, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 7, "column": 20, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 7, "column": 21, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 8, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 8, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 8, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 8, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 8, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 8, "column": 17, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 8, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'b', "line": 8, "column": 21, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 8, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 8, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 10, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 10, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 10, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 10, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 10, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 10, "column": 17, },
+		{ "name": Syntax.TOKEN_PLUS, "line": 10, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 10, "column": 21, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 10, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 10, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 11, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 11, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 11, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 11, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 11, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 11, "column": 17, },
+		{ "name": Syntax.TOKEN_MINUS, "line": 11, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 11, "column": 21, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 11, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 11, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 12, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 12, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 12, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 12, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 12, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 12, "column": 17, },
+		{ "name": Syntax.TOKEN_MULT, "line": 12, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 12, "column": 21, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 12, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 12, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 13, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 13, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 13, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 13, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 13, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 13, "column": 17, },
+		{ "name": Syntax.TOKEN_DIV, "line": 13, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 13, "column": 21, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 13, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 13, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 14, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 14, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 14, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 14, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 14, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 14, "column": 17, },
+		{ "name": Syntax.TOKEN_POWER, "line": 14, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 14, "column": 21, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 14, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 14, "column": 24, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 15, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 15, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 15, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 15, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 15, "column": 15, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 15, "column": 17, },
+		{ "name": Syntax.TOKEN_MOD, "line": 15, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 15, "column": 21, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 15, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 15, "column": 24 , "value": ""},
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 17, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 17, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_TRIGGER, "line": 17, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'event_name', "line": 17, "column": 10, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 17, "column": 21, "value": "" },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 17, "column": 22, "value": "" },
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 18, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 18, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 18, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 18, "column": 6, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 18, "column": 8, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '1', "line": 18, "column": 10, },
+		{ "name": Syntax.TOKEN_COMMA, "line": 18, "column": 11, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 18, "column": 13, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'b', "line": 18, "column": 17, },
+		{ "name": Syntax.TOKEN_ASSIGN, "line": 18, "column": 19, "value": "", },
+		{ "name": Syntax.TOKEN_NUMBER_LITERAL, "value": '2', "line": 18, "column": 21, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 18, "column": 23, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 18, "column": 24, "value": "" },
+
+
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 19, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 19, "column": 0, "value": "", },
+		{ "name": Syntax.TOKEN_KEYWORD_WHEN, "line": 19, "column": 2, "value": "", },
+		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 19, "column": 7, },
+		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 19, "column": 9, "value": "", },
+		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 19, "column": 10, "value": "" },
+
+		{ "name": Syntax.TOKEN_EOF, "line": 21, "column": 0, "value": "" },
+	])
+
+
+func test_lexer_placement_depentdent_block():
+	var lexer = Lexer.new()
+	var tokens = lexer.init('[ set x = 5 ]').get_all()
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens.size(), 7)
+	assert_eq_deep(jsonTokens[0], {
+		"name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN,
+		"value": "",
+		"line": 0,
+		"column": 0,
+	})
+	
+	assert_eq_deep(jsonTokens[5],{
+		"name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE,
+		"value": "",
+		"line": 0,
+		"column": 12,
+	})
+	
+func test_lexer_placement_depentdent_slice_text():
+	var lexer = Lexer.new()
+	var tokens = lexer.init('cheese [ set x = 5 ] cakes').get_all()
+	var jsonTokens : Array = []
+	for token in tokens:
+		jsonTokens.append(Token.to_JSON_object(token))
+	assert_eq_deep(jsonTokens.size(), 9)
+	assert_eq_deep(jsonTokens[0], {
+		"name": Syntax.TOKEN_TEXT,
+		"value": "cheese ",
+		"line": 0,
+		"column": 0,
+	})
+	
+	assert_eq_deep(jsonTokens[7],{
+		"name": Syntax.TOKEN_TEXT,
+		"value": " cakes",
+		"line": 0,
+		"column": 21,
+	})

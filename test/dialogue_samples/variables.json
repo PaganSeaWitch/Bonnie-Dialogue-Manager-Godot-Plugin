@@ -822,7 +822,7 @@
 							"content": [
 								{
 									"type": "Option",
-									"name": "Life",
+									"value": "Life",
 									"mode": "once",
 									"content": [
 										{
@@ -867,7 +867,7 @@
 				},
 				{
 					"type": "Option",
-					"name": "The universe",
+					"value": "The universe",
 					"mode": "once",
 					"content": [
 						{
@@ -935,7 +935,7 @@
 					"content": [
 						{
 							"type": "Option",
-							"name": "Everything else...",
+							"value": "Everything else...",
 							"mode": "once",
 							"content": [
 								{

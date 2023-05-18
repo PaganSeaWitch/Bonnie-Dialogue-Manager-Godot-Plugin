@@ -125,24 +125,24 @@ func test_variations_with_options():
 		"blocks": [],
 		"content": [
 			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
-				[{ "type": NodeFactory.NODE_TYPES.OPTIONS, "name": "", "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
-					{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'works?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": 
+				[{ "type": NodeFactory.NODE_TYPES.OPTIONS, "value": "", "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
+					{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'works?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": 
 						[ 
 							{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'works?', "id": "", "speaker": "", "tags": [], "id_suffixes": []}, 
 							{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}
 						],
 					},
-					{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'yep?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
+					{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'yep?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
 						{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
 					}
 				]}],
 				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'nice', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
-				[{ "type": NodeFactory.NODE_TYPES.OPTIONS, "name": "", "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
-					{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'works?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
+				[{ "type": NodeFactory.NODE_TYPES.OPTIONS, "value": "", "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
+					{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'works?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
 						{"type": NodeFactory.NODE_TYPES.LINE, "value": 'works?', "id": "", "speaker": "", "tags": [], "id_suffixes": []},
 						{"type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []},
 					]},
-					{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'yep?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": 
+					{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'yep?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": 
 						[ { "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
 					},
 				]}]

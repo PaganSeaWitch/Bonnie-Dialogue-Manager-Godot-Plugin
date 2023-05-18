@@ -32,7 +32,7 @@
 					"content": [
 						{
 							"type": "Option",
-							"name": "this is the first topic",
+							"value": "this is the first topic",
 							"mode": "once",
 							"content": [
 								{
@@ -58,7 +58,7 @@
 						},
 						{
 							"type": "Option",
-							"name": "the second topic",
+							"value": "the second topic",
 							"mode": "once",
 							"content": [
 								{
@@ -83,7 +83,7 @@
 					"content": [
 						{
 							"type": "Option",
-							"name": "another topic",
+							"value": "another topic",
 							"mode": "once",
 							"content": [
 								{
@@ -117,7 +117,7 @@
 						},
 						{
 							"type": "Option",
-							"name": "one more topic",
+							"value": "one more topic",
 							"mode": "once",
 							"content": [
 								{
@@ -137,7 +137,7 @@
 						},
 						{
 							"type": "Option",
-							"name": "this is a topic pointing to another block",
+							"value": "this is a topic pointing to another block",
 							"mode": "once",
 							"content": [
 								{
@@ -152,7 +152,7 @@
 						},
 						{
 							"type": "Option",
-							"name": "this is a sticky topic, with redirect to the beginning of the topics block",
+							"value": "this is a sticky topic, with redirect to the beginning of the topics block",
 							"mode": "sticky",
 							"content": [
 								{
@@ -182,7 +182,7 @@
 					"content": [
 						{
 							"type": "Option",
-							"name": "straight to the topic",
+							"value": "straight to the topic",
 							"mode": "once",
 							"content": [
 								{

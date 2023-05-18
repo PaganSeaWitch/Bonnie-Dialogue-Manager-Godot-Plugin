@@ -94,14 +94,14 @@ func test_parse_diverts():
 				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'one' },
 				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<end>' },
 				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<parent>' },
-				{ "type": NodeFactory.NODE_TYPES.OPTIONS, "speaker": "", "id": "", "tags": [], "name": "", "id_suffixes": [], "content": [
-						{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'thats it', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [], 
+				{ "type": NodeFactory.NODE_TYPES.OPTIONS, "speaker": "", "id": "", "tags": [], "value": "", "id_suffixes": [], "content": [
+						{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'thats it', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [], 
 								"content": [
 									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'somewhere' },
 									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<parent>' },
 								],
 						},
-						{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'does it work this way?', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [], "content":  [
+						{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'does it work this way?', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [], "content":  [
 									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'go' },
 								],
 						},

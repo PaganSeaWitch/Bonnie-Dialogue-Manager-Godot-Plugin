@@ -53,11 +53,11 @@
 		},
 		{
 			"type": "Options",
-			"name": "What do you want to know?",
+			"value": "What do you want to know?",
 			"content": [
 				{
 					"type": "Option",
-					"name": "Is hash legal there?",
+					"value": "Is hash legal there?",
 					"mode": "once",
 					"content": [
 						{
@@ -88,7 +88,7 @@
 					},
 					"content": [{
 						"type": "Option",
-						"name": "Something about Europe.",
+						"value": "Something about Europe.",
 						"mode": "sticky",
 						"content": [
 							{
@@ -120,7 +120,7 @@
 					},
 					"content": [{
 						"type": "Option",
-						"name": "Nah, maybe another time",
+						"value": "Nah, maybe another time",
 						"mode": "sticky",
 						"content": [
 							{
@@ -258,11 +258,11 @@
 				},
 				{
 					"type": "Options",
-					"name": "About Europe...",
+					"value": "About Europe...",
 					"content": [
 						{
 							"type": "Option",
-							"name": "You can buy beer in movie theatres.",
+							"value": "You can buy beer in movie theatres.",
 							"mode": "once",
 							"content": [
 								{
@@ -277,7 +277,7 @@
 						},
 						{
 							"type": "Option",
-							"name": "What they call a Quarter Pounder in Paris",
+							"value": "What they call a Quarter Pounder in Paris",
 							"mode": "once",
 							"content": [
 								{
@@ -298,7 +298,7 @@
 							},
 							"content": [{
 								"type": "Option",
-								"name": "What they call a Whopper",
+								"value": "What they call a Whopper",
 								"mode": "once",
 								"content": [
 									{
@@ -314,7 +314,7 @@
 						},
 						{
 							"type": "Option",
-							"name": "What they put on the french fries instead of ketchup.",
+							"value": "What they put on the french fries instead of ketchup.",
 							"mode": "once",
 							"content": [
 								{
@@ -345,7 +345,7 @@
 							},
 							"content": [{
 								"type": "Option",
-								"name": "I'm suddenly not interested anymore.",
+								"value": "I'm suddenly not interested anymore.",
 								"mode": "sticky",
 								"content": [
 									{
