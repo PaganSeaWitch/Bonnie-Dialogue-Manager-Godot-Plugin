@@ -105,7 +105,6 @@ const bracket_open : Array[String]  = [Syntax.TOKEN_BRACKET_OPEN]
 const bracket_close  : Array[String] = [Syntax.TOKEN_BRACKET_CLOSE]
 
 const dialogue : Array[String]  = [Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT]
-
 const set_trigger : Array[String]  = [Syntax.TOKEN_KEYWORD_SET,
 	Syntax.TOKEN_KEYWORD_TRIGGER]
 

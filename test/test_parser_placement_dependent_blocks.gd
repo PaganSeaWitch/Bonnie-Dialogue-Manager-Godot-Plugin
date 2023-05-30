@@ -26,12 +26,12 @@ func _action_content(actionContent):
 	var actions = actionContent.get("actions") if actionContent.get("actions") != null else []
 	return {
 		"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"value": actionContent.get("name"),
+		"value": actionContent.get("name") if actionContent.get("name") != null else "",
 		"speaker": actionContent.get("speaker") if actionContent.get("speaker") != null else "",
 		"id": actionContent.get("id") if actionContent.get("id") != null else "",
 		"tags": actionContent.get("tags") if actionContent.get("tags") != null else [],
 		"id_suffixes" : actionContent.get("id_suffixes") if actionContent.get("id_suffixes") != null else [],
-		"mode": actionContent.get("mode") if actionContent.get("mode") != null else "once",
+		"mode": actionContent.get("mode") if actionContent.get("mode") != null else "",
 		"content": content,
 		"actions": actions,
 	}
@@ -576,20 +576,21 @@ func test_divert_with_assignment():
 
 func test_condition_with_multiline_dialogue():
 		var result = _parse("""[ another_var ] This is conditional
-			multiline
+		multiline
 	""")
-	
-		var expected = _create_doc_payload([_line_part({
+
+		var expected = _create_doc_payload([_create_content_payload([_line_part({
 			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "another_var" },
-			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": "This is conditional multiline", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }]
-		}, true)])
+			"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": " This is conditional multiline", "speaker": "", "id": "", "tags": [], "id_suffixes": [], }]
+		}, true)])])
 		assert_eq_deep(result, expected)
-		
+
+
 func test_speaker_before_and_after_dependent():
 	var result = _parse("""npc: what do you[when chicken] want to talk about? """)
 
-	var expected = _create_doc_payload([
+	var expected = _create_doc_payload([_create_content_payload([
 		_line_part(_line({"speaker": "npc","value": "what do you"}),false),
 		_line_part(
 			{
@@ -602,14 +603,14 @@ func test_speaker_before_and_after_dependent():
 			},
 			true
 		)
-	])
+	])])
 	assert_eq_deep(result, expected)
 
 
 func test_tag_before_and_after_dependent():
-	var result = _parse("""what do you[when chicken] want to talk about? #conspiracy """)
+	var result = _parse("""what do you[when chicken] want to talk about? #conspiracy""")
 
-	var expected = _create_doc_payload([
+	var expected = _create_doc_payload([_create_content_payload([
 		_line_part(_line({"value": "what do you","tags":["conspiracy"]}),false),
 		_line_part(
 			{
@@ -622,15 +623,15 @@ func test_tag_before_and_after_dependent():
 			},
 			true
 		)
-	])
+	])])
 	assert_eq_deep(result, expected)
 
 
 func test_id_before_and_after_dependent():
 	var result = _parse("""what do you [when chicken] want to talk about? $line_id""")
 
-	var expected = _create_doc_payload([
-		_line_part(_line({"value": "what do you","id": "line_id_0"}),false),
+	var expected = _create_doc_payload([_create_content_payload([
+		_line_part(_line({"value": "what do you ","id": "line_id_0"}),false),
 		_line_part(
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -642,14 +643,15 @@ func test_id_before_and_after_dependent():
 			},
 			true
 		)
-	])
+	])])
 	assert_eq_deep(result, expected)
-	
+
+
 func test_id_suffix_before_and_after_dependent():
 	var result = _parse("""what do you [when chicken] want to talk about? $line_id&fren""")
 
-	var expected = _create_doc_payload([
-		_line_part(_line({"value": "what do you","id": "line_id_0","id_suffixes":["fren"]}),false),
+	var expected = _create_doc_payload([_create_content_payload([
+		_line_part(_line({"value": "what do you ","id": "line_id_0","id_suffixes":["fren"]}),false),
 		_line_part(
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -662,14 +664,14 @@ func test_id_suffix_before_and_after_dependent():
 			},
 			true
 		)
-	])
+	])])
 	assert_eq_deep(result, expected)
 	
 
 func test_full_line_after_dependent():
 	var result = _parse("""npc: what do you want to talk about?[when chicken] #conspiracy $line_id&fren""")
 
-	var expected = _create_doc_payload([
+	var expected = _create_doc_payload([_create_content_payload([
 		_line_part(_line({"speaker": "npc","value": "what do you want to talk about?",
 					"id": "line_id_0",
 					"id_suffixes":["fren"],
@@ -679,17 +681,17 @@ func test_full_line_after_dependent():
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "chicken" },
-				"content": [],
+				"content": [_line({"speaker" : "npc", "id": "line_id_1","id_suffixes": ["fren"],"tags" : ["conspiracy"]})],
 			},
 			true
 		)
-	])
+	])])
 	assert_eq_deep(result, expected)
 
 func test_full_line_tag_before_after_dependent():
 	var result = _parse("""npc: what do you want [when chucken] to talk about? #only_this [when chicken] #conspiracy $line_id&fren""")
 
-	var expected = _create_doc_payload([
+	var expected = _create_doc_payload([_create_content_payload([
 		_line_part(
 				_line({
 					"speaker": "npc",
@@ -706,7 +708,7 @@ func test_full_line_tag_before_after_dependent():
 				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "chucken" },
 				"content": [_line({
 					"speaker": "npc",
-					"value": " to talk about? ",
+					"value": " to talk about?",
 					"id": "line_id_1",
 					"id_suffixes":["fren"],
 					"tags" : ["only_this","conspiracy"]
@@ -718,10 +720,10 @@ func test_full_line_tag_before_after_dependent():
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "chicken" },
-				"content": [_line({"id": "line_id_2","id_suffixes": ["fren"],"tags" : ["conspiracy"]})]
+				"content": [_line({"speaker" : "npc", "id": "line_id_2","id_suffixes": ["fren"],"tags" : ["conspiracy"]})]
 			},
 			true
 		)
-	])
+	])])
 	assert_eq_deep(result, expected)
 		

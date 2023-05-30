@@ -151,3 +151,4 @@ func test_variations_with_options():
 	}
 
 	assert_eq_deep(result, expected)
+

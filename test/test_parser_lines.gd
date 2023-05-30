@@ -29,8 +29,7 @@ func test_parse_single_line():
 
 
 func test_parse_lines():
-		var result = parse("""
-jules: say what one more time! $first #yelling #mad
+		var result = parse("""jules: say what one more time! $first #yelling #mad
 just text
 just id $another&var1&var2
 just tags #tag

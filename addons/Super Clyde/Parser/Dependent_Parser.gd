@@ -26,6 +26,9 @@ func line_part_with_action(line : ClydeNode = null, content_node : ContentNode =
 		token_walker.consume(TokenArray.dialogue)
 		line_part.part.content = [parser.line_parser.dialogue_line()]
 	
+	if(token_walker.peek(TokenArray.tag_and_id)):
+		line_part.part.content = [parser.line_parser._text_line()]
+
 	if token_walker.peek(TokenArray.lineBreak) != null:
 		token_walker.consume(TokenArray.lineBreak)
 		line_part.end_line = true
@@ -42,19 +45,28 @@ func line_part_with_action(line : ClydeNode = null, content_node : ContentNode =
 			token_walker.consume(TokenArray.curly_brace_open)
 			return parser.logic_parser.line_with_action(content_node, true)
 	
+	
 	var speaker = _get_from_line_part(content_node.content[0].part, "speaker")
 	var tags  = _get_from_line_part(content_node.content.back().part, "tags")
 	var id  = _get_from_line_part(content_node.content.back().part, "id")
 	var id_suffixes = _get_from_line_part(content_node.content.back().part, "id_suffixes")
 
-	var i = 0;
-	for inner_line_part in content_node.content:
+
+	for i in range(content_node.content.size()):
+		var inner_line_part : LinePartNode = content_node.content[i];
 		var part = inner_line_part.part;
 		if(part is LineNode):
-			inner_line_part.part = add_to_line_part(part, speaker, tags, id, id_suffixes, i)
+			if(i == content_node.content.size() - 1):
+				inner_line_part.part = add_to_line_part(part, speaker, null, id, null, i)
+			else:
+				inner_line_part.part = add_to_line_part(part, speaker, tags, id, id_suffixes, i)
 		else:
 			if(!inner_line_part.part.content.is_empty()):
-				inner_line_part.part.content[0] = add_to_line_part(part.content[0], speaker, tags, id, id_suffixes, i)	
+				if(i == content_node.content.size() - 1):
+					inner_line_part.part.content[0] = add_to_line_part(part.content[0], speaker, null, id, null, i)	
+				else:
+					inner_line_part.part.content[0] = add_to_line_part(part.content[0], speaker, tags, id, id_suffixes, i)	
+
 
 	return content_node;
 

@@ -9,7 +9,7 @@ npc: what do you want to talk about?
   (
       - player: I want to talk about the universe!
       - npc: That's too complex!
-   )
+  )
 * Everything else...
   (
       -

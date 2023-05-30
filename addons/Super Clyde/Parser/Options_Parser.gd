@@ -55,6 +55,7 @@ func _option() -> ClydeNode:
 			wrapper.content = [block.wrapper]
 			wrapper = block.wrapper
 
+	if(token_walker.peek(TokenArray.lineBreak)):
 		token_walker.consume(TokenArray.lineBreak)
 
 
