@@ -22,18 +22,19 @@ var doc : DocumentNode
 var stack : InterpreterStack = InterpreterStack.new()
 
 var _handlers = {
-		ActionContentNode: logic_interpreter.handle_action_content_node,
-		ConditionalContentNode: logic_interpreter.handle_conditional_content_node,
-		BlockNode: misc_interpreter.handle_block_node,
-		DocumentNode: misc_interpreter.handle_document_node,
-		OptionNode: options_interpreter.handle_option_node,
-		OptionsNode: options_interpreter.handle_options_node,
-		VariationsNode: variations_interpreter.handle_variations_node,
-		DivertNode: misc_interpreter.handle_divert_node,
-		AssignmentsNode: logic_interpreter.handle_assignments_node,
-		LineNode: line_interpreter.handle_line_node,
-		EventsNode: logic_interpreter.handle_events_node,
-		ContentNode: line_interpreter.handle_content_node }
+		ActionContentNode.new().get_node_class(): logic_interpreter.handle_action_content_node,
+		AssignmentsNode.new().get_node_class(): logic_interpreter.handle_assignments_node,
+		BlockNode.new().get_node_class(): misc_interpreter.handle_block_node,
+		ConditionalContentNode.new().get_node_class(): logic_interpreter.handle_conditional_content_node,
+		ContentNode.new().get_node_class(): line_interpreter.handle_content_node,
+		DocumentNode.new().get_node_class(): misc_interpreter.handle_document_node,
+		DivertNode.new().get_node_class(): misc_interpreter.handle_divert_node,
+		EventsNode.new().get_node_class(): logic_interpreter.handle_events_node,
+		LineNode.new().get_node_class(): line_interpreter.handle_line_node,
+		OptionNode.new().get_node_class(): options_interpreter.handle_option_node,
+		OptionsNode.new().get_node_class(): options_interpreter.handle_options_node,
+		VariationsNode.new().get_node_class(): variations_interpreter.handle_variations_node,}
+
 
 
 var anchors = {}
@@ -111,10 +112,8 @@ func _initialise_blocks(doc : DocumentNode) -> void:
 
 
 func handle_next_node(node : ClydeNode) -> ClydeNode:
-	for type in _handlers.keys():
-		
-		if is_instance_of(node, type):
-			return _handlers[type].call(node)
+	if _handlers.has(node.get_node_class()):
+		return _handlers[node.get_node_class()].call(node)
 	
 	printerr("Unkown node type '%s'" % node.type)
 	return null
