@@ -42,29 +42,30 @@ func line_part_with_action(line : ClydeNode = null, content_node : ContentNode =
 			token_walker.consume(TokenArray.curly_brace_open)
 			return parser.logic_parser.line_with_action(content_node, true)
 	
-	var speaker : String = _get_from_line_part(content_node.content[0].part, "speaker")
-	var tags : Array[String]= _get_from_line_part(content_node.content.back().part, "tags")
-	var id : String = _get_from_line_part(content_node.content.back().part, "id")
-	var id_suffixes : Array[String] = _get_from_line_part(content_node.content.back().part, "id_suffixes")
+	var speaker = _get_from_line_part(content_node.content[0].part, "speaker")
+	var tags  = _get_from_line_part(content_node.content.back().part, "tags")
+	var id  = _get_from_line_part(content_node.content.back().part, "id")
+	var id_suffixes = _get_from_line_part(content_node.content.back().part, "id_suffixes")
 
 	var i = 0;
-	for line_part in content_node.content:
-		var part = line_part.part;
+	for inner_line_part in content_node.content:
+		var part = inner_line_part.part;
 		if(part is LineNode):
-			line_part.part = add_to_line_part(part, speaker, tags, id, id_suffixes, index)
+			inner_line_part.part = add_to_line_part(part, speaker, tags, id, id_suffixes, i)
 		else:
-			line_part.part.content[0] = add_to_line_part(part.content[0], speaker, tags, id, id_suffixes, index)	
+			if(!inner_line_part.part.content.is_empty()):
+				inner_line_part.part.content[0] = add_to_line_part(part.content[0], speaker, tags, id, id_suffixes, i)	
 
 	return content_node;
 
 
-func add_to_line_part(line : LineNode, speaker : String, tags : Array[String], id : String, id_suffixes : Array[String], index : int):
-	if(speaker != null)
+func add_to_line_part(line : LineNode, speaker, tags, id, id_suffixes, index : int):
+	if(speaker != null):
 		line.speaker = speaker
 	if(tags != null):
 		line.tags.append_array(tags)
-	if(!id.is_empty()):
-		line.id = id + "_" + str(i);
+	if(id != null && !id.is_empty()):
+		line.id = id + "_" + str(index);
 	if(id_suffixes != null):
 		line.id_suffixes.append_array(id_suffixes)
 	return line 

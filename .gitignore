@@ -18,3 +18,4 @@ mono_crash.*.json
 *~
 /.godot/
 addons/Super Clyde.zip
+.vscode/settings.json

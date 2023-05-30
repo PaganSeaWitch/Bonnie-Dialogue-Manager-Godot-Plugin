@@ -92,10 +92,10 @@ func lines() -> Array[ClydeNode]:
 			token_walker.consume(TokenArray.bracket_open)
 			lines = [parser.variations_parser.variations()]
 			
-		Syntax.TOKEN_LINE_BREAK, Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN:
-			if tk.name == Syntax.TOKEN_LINE_BREAK:
-				token_walker.consume(TokenArray.lineBreak)
-				
+		Syntax.TOKEN_LINE_BREAK:
+			token_walker.consume(TokenArray.lineBreak)
+
+		Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN:
 			token_walker.consume(TokenArray.curly_brace_open)
 	
 			if token_walker.peek(TokenArray.set_trigger) != null:
@@ -105,6 +105,7 @@ func lines() -> Array[ClydeNode]:
 				if token_walker.peek(TokenArray.when) != null:
 					token_walker.consume(TokenArray.when)
 				lines = [parser.logic_parser.conditional_line()]
+
 		Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN:
 			token_walker.consume(TokenArray.brace_open)
 			lines = [parser.dependent_parser.line_part_with_action()]

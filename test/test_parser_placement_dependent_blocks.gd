@@ -36,13 +36,13 @@ func _action_content(actionContent):
 		"actions": actions,
 	}
 
-func _line_part(part : Dictionary, end_line = false){
+func _line_part(part : Dictionary, end_line = false):
 	return {
 		"type" : NodeFactory.NODE_TYPES.LINE_PART,
 		"part": part,
 		"end_line": end_line
 	}
-}
+
 
 
 func _create_doc_payload(content = [], blocks = []):
@@ -59,11 +59,11 @@ func _create_content_payload(content = []):
 	}
 
 func test_parser_placement_depentdent_slice_text():
-	var result = parse('cheese [ set x = 5 ] cakes')
+	var result = _parse('cheese [ set x = 5 ] cakes')
 	
 	var expected = _create_doc_payload([_create_content_payload([
 			_line_part( _line({"type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese " }), false),
-			_line_part( _actionContent({
+			_line_part( _action_content({
 					"actions": [{
 						"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 						"assignments": [
@@ -85,7 +85,7 @@ func test_parser_placement_depentdent_slice_text():
 
 
 func test_parser_placement_depentdent_conditional_text():
-	var result = parse('cheese [ when chicken ] cakes')
+	var result = _parse('cheese [ when chicken ] cakes')
 	
 	var expected = _create_doc_payload([_create_content_payload([
 			_line_part(_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese " }),false),
@@ -98,9 +98,10 @@ func test_parser_placement_depentdent_conditional_text():
 		])
 	])
 	assert_eq_deep(result, expected)
-	
+
+
 func test_parser_multiple_placement_depentdent_conditional_text():
-	var result = parse('cheese [ when chicken ] cakes [ when sticks ] suck')
+	var result = _parse('cheese [ when chicken ] cakes [ when sticks ] suck')
 	var expected = _create_doc_payload([_create_content_payload([
 		_line_part(_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese " }), false),
 		_line_part({"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -121,7 +122,7 @@ func test_parser_multiple_placement_depentdent_conditional_text():
 
 
 func test_parser_multiple_placement_depentdent_conditional_and_action_text():
-	var result = parse('cheese [ when chicken ] cakes [ when sticks ] suck [ set x = 5 ] a lot')
+	var result = _parse('cheese [ when chicken ] cakes [ when sticks ] suck [ set x = 5 ] a lot')
 	var expected = _create_doc_payload([_create_content_payload([
 			_line_part(_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese " }),false),
 			_line_part({"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -136,7 +137,7 @@ func test_parser_multiple_placement_depentdent_conditional_and_action_text():
 					},
 				 false
 			),
-			_line_part(_actionContent({
+			_line_part(_action_content({
 					"actions": [{
 						"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 						"assignments": [
@@ -158,7 +159,7 @@ func test_parser_multiple_placement_depentdent_conditional_and_action_text():
 
 
 func test_not_operator():
-	var result = parse('cheese [ not chicken ] cakes')
+	var result = _parse('cheese [ not chicken ] cakes')
 
 	var expected = _create_doc_payload([_create_content_payload([
 		_line_part( _line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese " }),false),
@@ -178,7 +179,7 @@ func test_not_operator():
 	assert_eq_deep(result, expected)
 	
 func test_and_operator():
-	var result = parse('cheese [chicken && checken ] cakes')
+	var result = _parse('cheese [chicken && checken ] cakes')
 
 	var expected = _create_doc_payload([_create_content_payload([
 		_line_part( _line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese " }),false),
@@ -201,7 +202,7 @@ func test_and_operator():
 	assert_eq_deep(result, expected)
 
 func test_empty_block():
-	var result = parse("cheese [] cakes")
+	var result = _parse("cheese [] cakes")
 	
 	var expected = _create_doc_payload([_create_content_payload([
 		_line_part(_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese " }),false),
@@ -217,7 +218,7 @@ func test_empty_block():
 	
 
 func test_independent_before_dependent_logic():
-	var result = parse('{ when chicken } cheese [ when chicken ] cakes')
+	var result = _parse('{ when chicken } cheese [ when chicken ] cakes')
 	
 	var expected = _create_doc_payload([
 		{
@@ -237,8 +238,9 @@ func test_independent_before_dependent_logic():
 	])
 	assert_eq_deep(result, expected)
 
+
 func test_independent_after_dependent_logic():
-	var result = parse('cheese [ when chicken ] cakes { when chicken }')
+	var result = _parse('cheese [ when chicken ] cakes { when chicken }')
 	
 	var expected = _create_doc_payload([
 		{
@@ -258,8 +260,9 @@ func test_independent_after_dependent_logic():
 	])
 	assert_eq_deep(result, expected)
 
+
 func test_independent_inbetween_dependent_logic():
-	var result = parse('cheese [ when chicken ] { when chicken } cakes')
+	var result = _parse('cheese [ when chicken ] { when chicken } cakes')
 	
 	var expected = _create_doc_payload([
 		{
@@ -279,8 +282,9 @@ func test_independent_inbetween_dependent_logic():
 	])
 	assert_eq_deep(result, expected)
 
+
 func test_independent_inbetween_dependent_logic_reversed():
-	var result = parse('cheese { when chicken }[ when chicken ]  cakes')
+	var result = _parse('cheese { when chicken }[ when chicken ]  cakes')
 	
 	var expected = _create_doc_payload([
 		{
@@ -302,7 +306,7 @@ func test_independent_inbetween_dependent_logic_reversed():
 
 
 func test_independent_inbetween_dependent_logics():
-	var result = parse('[ when chicken ] cheese { when chicken } [ when chicken ]  cakes')
+	var result = _parse('[ when chicken ] cheese { when chicken } [ when chicken ]  cakes')
 	
 	var expected = _create_doc_payload([
 		{
@@ -329,10 +333,10 @@ func test_independent_inbetween_dependent_logics():
 
 
 func test_independent_set_inbetween_dependent_logics():
-	var result = parse('[ when chicken ] cheese { set x = 5 }[ when chicken ]  cakes')
+	var result = _parse('[ when chicken ] cheese { set x = 5 }[ when chicken ]  cakes')
 	
 	var expected = _create_doc_payload([
-		_actionContent({
+		_action_content({
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 					"assignments": [
@@ -364,8 +368,8 @@ func test_independent_set_inbetween_dependent_logics():
 	
 
 func test_multiple_logic_blocks_with_condition_after():
-	var result = parse("{set something = 1}[when chicken]{ some_var }{ trigger event }cheese")
-	var expected = _create_doc_payload([_actionContent({
+	var result = _parse("{set something = 1}[when chicken]{ some_var }{ trigger event }cheese")
+	var expected = _create_doc_payload([_action_content({
 		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 			"assignments": [{
@@ -378,7 +382,7 @@ func test_multiple_logic_blocks_with_condition_after():
 		"content": [{
 			"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 			"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
-			"content": [_actionContent({
+			"content": [_action_content({
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,
 					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'event' } ],
@@ -395,14 +399,15 @@ func test_multiple_logic_blocks_with_condition_after():
 	})])
 	assert_eq_deep(result, expected)
 
+
 func test_parser_placement_depentdent_slice_conditional_text():
-	var result = parse('cheese [ set x = 5 ][when chicken] cakes')
+	var result = _parse('cheese [ set x = 5 ][when chicken] cakes')
 	
 	var expected = _create_doc_payload([_create_content_payload([
 			_line_part( _line({"type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese " }),
 				false
 			),
-			_line_part(_actionContent({
+			_line_part(_action_content({
 					"actions": [{
 						"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 						"assignments": [
@@ -426,10 +431,10 @@ func test_parser_placement_depentdent_slice_conditional_text():
 		])
 	])
 	assert_eq_deep(result, expected)
-	
+
 
 func test_parser_placement_depentdent_slice_conditional_text_more():
-	var result = parse('[when cheken]cheese [ set x = 5 ][when chicken] cakes')
+	var result = _parse('[when cheken]cheese [ set x = 5 ][when chicken] cakes')
 	
 	var expected = _create_doc_payload([_create_content_payload([
 			_line_part({"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -438,7 +443,7 @@ func test_parser_placement_depentdent_slice_conditional_text_more():
 							},
 						false
 			),
-			_line_part(_actionContent({
+			_line_part(_action_content({
 					"actions": [{
 						"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 						"assignments": [
@@ -465,7 +470,7 @@ func test_parser_placement_depentdent_slice_conditional_text_more():
 
 
 func test_parser_placement_depentdent_slice_conditional_text_trigger():
-	var result = parse('[when cheken]cheese [ set x = 5 ][trigger chicken] cakes')
+	var result = _parse('[when cheken]cheese [ set x = 5 ][trigger chicken] cakes')
 	
 	var expected = _create_doc_payload([_create_content_payload([
 		_line_part({"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -474,7 +479,7 @@ func test_parser_placement_depentdent_slice_conditional_text_trigger():
 							},
 				false
 		),
-		_line_part(_actionContent({
+		_line_part(_action_content({
 					"actions": [{
 						"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 						"assignments": [
@@ -503,15 +508,13 @@ func test_parser_placement_depentdent_slice_conditional_text_trigger():
 		)])
 	])
 	assert_eq_deep(result, expected)
-	
+
 
 func test_parser_placement_depentdent_conditional_text_after():
-	var result = parse('cheese cakes[when chicken]')
+	var result = _parse('cheese cakes[when chicken]')
 	
 	var expected = _create_doc_payload([_create_content_payload([
-			_line_part(_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese cakes" }),
-				"end_line" : false,
-			),
+			_line_part(_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": "cheese cakes" }),false),
 			_line_part({"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 					"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "chicken" },
 					"content": [],
@@ -521,14 +524,14 @@ func test_parser_placement_depentdent_conditional_text_after():
 		])
 	])
 	assert_eq_deep(result, expected)
-	
+
 
 func test_standalone_assignment_with_standalone_variable():
-	var result = parse("[ set a ]")
+	var result = _parse("[ set a ]")
 
 	var expected = _create_doc_payload([_create_content_payload([
 		_line_part(
-			_actionContent(_action_content({
+			_action_content({
 						"actions": [{
 							"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
 							"assignments": [
@@ -540,14 +543,14 @@ func test_standalone_assignment_with_standalone_variable():
 								},
 							],
 						}],
-						})),
+						}),
 			true
 		)])
 	])
 	assert_eq_deep(result, expected)
 
 func test_divert_with_assignment():
-	var result = parse("-> go [ set a = 2 ]")
+	var result = _parse("-> go [ set a = 2 ]")
 	var expected = _create_doc_payload([
 		{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'go' },
 		_create_content_payload([
@@ -572,7 +575,7 @@ func test_divert_with_assignment():
 
 
 func test_condition_with_multiline_dialogue():
-		var result = parse("""[ another_var ] This is conditional
+		var result = _parse("""[ another_var ] This is conditional
 			multiline
 	""")
 	
@@ -584,19 +587,10 @@ func test_condition_with_multiline_dialogue():
 		assert_eq_deep(result, expected)
 		
 func test_speaker_before_and_after_dependent():
-	var result = parse("""npc: what do you[when chicken] want to talk about? """)
+	var result = _parse("""npc: what do you[when chicken] want to talk about? """)
 
 	var expected = _create_doc_payload([
-		_line_part(
-			{
-				_line({
-					"speaker": "npc",
-					"value": "what do you"
-				})
-
-			},
-			false
-		),
+		_line_part(_line({"speaker": "npc","value": "what do you"}),false),
 		_line_part(
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -613,20 +607,10 @@ func test_speaker_before_and_after_dependent():
 
 
 func test_tag_before_and_after_dependent():
-	var result = parse("""what do you[when chicken] want to talk about? #conspiracy """)
+	var result = _parse("""what do you[when chicken] want to talk about? #conspiracy """)
 
 	var expected = _create_doc_payload([
-		_line_part(
-			{
-				_line({
-					"value": "what do you",
-					"tags":["conspiracy"]
-						
-				})
-
-			},
-			false
-		),
+		_line_part(_line({"value": "what do you","tags":["conspiracy"]}),false),
 		_line_part(
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -643,20 +627,10 @@ func test_tag_before_and_after_dependent():
 
 
 func test_id_before_and_after_dependent():
-	var result = parse("""what do you [when chicken] want to talk about? $line_id""")
+	var result = _parse("""what do you [when chicken] want to talk about? $line_id""")
 
 	var expected = _create_doc_payload([
-		_line_part(
-			{
-				_line({
-					"value": "what do you",
-					"id": "line_id_0"
-						
-				})
-
-			},
-			false
-		),
+		_line_part(_line({"value": "what do you","id": "line_id_0"}),false),
 		_line_part(
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -672,20 +646,10 @@ func test_id_before_and_after_dependent():
 	assert_eq_deep(result, expected)
 	
 func test_id_suffix_before_and_after_dependent():
-	var result = parse("""what do you [when chicken] want to talk about? $line_id&fren""")
+	var result = _parse("""what do you [when chicken] want to talk about? $line_id&fren""")
 
 	var expected = _create_doc_payload([
-		_line_part(
-			{
-				_line({
-					"value": "what do you",
-					"id": "line_id_0",
-					"id_suffixes":["fren"]
-				})
-
-			},
-			false
-		),
+		_line_part(_line({"value": "what do you","id": "line_id_0","id_suffixes":["fren"]}),false),
 		_line_part(
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -703,22 +667,14 @@ func test_id_suffix_before_and_after_dependent():
 	
 
 func test_full_line_after_dependent():
-	var result = parse("""npc: what do you want to talk about?[when chicken] #conspiracy $line_id&fren""")
+	var result = _parse("""npc: what do you want to talk about?[when chicken] #conspiracy $line_id&fren""")
 
 	var expected = _create_doc_payload([
-		_line_part(
-			{
-				_line({
-					"speaker": "npc",
-					"value": "what do you want to talk about?",
+		_line_part(_line({"speaker": "npc","value": "what do you want to talk about?",
 					"id": "line_id_0",
 					"id_suffixes":["fren"],
-					"tags" = ["conspiracy"]
-				})
-
-			},
-			false
-		),
+					"tags" : ["conspiracy"]
+				}),false),
 		_line_part(
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
@@ -731,20 +687,17 @@ func test_full_line_after_dependent():
 	assert_eq_deep(result, expected)
 
 func test_full_line_tag_before_after_dependent():
-	var result = parse("""npc: what do you want [when chucken] to talk about? #only_this [when chicken] #conspiracy $line_id&fren""")
+	var result = _parse("""npc: what do you want [when chucken] to talk about? #only_this [when chicken] #conspiracy $line_id&fren""")
 
 	var expected = _create_doc_payload([
 		_line_part(
-			{
 				_line({
 					"speaker": "npc",
 					"value": "what do you want ",
 					"id": "line_id_0",
 					"id_suffixes":["fren"],
-					"tags" = ["conspiracy"]
-				})
-
-			},
+					"tags" : ["conspiracy"]
+				}),
 			false
 		),
 		_line_part(
@@ -756,20 +709,16 @@ func test_full_line_tag_before_after_dependent():
 					"value": " to talk about? ",
 					"id": "line_id_1",
 					"id_suffixes":["fren"],
-					"tags" = ["only_this","conspiracy"]
+					"tags" : ["only_this","conspiracy"]
 				})],
 			},
 			false
-		)
+		),
 		_line_part(
 			{
 				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "chicken" },
-				"content": [_line({
-					"id": "line_id_2",
-					"id_suffixes":["fren"],
-					"tags" = ["conspiracy"]
-				})],],
+				"content": [_line({"id": "line_id_2","id_suffixes": ["fren"],"tags" : ["conspiracy"]})]
 			},
 			true
 		)
