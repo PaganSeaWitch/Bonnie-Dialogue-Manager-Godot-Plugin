@@ -7,11 +7,54 @@ extends MiscLexer
 func handle_text() -> Array[Token]:
 	var setup_dict : Dictionary = LexerHelperFunctions.internal_setup(lexer)
 
+
+	# Addtional logic for honoring spaces in line_parts
+	var strip_right = true
+
+	var strip_left = true
+	var current_pos = lexer.position - 1
+	var moving_thru_logic = false
+	var left_spaces = 0
+	var right_spaces = 0
+	# Go past previous spaces
+	while current_pos >= 1 && (lexer.input[current_pos] == ' ' || moving_thru_logic):
+		if(!moving_thru_logic):
+			left_spaces = left_spaces + 1
+		current_pos = current_pos - 1
+		var current_char : String = lexer.input[current_pos]
+		if(current_char == '}'):
+			moving_thru_logic = true
+		if(lexer.input[current_pos+1] == '{'):
+			moving_thru_logic = false
+	# if before the previous spaces is a ], honor spacing
+	if(lexer.input[current_pos] == ']'):
+		strip_left = false
+
+
 	# Get text
 	while lexer.position < lexer.input.length():
 		var current_char : String = lexer.input[lexer.position]
 
 		if ['\n', '$', '#', '{', '[' ].has(current_char):
+			# if were ending on a [, honor spacing
+			if('[' == current_char):
+				strip_right = false
+			if('{' == current_char):
+				# Go past previous spaces
+				moving_thru_logic = true
+				current_pos = lexer.position
+				while current_pos <= lexer.input.length()-2 && (lexer.input[current_pos] == ' ' || moving_thru_logic):
+					if(!moving_thru_logic):
+						right_spaces = right_spaces + 1
+					current_pos = current_pos + 1
+					current_char = lexer.input[current_pos]
+					if(current_char == '}'):
+						moving_thru_logic = true
+					if(lexer.input[current_pos-1] == '}'):
+						moving_thru_logic = false
+				# if before the previous spaces is a ], honor spacing
+				if(lexer.input[current_pos] == '['):
+					strip_right = false
 			break
 
 		if (current_char == "\\" 
@@ -29,8 +72,10 @@ func handle_text() -> Array[Token]:
 		setup_dict["values"] += current_char
 		LexerHelperFunctions.increase_lexer_position(lexer)
 
+	var left_spaces_str = " ".repeat(left_spaces) + "" if !strip_left else ""
+	var right_spaces_str = " ".repeat(right_spaces) + "" if !strip_right else ""
 	return [Token.new(Syntax.TOKEN_TEXT, setup_dict["initial_line"],
-		setup_dict["initial_column"], setup_dict["values"].strip_edges())]
+		setup_dict["initial_column"], left_spaces_str +setup_dict["values"].strip_edges(true, strip_right) + right_spaces_str)]
 
 
 # Consumes as line id until end of line

@@ -71,9 +71,14 @@ func lines() -> Array[ClydeNode]:
 		Syntax.TOKEN_SPEAKER, Syntax.TOKEN_TEXT:
 			token_walker.consume(TokenArray.dialogue)
 			var line  : DialogueNode = parser.line_parser.dialogue_line()
-			if token_walker.peek(TokenArray.brace_open):
-				token_walker.consume(TokenArray.brace_open)
+			
+			if token_walker.peek(TokenArray.curly_brace_open):
+				token_walker.consume(TokenArray.curly_brace_open)
 				lines = [parser.logic_parser.line_with_action(line)]
+			
+			elif token_walker.peek(TokenArray.brace_open):
+				token_walker.consume(TokenArray.brace_open)
+				lines = [parser.dependent_parser.line_part_with_action(line)]
 			else:
 				lines = [line]
 				
@@ -91,7 +96,7 @@ func lines() -> Array[ClydeNode]:
 			if tk.name == Syntax.TOKEN_LINE_BREAK:
 				token_walker.consume(TokenArray.lineBreak)
 				
-			token_walker.consume(TokenArray.brace_open)
+			token_walker.consume(TokenArray.curly_brace_open)
 	
 			if token_walker.peek(TokenArray.set_trigger) != null:
 				lines = [parser.logic_parser.line_with_action()]
@@ -100,7 +105,10 @@ func lines() -> Array[ClydeNode]:
 				if token_walker.peek(TokenArray.when) != null:
 					token_walker.consume(TokenArray.when)
 				lines = [parser.logic_parser.conditional_line()]
-
+		Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN:
+			token_walker.consume(TokenArray.brace_open)
+			lines = [parser.dependent_parser.line_part_with_action()]
+	
 	if token_walker.peek(TokenArray.acceptable_next) != null:
 		lines.append_array(lines())
 
@@ -127,8 +135,8 @@ func divert() -> ClydeNode:
 	if token_walker.peek(TokenArray.eof) != null:
 		return  node
 
-	if token_walker.peek(TokenArray.brace_open) != null:
-		token_walker.consume(TokenArray.brace_open)
+	if token_walker.peek(TokenArray.curly_brace_open) != null:
+		token_walker.consume(TokenArray.curly_brace_open)
 		node = parser.logic_parser.line_with_action(node)
 
 	return node

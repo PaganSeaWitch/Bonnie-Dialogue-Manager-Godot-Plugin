@@ -7,7 +7,7 @@ var logic_parser : LogicParser = LogicParser.new()
 var line_parser : LineParser = LineParser.new()
 var variations_parser : VariationsParser = VariationsParser.new()
 var options_parser : OptionsParser = OptionsParser.new()
-
+var dependent_parser : DependentParser = DependentParser.new()
 # Parses given string data into a DocumentNode
 func parse(doc : String) -> DocumentNode:
 	var token_walker = TokenWalker.new()
@@ -17,6 +17,7 @@ func parse(doc : String) -> DocumentNode:
 	line_parser.init(self, token_walker)
 	variations_parser.init(self, token_walker)
 	options_parser.init(self, token_walker)
+	dependent_parser.init(self, token_walker)
 	var result : DocumentNode = misc_parser.document()
 	if token_walker.peek() != null:
 		token_walker.consume(TokenArray.eof)

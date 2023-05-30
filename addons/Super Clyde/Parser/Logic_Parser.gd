@@ -2,7 +2,7 @@ class_name LogicParser
 extends MiscParser
 
 
-func _logic_element() -> ClydeNode:
+func logic_element() -> ClydeNode:
 	if token_walker.peek(TokenArray.set):
 		var assignments = _assignments()
 		return assignments
@@ -31,8 +31,8 @@ func nested_logic_block() -> Dictionary:
 			wrapper.content = [next]
 			wrapper = next
 
-		if token_walker.peek(TokenArray.brace_open):
-			token_walker.consume(TokenArray.brace_open)
+		if token_walker.peek(TokenArray.curly_brace_open):
+			token_walker.consume(TokenArray.curly_brace_open)
 
 	return {
 		"root": root,
@@ -40,7 +40,7 @@ func nested_logic_block() -> Dictionary:
 	}
 
 
-func _logic_block() -> ContentNode:
+func _logic_block() -> ClydeNode:
 	if token_walker.peek(TokenArray.set) != null:
 		var assignments : AssignmentsNode = _assignments()
 		return node_factory.create_node(node_factory.NODE_TYPES.ACTION_CONTENT,
@@ -72,7 +72,7 @@ func _events() -> EventsNode:
 		eventsNode.events.push_back(node_factory.create_node(node_factory.NODE_TYPES.EVENT, 
 			{name = token_walker.current_token.value}))
 
-	token_walker.consume(TokenArray.brace_close)
+	token_walker.consume(TokenArray.logic_close)
 
 	return eventsNode
 
@@ -90,14 +90,20 @@ func conditional_line() -> ConditionalContentNode :
 		token_walker.consume(TokenArray.end)
 	elif token_walker.peek(TokenArray.brace_open):
 		token_walker.consume(TokenArray.brace_open)
+		content = parser.dependent_parser.line_part_with_action()
+	elif token_walker.peek(TokenArray.curly_brace_open):
+		token_walker.consume(TokenArray.curly_brace_open)
 		content = line_with_action()
 	else:
 		token_walker.consume(TokenArray.dialogue)
 		content = parser.line_parser.dialogue_line()
-		if token_walker.peek(TokenArray.brace_open):
-			token_walker.consume(TokenArray.brace_open)
+		if token_walker.peek(TokenArray.curly_brace_open):
+			token_walker.consume(TokenArray.curly_brace_open)
 			content = line_with_action(content)
-
+		elif token_walker.peek(TokenArray.brace_open):
+			token_walker.consume(TokenArray.brace_open)
+			content = parser.dependent_parser.line_part_with_action(content)
+			
 	if(typeof(content) == TYPE_ARRAY):
 		return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
 			{"conditions" = expression, "content" = content})
@@ -114,7 +120,7 @@ func _condition() -> ClydeNode:
 	if token != null:
 		expression = _expression()
 
-	token_walker.consume(TokenArray.brace_close)
+	token_walker.consume(TokenArray.logic_close)
 	return expression
 
 
@@ -125,7 +131,7 @@ func _assignments() -> AssignmentsNode:
 		token_walker.consume(TokenArray.comma)
 		assignments.push_back(_assignment_expression())
 
-	token_walker.consume(TokenArray.brace_close)
+	token_walker.consume(TokenArray.logic_close)
 	if(typeof(assignments) == TYPE_ARRAY):
 		return node_factory.create_node(node_factory.NODE_TYPES.ASSIGNMENTS,
 			{"assignments"= assignments})
@@ -155,7 +161,7 @@ func _assignment_expression_internal() -> ClydeNode:
 	var variable : VariableNode = node_factory.create_node(node_factory.NODE_TYPES.VARIABLE, 
 		{"name" : token_walker.current_token.value})
 
-	if token_walker.peek(TokenArray.brace_close) != null:
+	if token_walker.peek(TokenArray.logic_close) != null:
 		return variable
 
 
@@ -227,20 +233,41 @@ func _operator(operator, lhs, rhs) -> ExpressionNode:
 		{"name"= operator,"elements"= [lhs, rhs] })
 
 
-func line_with_action(line : ClydeNode = null) -> ContentNode:
+func line_with_action(line : ClydeNode = null, from_dependent_logic : bool = false) -> ContentNode:
 	var token = token_walker.peek(TokenArray.set_trigger)
-	var expression : ClydeNode = _logic_element()
+	var expression : ClydeNode = logic_element()
 
 	if line != null:
 		var content : ClydeNode = line
-
+		
+		if token_walker.peek(TokenArray.dialogue) != null && from_dependent_logic:
+			token_walker.consume(TokenArray.dialogue)
+			if(content.content.back().part is ConditionalContentNode || content.content.back().part is ActionContentNode):
+				content.content.back().part.content.append(parser.line_parser.dialogue_line())
+			else:
+				content.content.append(node_factory.create_node(node_factory.NODE_TYPES.LINE_PART,
+					{"part" = parser.line_parser.dialogue_line()}))
+		
 		if token_walker.peek(TokenArray.brace_open) != null:
 			token_walker.consume(TokenArray.brace_open)
-			content = line_with_action(line)
+			if(from_dependent_logic):
+				content = parser.dependent_parser.line_part_with_action(null, line)
+			else:
+				content = parser.dependent_parser.line_part_with_action(line)
+		if token_walker.peek(TokenArray.curly_brace_open) != null:
+			token_walker.consume(TokenArray.curly_brace_open)
+			content = line_with_action(line,from_dependent_logic)
 
 		if token_walker.peek(TokenArray.lineBreak) != null:
 			token_walker.consume(TokenArray.lineBreak)
-
+			if(from_dependent_logic && 
+			(content is ActionContentNode ==  false) && (content is ConditionalContentNode == false)):
+				content.content.back().end_part = true
+		if token_walker.peek(TokenArray.eof) != null:
+			if(from_dependent_logic && 
+			(content is ActionContentNode ==  false) && (content is ConditionalContentNode == false)):
+				content.content.back().end_line = true
+		
 		if token == null || token.name == Syntax.TOKEN_KEYWORD_WHEN:
 			return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
 				{"conditions" = expression, "content" = [content]})
@@ -255,14 +282,22 @@ func line_with_action(line : ClydeNode = null) -> ContentNode:
 	if token_walker.peek(TokenArray.eof) != null:
 		return  expression
 
-	if token_walker.peek(TokenArray.brace_open) != null:
-		token_walker.consume(TokenArray.brace_open)
+	if token_walker.peek(TokenArray.curly_brace_open) != null:
+		token_walker.consume(TokenArray.curly_brace_open)
 		if !token:
 			return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
 				{"conditions" = expression, "content" = [line_with_action()]})
 		return node_factory.create_node(node_factory.NODE_TYPES.ACTION_CONTENT,
 			{"actions"= [expression], "content"= [line_with_action()]})
 
+	if token_walker.peek(TokenArray.brace_open) != null:
+		token_walker.consume(TokenArray.brace_open)
+		if !token:
+			return node_factory.create_node(node_factory.NODE_TYPES.CONDITIONAL_CONTENT, 
+					{"conditions" = expression, "content" = [parser.dependent_parser.line_part_with_action()]})
+		return node_factory.create_node(node_factory.NODE_TYPES.ACTION_CONTENT,
+			{"actions"= [expression], "content"= [parser.dependent_parser.line_part_with_action()]})
+	
 	token_walker.consume(TokenArray.dialogue)
 
 	if token == null:

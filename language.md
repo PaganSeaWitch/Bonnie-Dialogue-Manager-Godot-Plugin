@@ -873,10 +873,13 @@ A important concept is that if you split a line with a placement dependent logic
 -- Condition is checked after assignment. This line will be returned.
 say something { set something = true } { when something }
 
--- 'say' is returned. variable is assgined. 'some' is returned.condition is checked truthfully and 'thing' is returned.
+-- 'say' is returned. variable is assgined. 'some' is returned. condition is checked truthfully and 'thing' is returned.
 say [ set something = true ] some [ when something ] thing 
 
+condition is checked falsely so say isnt returned. condition is checked truthy so something is. 
+[ when something = false] say [ when something = true] something
 ```
+
 
 A good use case for placement dependent logic blocks is triggers mid dialogue or if you want only part of a line revealed based based on a variable.
 
