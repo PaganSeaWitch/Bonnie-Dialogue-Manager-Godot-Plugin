@@ -135,7 +135,7 @@ npc: what do you want to talk about?
 		"type":  NodeFactory.NODE_TYPES.DOCUMENT,
 		"content":  [
 			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'what do you want to talk about?', "speaker": 'npc', "id": "", "tags": [], "id_suffixes": [], },
-			{
+			{ 
 				"type": NodeFactory.NODE_TYPES.OPTIONS,
 				"value": "",
 				"speaker": "",
