@@ -11,16 +11,16 @@
 			"content": [
 				{
 					"type": "Option",
-					"name": "Life",
+					"value": "Life",
 					"mode": "once",
 					"content": [
 						{
 							"type": "Options",
-							"name": "I want to talk about life!",
+							"value": "I want to talk about life!",
 							"content": [
 								{
 									"type": "Option",
-									"name": "nested life",
+									"value": "nested life",
 									"mode": "once",
 									"content": [
 										{
@@ -37,7 +37,7 @@
 				},
 				{
 					"type": "Option",
-					"name": "The universe",
+					"value": "The universe",
 					"mode": "once",
 					"content": [
 						{
@@ -64,7 +64,7 @@
 				},
 				{
 					"type": "Option",
-					"name": "Everything else...",
+					"value": "Everything else...",
 					"mode": "once",
 					"content": [
 						{
@@ -86,7 +86,7 @@
 										"content": [
 											{
 												"type": "Option",
-												"name": "nested option 1",
+												"value": "nested option 1",
 												"mode": "once",
 												"content": [
 													{
@@ -101,7 +101,7 @@
 											},
 											{
 												"type": "Option",
-												"name": "nested option 2",
+												"value": "nested option 2",
 												"mode": "once",
 												"content": [
 													{
@@ -140,7 +140,7 @@
 										"content": [
 											{
 												"type": "Option",
-												"name": "nested option 1",
+												"value": "nested option 1",
 												"mode": "once",
 												"content": [
 													{
@@ -151,7 +151,7 @@
 											},
 											{
 												"type": "Option",
-												"name": "nested option 2",
+												"value": "nested option 2",
 												"mode": "once",
 												"content": [
 													{

@@ -443,7 +443,7 @@ func test_conditional_option():
 """)
 	var expected = _create_doc_payload([{
 		"type": NodeFactory.NODE_TYPES.OPTIONS,
-		"name": "",
+		"value": "",
 		"speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		"content": [
 			{
@@ -451,7 +451,7 @@ func test_conditional_option():
 				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
 				"content": [{
 					"type": NodeFactory.NODE_TYPES.OPTION,
-					"name": 'option 1',
+					"value": 'option 1',
 					"mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content":  [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 					
@@ -462,7 +462,7 @@ func test_conditional_option():
 				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_var" },
 				"content": [{
 					"type": NodeFactory.NODE_TYPES.OPTION,
-					"name": 'option 2',
+					"value": 'option 2',
 					"mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },],
 				}],
@@ -472,7 +472,7 @@ func test_conditional_option():
 				"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "some_other_var" },
 				"content": [{
 					"type": NodeFactory.NODE_TYPES.OPTION,
-					"name": 'option 3',
+					"value": 'option 3',
 					"mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content":  [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], }],
 				}],
@@ -528,7 +528,7 @@ func _assignment_tests(token, node_name):
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -553,7 +553,7 @@ func test_assignment_with_expression():
 		"speaker": "",
 		"id": "", 
 		"tags": [], 
-		"name": "",
+		"value": "",
 		"id_suffixes": [],
 		"mode": "",
 		"actions": [{
@@ -597,7 +597,7 @@ func test_assignment_with_expression_after():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -639,7 +639,7 @@ func test_chaining_assigments():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -695,7 +695,7 @@ func test_chaining_assigment_ending_with_variable():
 			"id": "",
 			"id_suffixes" : [],
 			"tags" : [],
-			"name" : "",
+			"value" : "",
 			"speaker": "",
 			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -735,7 +735,7 @@ func test_multiple_assigments_block():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -791,7 +791,7 @@ func test_assignment_after_line():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type": NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -849,7 +849,7 @@ func test_options_assignment():
 """)
 	var expected = _create_doc_payload([{
 		"type": NodeFactory.NODE_TYPES.OPTIONS,
-		"name": "",
+		"value": "",
 		"speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		"content": [
 			{
@@ -858,13 +858,13 @@ func test_options_assignment():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'a', }, "operation": "ASSIGN", "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 2.0, }, }, ],
 				}],
-				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content":  [
 							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
@@ -876,13 +876,13 @@ func test_options_assignment():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'b', }, "operation": "ASSIGN", "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 3.0, }, }, ],
 				}],
-				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content":  [
 							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
@@ -894,13 +894,13 @@ func test_options_assignment():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
 					"assignments": [{ "type":  NodeFactory.NODE_TYPES.ASSIGNMENT, "variable": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": 'c', }, "operation": "ASSIGN", "value": { "type": NodeFactory.NODE_TYPES.NUMBER_LITERAL, "value": 4.0, }, }, ],
 				}],
-				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": [
 							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
@@ -920,7 +920,7 @@ func test_divert_with_assignment():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -965,7 +965,7 @@ func test_trigger_event():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type": NodeFactory.NODE_TYPES.EVENTS,
@@ -987,7 +987,7 @@ func test_trigger_multiple_events_in_one_block():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type": NodeFactory.NODE_TYPES.EVENTS,
@@ -1023,7 +1023,7 @@ func test_trigger_event_after_line():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type": NodeFactory.NODE_TYPES.EVENTS,
@@ -1045,7 +1045,7 @@ func test_options_trigger():
 """)
 	var expected = _create_doc_payload([{
 		"type": NodeFactory.NODE_TYPES.OPTIONS,
-		"name": "",
+		"value": "",
 		"speaker": "", "id": "", "tags": [], "id_suffixes": [],
 		"content": [
 			{
@@ -1054,14 +1054,14 @@ func test_options_trigger():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,
 					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'a' }],
 				}],
 				"content": 
-					[{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+					[{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'option 1', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 						"content": [ { "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },],
 					}],
 			},
@@ -1071,13 +1071,13 @@ func test_options_trigger():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,
 					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'b' }],
 				}],
-				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'option 2', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": [{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },],
 				}],
 			},
@@ -1087,13 +1087,13 @@ func test_options_trigger():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,
 					"events": [{ "type": NodeFactory.NODE_TYPES.EVENT, "name": 'c' }],
 				}],
-				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "name": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
+				"content": [{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'option 3', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [],
 					"content": [
 							{ "type":  NodeFactory.NODE_TYPES.LINE, "value": 'option 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
 						],
@@ -1116,7 +1116,7 @@ func test_multiple_logic_blocks_in_the_same_line():
 			"id": "",
 			"id_suffixes" : [],
 			"tags" : [],
-			"name" : "",
+			"value" : "",
 			"speaker": "",
 			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -1147,7 +1147,7 @@ func test_multiple_logic_blocks_in_the_same_line_before():
 			"id": "",
 			"id_suffixes" : [],
 			"tags" : [],
-			"name" : "",
+			"value" : "",
 			"speaker": "",
 			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -1164,7 +1164,7 @@ func test_multiple_logic_blocks_in_the_same_line_before():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,
@@ -1191,7 +1191,7 @@ func test_multiple_logic_blocks_in_the_same_line_after():
 			"id": "",
 			"id_suffixes" : [],
 			"tags" : [],
-			"name" : "",
+			"value" : "",
 			"speaker": "",
 			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -1208,7 +1208,7 @@ func test_multiple_logic_blocks_in_the_same_line_after():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,
@@ -1235,7 +1235,7 @@ func test_multiple_logic_blocks_in_the_same_line_around():
 			"id": "",
 			"id_suffixes" : [],
 			"tags" : [],
-			"name" : "",
+			"value" : "",
 			"speaker": "",
 			"actions": [{
 				"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -1252,7 +1252,7 @@ func test_multiple_logic_blocks_in_the_same_line_around():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,
@@ -1276,7 +1276,7 @@ func test_multiple_logic_blocks_with_condition_after():
 		"id": "",
 		"id_suffixes" : [],
 		"tags" : [],
-		"name" : "",
+		"value" : "",
 		"speaker": "",
 		"actions": [{
 			"type":  NodeFactory.NODE_TYPES.ASSIGNMENTS,
@@ -1296,7 +1296,7 @@ func test_multiple_logic_blocks_with_condition_after():
 				"id": "",
 				"id_suffixes" : [],
 				"tags" : [],
-				"name" : "",
+				"value" : "",
 				"speaker": "",
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,

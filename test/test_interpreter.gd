@@ -36,7 +36,7 @@ func _options(options):
 	var content = options.get("content") if options.get("content") != null else []
 	return {
 		"type": NodeFactory.NODE_TYPES.OPTIONS,
-		"name": value,
+		"value": value,
 		"id": id,
 		"tags": tags,
 		"speaker": speaker,
@@ -48,7 +48,7 @@ func _option(option):
 	var content = option.get("content") if option.get("content") != null else []
 	return {
 		"type": NodeFactory.NODE_TYPES.OPTION,
-		"name": option.get("name"),
+		"value": option.get("name"),
 		"speaker": option.get("speaker") if option.get("speaker") != null else "",
 		"id": option.get("id") if option.get("id") != null else "",
 		"tags": option.get("tags") if option.get("tags") != null else [],
@@ -61,7 +61,7 @@ func _actionContent(actionContent):
 	var content = actionContent.get("content") if actionContent.get("content") != null else []
 	return {
 		"type": NodeFactory.NODE_TYPES.ACTION_CONTENT,
-		"name": actionContent.get("name"),
+		"value": actionContent.get("name"),
 		"speaker": actionContent.get("speaker") if actionContent.get("speaker") != null else "",
 		"id": actionContent.get("id") if actionContent.get("id") != null else "",
 		"tags": actionContent.get("tags") if actionContent.get("tags") != null else [],
@@ -194,8 +194,8 @@ first topics $abc&suffix1
 	interpreter.set_variable("suffix1", "P");
 	interpreter.set_variable("suffix2", "S");
 	var first_options = interpreter.get_current_node()
-	assert_eq(first_options.name, "simple key with suffix 1")
-	assert_eq(first_options.content[0].name, "simple key with only suffix 2")
+	assert_eq(first_options.value, "simple key with suffix 1")
+	assert_eq(first_options.content[0].value, "simple key with only suffix 2")
 
 	interpreter.choose(1);
 
