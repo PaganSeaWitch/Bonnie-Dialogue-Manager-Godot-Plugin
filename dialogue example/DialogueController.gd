@@ -26,7 +26,7 @@ signal change_character_stat(character, stat, typeOfChange)
 
 
 func _ready():
-	loadDialogue("variations", "", [], true)
+	loadDialogue("simple_lines", "", [], true)
 
 func loadDialogue(file: String, block : String, startingValues : Array, loadInFirstLine : bool = false):
 	clydeFile = file
@@ -62,7 +62,7 @@ func parseChoice(indexOfChoice : int, contentOfChoice : Array) -> void:
 	pauseForOptions = false
 
 
-#parses the content taken from clyde file
+# Parses the content taken from clyde file
 func parseContent(content : ClydeNode) -> void:
 	if(content != null):
 		dialogue_container.reset()
@@ -84,7 +84,7 @@ func parseContent(content : ClydeNode) -> void:
 		stage_controller.reset()
 
 
-#parses a clyde line
+# Parses a clyde line
 func parseLine(line : LineNode) -> void:
 	if(line.value == null || line.speaker == null):
 		printerr("line is not correctly formatted!")

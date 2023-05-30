@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cj7d8vg5wwxmw"]
+[gd_scene load_steps=2 format=3 uid="uid://7cxfnrdrlq0n"]
 
-[ext_resource type="Script" path="res://dialogue/lineController.gd" id="1_3f5dp"]
+[ext_resource type="Script" path="res://dialogue example/lineController.gd" id="1_3f5dp"]
 
 [node name="dialogueContainer" type="Control"]
 unique_name_in_owner = true

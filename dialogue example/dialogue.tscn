@@ -1,11 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://cbsibkt8wc2tv"]
+[gd_scene load_steps=8 format=3 uid="uid://cgmvit21ev3yj"]
 
-[ext_resource type="Script" path="res://dialogue/DialogueController.gd" id="1"]
-[ext_resource type="Script" path="res://dialogue/BackgroundController.gd" id="2"]
-[ext_resource type="Script" path="res://dialogue/StageController.gd" id="3"]
-[ext_resource type="Script" path="res://dialogue/soundEffectController.gd" id="4"]
-[ext_resource type="PackedScene" uid="uid://cj7d8vg5wwxmw" path="res://dialogue/dialogue_container.tscn" id="5_rwij0"]
-[ext_resource type="Script" path="res://dialogue/optionsController.gd" id="8"]
+[ext_resource type="Script" path="res://dialogue example/DialogueController.gd" id="1"]
+[ext_resource type="Script" path="res://dialogue example/BackgroundController.gd" id="2"]
+[ext_resource type="Script" path="res://dialogue example/StageController.gd" id="3"]
+[ext_resource type="Script" path="res://dialogue example/soundEffectController.gd" id="4"]
+[ext_resource type="PackedScene" uid="uid://7cxfnrdrlq0n" path="res://dialogue example/dialogue_container.tscn" id="5_rwij0"]
+[ext_resource type="Script" path="res://dialogue example/optionsController.gd" id="8"]
 
 [sub_resource type="SpriteFrames" id="1"]
 
