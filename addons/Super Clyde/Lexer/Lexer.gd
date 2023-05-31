@@ -21,6 +21,7 @@ var line : int = 0
 var column: int = 0
 var length : int= 0
 var line_with_dependent_logic : int = -1;
+var added_space : bool = false
 
 func init(_input : String) -> Lexer:
 	input = _input

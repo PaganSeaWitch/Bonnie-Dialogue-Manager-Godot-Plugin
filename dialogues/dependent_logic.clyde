@@ -17,3 +17,6 @@ Hello [ when a == 3 ] you!
 trigger [ trigger some_event ] this!
 plz [ trigger some_event, another_event ] trigger me daddy!!
 
+[ set logic = true]
+
+{ when logic } logic happening

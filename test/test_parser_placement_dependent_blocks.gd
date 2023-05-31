@@ -77,7 +77,7 @@ func test_parser_placement_depentdent_slice_text():
 					}],
 					"content": [_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": ' cakes', "speaker": "", "id": "", "tags": [], "id_suffixes": [], })],
 					}),
-				 true,
+				true,
 			),
 		])
 	])
@@ -108,7 +108,7 @@ func test_parser_multiple_placement_depentdent_conditional_text():
 					"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "chicken" },
 					"content": [_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": ' cakes ', "speaker": "", "id": "", "tags": [], "id_suffixes": [], })],
 					},
-				 false
+				false
 		),
 		_line_part({"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 					"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "sticks" },
@@ -135,7 +135,7 @@ func test_parser_multiple_placement_depentdent_conditional_and_action_text():
 					"conditions": { "type":  NodeFactory.NODE_TYPES.VARIABLE, "name": "sticks" },
 					"content": [_line({ "type":  NodeFactory.NODE_TYPES.LINE, "value": ' suck ', "speaker": "", "id": "", "tags": [], "id_suffixes": [], })],
 					},
-				 false
+				false
 			),
 			_line_part(_action_content({
 					"actions": [{
@@ -726,4 +726,3 @@ func test_full_line_tag_before_after_dependent():
 		)
 	])])
 	assert_eq_deep(result, expected)
-		

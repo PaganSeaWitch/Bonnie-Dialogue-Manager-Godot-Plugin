@@ -21,6 +21,7 @@ func handle_line_breaks() -> Array[Token]:
 		if lexer.is_current_mode(Syntax.MODE_OPTION):
 			lexer.pop_mode()
 	if(token.line == lexer.line_with_dependent_logic):
+		lexer.added_space = true
 		return [token]
 	return []
 

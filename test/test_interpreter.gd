@@ -671,6 +671,9 @@ func test_dependent_logic():
 	line_part = Parser.new().to_JSON_object(dialogue.get_content())
 	assert_eq_deep(line_part.part.value, " trigger me daddy!!")
 	assert_eq_deep(line_part.end_line, true)
+	
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.value, "logic happening")
 	line_part = Parser.new().to_JSON_object(dialogue.get_content())
 	if(line_part.keys().size() == 0):
 		assert_eq_deep(null, null)

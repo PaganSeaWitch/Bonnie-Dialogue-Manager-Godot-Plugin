@@ -13,7 +13,7 @@ func init(_interpreter : ClydeInterpreter, mem : MemoryInterface, _stack:  Inter
 	stack = _stack
 
 
-func handle_content_node(content_node : ContentNode) -> DialogueNode:
+func handle_content_node(content_node : ContentNode, fallback = true) -> DialogueNode:
 	if content_node.node_index == ClydeInterpreter.DEFAULT_INDEX:
 		content_node.node_index = stack.generate_index()
 	stack.add_to_stack(content_node)
@@ -25,7 +25,9 @@ func handle_content_node(content_node : ContentNode) -> DialogueNode:
 	if(node != null): 
 		return node
 	stack.stack_pop()
-	return interpreter.handle_next_node(stack.stack_head().node);
+	if(fallback):
+		return interpreter.handle_next_node(stack.stack_head().node);
+	return null
 
 
 func get_all_content_nodes(stack_element : InterpreterStack.StackElement) -> DialogueNode:

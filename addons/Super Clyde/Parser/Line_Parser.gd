@@ -118,4 +118,3 @@ func _line_with_tags() -> LineNode:
 
 	return node_factory.create_node(node_factory.NODE_TYPES.LINE,
 		{"tags"=[token_value]})
-

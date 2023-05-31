@@ -25,9 +25,13 @@ func handle_logic_block_stop_and_start(syntax_token : String) -> Array[Token]:
 		linebreak = LexerHelperFunctions.get_following_line_break(lexer.input,
 			lexer.line, lexer.column, lexer.position)
 	
-	if(syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN) && lexer.line != lexer.line_with_dependent_logic:
-		linebreak = LexerHelperFunctions.get_leading_line_break(lexer.input,
-			lexer.line, lexer.position)
+	if((syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN) 
+	&& lexer.line != lexer.line_with_dependent_logic):
+		if(lexer.added_space):
+			lexer.added_space = false
+		else:
+			linebreak = LexerHelperFunctions.get_leading_line_break(lexer.input,
+				lexer.line, lexer.position)
 	
 	if linebreak != null:
 		if (syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE):
