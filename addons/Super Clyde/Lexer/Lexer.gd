@@ -112,7 +112,7 @@ func _get_next_tokens() -> Array[Token]:
 		return line_lexer.handle_comments()
 	
 	# Rule : If \n in not quote mode, consume line break
-	if (input[position] == '\n'
+	if ((input[position] == '\n' || input[position] == '\r')
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
 		return misc_lexer.handle_line_breaks()
 

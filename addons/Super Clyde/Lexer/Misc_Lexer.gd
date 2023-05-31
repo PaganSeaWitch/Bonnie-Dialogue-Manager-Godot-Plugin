@@ -13,7 +13,7 @@ func init(_lexer : Lexer) -> void:
 func handle_line_breaks() -> Array[Token]:
 	
 	while (LexerHelperFunctions.is_valid_position(lexer.input, lexer.position) 
-	&& lexer.input[lexer.position] == '\n'):
+	&& (lexer.input[lexer.position] == '\n' || lexer.input[lexer.position] == '\r')):
 		lexer.line += 1
 		
 		# Move position forward and reset column
