@@ -13,6 +13,7 @@ var misc_interpreter : MiscInterpreter = MiscInterpreter.new()
 var line_interpreter : LineInterpreter = LineInterpreter.new()
 var options_interpreter : OptionsInterpreter = OptionsInterpreter.new()
 var random_block_interpreter : RandomBlockInterpreter = RandomBlockInterpreter.new()
+var dependent_interpreter : DependentInterpreter = DependentInterpreter.new()
 
 class Config:
 	var id_suffix_lookup_separator : String
@@ -33,8 +34,9 @@ var _handlers = {
 		LineNode.new().get_node_class(): line_interpreter.handle_line_node,
 		OptionNode.new().get_node_class(): options_interpreter.handle_option_node,
 		OptionsNode.new().get_node_class(): options_interpreter.handle_options_node,
-		VariationsNode.new().get_node_class(): variations_interpreter.handle_variations_node,}
-
+		VariationsNode.new().get_node_class(): variations_interpreter.handle_variations_node,
+		LinePartNode.new().get_node_class(): dependent_interpreter.handle_line_part_node}
+	
 
 
 var anchors = {}
@@ -57,7 +59,7 @@ func init(document_dict : Dictionary, interpreter_options :Dictionary = {}) -> v
 	line_interpreter.init(self,memory, stack)
 	options_interpreter.init(self, memory, stack)
 	random_block_interpreter.init(self, memory, stack)
-	
+	dependent_interpreter.init(self,memory, stack)
 	config.id_suffix_lookup_separator = interpreter_options.get("id_suffix_lookup_separator", "&")
 
 	_initialise_blocks(doc)

@@ -19,20 +19,8 @@ func handle_dependent_logic_block_stop_and_start(syntax_token : String) -> Array
 	LexerHelperFunctions.increase_lexer_position(lexer)
 	var token : Token = Token.new(syntax_token, 
 		lexer.line, setup_dict["initial_column"])
-	var linebreak : Token = null
-	
-	if(syntax_token == Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE):
-		linebreak = LexerHelperFunctions.get_following_line_break(lexer.input,
-			lexer.line, lexer.column, lexer.position)
-	
-	if(syntax_token == Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN):
-		linebreak = LexerHelperFunctions.get_leading_line_break(lexer.input,
-			lexer.line, lexer.position)
-	
-	if linebreak != null:
-		if (syntax_token == Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE):
-			return [ token, linebreak ] 
-		return [ linebreak, token ] 
+	lexer.line_with_dependent_logic = lexer.line
+
 	return [token]
 
 

@@ -1,0 +1,42 @@
+class_name DependentInterpreter
+extends MiscInterpreter
+
+
+func handle_line_part_node(line_part : LinePartNode):
+	if(!line_part.end_line):
+		line_part.end_line = check_next_line_part_is_valid(line_part)
+	
+	match(line_part.part.get_node_class()):
+		"LineNode":
+			return line_part
+		"ActionContentNode":
+			interpreter.logic_interpreter.handle_action(line_part.part)
+			var content = ContentNode.new()
+			content.content = line_part.part.content
+			line_part.part = interpreter.line_interpreter.handle_content_node(content)
+			return line_part
+		"ConditionalContentNode":
+			if interpreter.logic_interpreter.check_condition(line_part.part.conditions):
+				var content = ContentNode.new()
+				content.content = line_part.part.content
+				line_part.part = interpreter.line_interpreter.handle_content_node(content)
+				return line_part
+			return interpreter.handle_next_node(stack.stack_head().node)
+
+
+func check_next_line_part_is_valid(line_part : LinePartNode):
+	var content_node = stack.stack_head().node
+	if(content_node != null && content_node.get_node_class() == "ContentNode"):
+		var index = content_node.content.find(line_part)
+		if(index != -1 && content_node.content.back() != line_part):
+			for i in range(index + 1, content_node.content.size()):
+				var next_part = content_node.content[i]
+				match(next_part.part.get_node_class()):
+					"LineNode":
+						return false
+					"ActionContentNode":
+						return false
+					"ConditionalContentNode":
+						if interpreter.logic_interpreter.check_condition(next_part.part.conditions):
+							return false
+	return true

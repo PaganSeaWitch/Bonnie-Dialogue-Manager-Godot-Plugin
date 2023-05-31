@@ -23,6 +23,13 @@ func _line(line):
 		"id_suffixes": []
 	}
 
+func _line_part(part : Dictionary, end_line = false):
+	return {
+		"type" : NodeFactory.NODE_TYPES.LINE_PART,
+		"part": part,
+		"end_line": end_line
+	}
+
 
 func _options(options):
 
@@ -618,3 +625,54 @@ func test_uses_configured_dialogue_folder():
 
 	for line in lines:
 		assert_eq_deep(Parser.new().to_JSON_object(dialogue.get_content()), line)
+
+
+func test_dependent_logic():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('dependent_logic')
+	var line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "variable was")
+	assert_eq_deep(line_part.end_line, false)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, " initialized with 1")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "setting ")
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "multiple variables")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "  4 == 4.  3 == 3")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "you")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "hey")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "Hello ")
+	assert_eq_deep(line_part.end_line, false)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, " you!")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, " This is a line inside a condition")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "trigger ")
+	assert_eq_deep(line_part.end_line, false)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, " this!")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, "plz ")
+	assert_eq_deep(line_part.end_line, false)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	assert_eq_deep(line_part.part.value, " trigger me daddy!!")
+	assert_eq_deep(line_part.end_line, true)
+	line_part = Parser.new().to_JSON_object(dialogue.get_content())
+	if(line_part.keys().size() == 0):
+		assert_eq_deep(null, null)
+	else:
+		assert_eq_deep(line_part, null)

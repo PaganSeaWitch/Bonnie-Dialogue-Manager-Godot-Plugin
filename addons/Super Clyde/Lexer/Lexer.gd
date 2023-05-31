@@ -20,7 +20,7 @@ var position: int = 0
 var line : int = 0
 var column: int = 0
 var length : int= 0
-
+var line_with_dependent_logic : int = -1;
 
 func init(_input : String) -> Lexer:
 	input = _input
@@ -105,29 +105,31 @@ func is_current_mode(mode : String):
 
 # Returns an array of tokens gotten from input
 func _get_next_tokens() -> Array[Token]:
-	
+
+	var chr = input[position]
+	var inputTillNow = input.substr(0, position)
 	# Rule : If -- in not quote mode, consume as comment
 	if  (input.substr(position, 2) == '--' 
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
 		return line_lexer.handle_comments()
 	
 	# Rule : If \n in not quote mode, consume line break
-	if ((input[position] == '\n' || input[position] == '\r')
+	if ((chr == '\n' || chr == '\r')
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
 		return misc_lexer.handle_line_breaks()
 
 	# Rule : If tab at the zeroth columm in not logic mode, consume the indents
-	if (((column == 0 && LexerHelperFunctions.is_tab_char(input[position])) 
+	if (((column == 0 && LexerHelperFunctions.is_tab_char(chr)) 
 	|| (column == 0 && indent.size() > 1))
 	&&  !is_current_mode(Syntax.MODE_LOGIC)):
 		return misc_lexer.handle_indent()
 
-	if (input[position] == '['
+	if (chr == '['
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
 		return dependent_logic_lexer.handle_dependent_logic_block_start()
 
 	# Rule : if { in not quote mode, start logic mode
-	if (input[position] == '{'
+	if (chr == '{'
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
 		return logic_lexer.handle_logic_block_start()
 
@@ -138,13 +140,13 @@ func _get_next_tokens() -> Array[Token]:
 			return response
  
 	# Rule : if " or ', start quote mode
-	if (input[position] == '"' 
-	|| input[position] == "'"):
+	if (chr == '"' 
+	|| chr == "'"):
 		if !current_quote.is_empty():
-			if input[position] == current_quote:
+			if chr == current_quote:
 				return line_lexer.handle_quote()
 		else:
-			current_quote = input[position]
+			current_quote = chr
 			return line_lexer.handle_quote()
 
 	# Rule : if we are in quote mode, consume text
@@ -184,28 +186,28 @@ func _get_next_tokens() -> Array[Token]:
 		return misc_lexer.handle_divert_parent()
 
 	# Rule : if - in variations mode, consume variation  
-	if (input[position] == '-' 
+	if (chr == '-' 
 	&& is_current_mode(Syntax.MODE_VARIATIONS)):
 		return variations_lexer.handle_variation_item()
 
 
 	# Rule : if *, +, >, start option mode
-	if (input[position] == '*' 
-	|| input[position] == '+' 
-	|| input[position] == '>'):
+	if (chr == '*' 
+	|| chr == '+' 
+	|| chr == '>'):
 		return option_lexer.handle_options()
 
 	# Rule : if = in option mode, consume assign
-	if (input[position] == '=' 
+	if (chr == '=' 
 	&& is_current_mode(Syntax.MODE_OPTION)):
 		return option_lexer.handle_option_display_char()
 
 	# Rule : if $, consume line id
-	if input[position] == '$':
+	if chr == '$':
 		return line_lexer.handle_line_id()
 
 	# Rule : if #, consume tag
-	if input[position] == '#':
+	if chr == '#':
 		return line_lexer.handle_tag()
 
 	# Rule : base case, handle as regular text

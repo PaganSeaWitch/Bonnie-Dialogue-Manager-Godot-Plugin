@@ -21,11 +21,11 @@ func handle_logic_block_stop_and_start(syntax_token : String) -> Array[Token]:
 		lexer.line, setup_dict["initial_column"])
 	var linebreak : Token = null
 	
-	if(syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE):
+	if(syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE) && lexer.line != lexer.line_with_dependent_logic:
 		linebreak = LexerHelperFunctions.get_following_line_break(lexer.input,
 			lexer.line, lexer.column, lexer.position)
 	
-	if(syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN):
+	if(syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN) && lexer.line != lexer.line_with_dependent_logic:
 		linebreak = LexerHelperFunctions.get_leading_line_break(lexer.input,
 			lexer.line, lexer.position)
 	

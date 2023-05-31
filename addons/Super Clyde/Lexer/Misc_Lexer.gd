@@ -8,10 +8,10 @@ func init(_lexer : Lexer) -> void:
 	lexer = _lexer
 
 
-
 # Consumes line breaks and returns nothing
 func handle_line_breaks() -> Array[Token]:
 	
+	var token = Token.new(Syntax.TOKEN_LINE_BREAK, lexer.line, lexer.column)
 	while (LexerHelperFunctions.is_valid_position(lexer.input, lexer.position) 
 	&& (lexer.input[lexer.position] == '\n' || lexer.input[lexer.position] == '\r')):
 		lexer.line += 1
@@ -20,6 +20,8 @@ func handle_line_breaks() -> Array[Token]:
 		LexerHelperFunctions.increase_lexer_position(lexer, 1, lexer.column * -1)
 		if lexer.is_current_mode(Syntax.MODE_OPTION):
 			lexer.pop_mode()
+	if(token.line == lexer.line_with_dependent_logic):
+		return [token]
 	return []
 
 

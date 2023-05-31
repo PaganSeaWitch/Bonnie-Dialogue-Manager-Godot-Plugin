@@ -35,7 +35,12 @@ func _text_line() -> DialogueNode:
 			{"value" = token_value}) as LineNode
 
 
-	if token_walker.is_multiline_enabled && token_walker.peek(TokenArray.indent):
+	if token_walker.is_multiline_enabled && (token_walker.peek(TokenArray.indent) 
+	|| ( token_walker.peek(TokenArray.lineBreak) && token_walker.peek(TokenArray.indent, 1))):
+		
+		if(token_walker.peek(TokenArray.lineBreak)):
+			token_walker.consume(TokenArray.lineBreak)
+		
 		token_walker.consume(TokenArray.indent)
 
 		if token_walker.peek(TokenArray.options):

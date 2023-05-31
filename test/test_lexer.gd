@@ -1220,7 +1220,6 @@ func test_variables_assignements_dependent():
 	for token in tokens:
 		jsonTokens.append(Token.to_JSON_object(token))
 	assert_eq_deep(jsonTokens, [
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": "" },
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 1, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 1, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 1, "column": 6, },
@@ -1229,7 +1228,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 1, "column": 19, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 20, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 2, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 2, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 2, "column": 6, },
@@ -1238,7 +1237,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 2, "column": 20, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 2, "column": 21, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 3, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 3, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 3, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 3, "column": 6, },
@@ -1247,7 +1246,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 3, "column": 20, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 3, "column": 21, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 4, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 4, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 4, "column": 6, },
@@ -1256,7 +1255,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 4, "column": 20, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 4, "column": 21, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 5, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 5, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 5, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 5, "column": 6, },
@@ -1265,7 +1264,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 5, "column": 20, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 5, "column": 21, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 6, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 6, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 6, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 6, "column": 6, },
@@ -1275,7 +1274,6 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 6, "column": 21, "value": "" },
 
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 7, "column": 0, "value": "" },
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 7, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 7, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 7, "column": 6, },
@@ -1284,7 +1282,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 7, "column": 20, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 7, "column": 21, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 8, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 8, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 8, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 8, "column": 6, },
@@ -1295,7 +1293,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 8, "column": 23, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 8, "column": 24, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 10, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 10, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 10, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 10, "column": 6, },
@@ -1306,7 +1304,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 10, "column": 23, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 10, "column": 24, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 11, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 11, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 11, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 11, "column": 6, },
@@ -1317,7 +1315,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 11, "column": 23, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 11, "column": 24, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 12, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 12, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 12, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 12, "column": 6, },
@@ -1328,7 +1326,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 12, "column": 23, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 12, "column": 24, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 13, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 13, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 13, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 13, "column": 6, },
@@ -1339,7 +1337,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 13, "column": 23, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 13, "column": 24, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 14, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 14, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 14, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 14, "column": 6, },
@@ -1350,7 +1348,7 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 14, "column": 23, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 14, "column": 24, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 15, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 15, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 15, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'variable', "line": 15, "column": 6, },
@@ -1361,14 +1359,14 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 15, "column": 23, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 15, "column": 24 , "value": ""},
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 17, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 17, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_TRIGGER, "line": 17, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'event_name', "line": 17, "column": 10, },
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_CLOSE, "line": 17, "column": 21, "value": "" },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 17, "column": 22, "value": "" },
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 18, "column": 0, "value": "" },
+
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 18, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 18, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 18, "column": 6, },
@@ -1383,7 +1381,6 @@ func test_variables_assignements_dependent():
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 18, "column": 24, "value": "" },
 
 
-		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 19, "column": 0, "value": "" },
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 19, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_WHEN, "line": 19, "column": 2, "value": "", },
 		{ "name": Syntax.TOKEN_IDENTIFIER, "value": 'a', "line": 19, "column": 7, },
@@ -1414,7 +1411,8 @@ func test_lexer_placement_depentdent_block():
 		"line": 0,
 		"column": 12,
 	})
-	
+
+
 func test_lexer_placement_depentdent_slice_text():
 	var lexer = Lexer.new()
 	var tokens = lexer.init('cheese [ set x = 5 ] cakes').get_all()

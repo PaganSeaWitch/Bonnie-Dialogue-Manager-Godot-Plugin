@@ -5,6 +5,7 @@ func parse(input):
 	var parser = Parser.new()
 	return parser.to_JSON_object(parser.parse(input))
 
+
 func test_parse_blocks():
 	var result = parse("""
 == first block
@@ -35,6 +36,7 @@ line 4
 		]
 	}
 	assert_eq_deep(result, expected)
+
 
 func test_parse_blocks_and_lines():
 	var result = parse("""

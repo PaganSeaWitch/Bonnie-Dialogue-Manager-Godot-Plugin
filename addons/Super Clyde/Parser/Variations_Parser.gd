@@ -43,7 +43,9 @@ func variations() -> VariationsNode:
 
 		if token_walker.peek(TokenArray.dedent) != null:
 			token_walker.consume(TokenArray.dedent)
-
+	if(token_walker.peek(TokenArray.lineBreak)):
+		token_walker.consume(TokenArray.lineBreak)
+	
 	token_walker.consume(TokenArray.bracket_close)
 
 	return variations

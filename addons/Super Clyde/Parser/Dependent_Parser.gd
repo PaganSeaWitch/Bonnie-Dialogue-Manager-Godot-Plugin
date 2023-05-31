@@ -29,11 +29,11 @@ func line_part_with_action(line : ClydeNode = null, content_node : ContentNode =
 	if(token_walker.peek(TokenArray.tag_and_id)):
 		line_part.part.content = [parser.line_parser._text_line()]
 
-	if token_walker.peek(TokenArray.lineBreak) != null:
+	if token_walker.peek(TokenArray.lineBreak):
 		token_walker.consume(TokenArray.lineBreak)
 		line_part.end_line = true
 	
-	if token_walker.peek(TokenArray.eof) != null:
+	if token_walker.peek(TokenArray.eof):
 		line_part.end_line = true
 	
 	content_node.content.append(line_part)
@@ -67,7 +67,7 @@ func line_part_with_action(line : ClydeNode = null, content_node : ContentNode =
 				else:
 					inner_line_part.part.content[0] = add_to_line_part(part.content[0], speaker, tags, id, id_suffixes, i)	
 
-
+	content_node.content.back().end_line = true
 	return content_node;
 
 

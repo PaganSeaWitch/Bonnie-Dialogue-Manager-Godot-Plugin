@@ -1,0 +1,19 @@
+-- logic example
+
+-- assignments
+variable was[ set some_value = 1 ] initialized with %some_value%
+setting [ set a = 1, b = 2, c = 3 ]multiple variables
+[ set some_value += a += b ]  %some_value% == 4.  %a% == 3
+
+--  conditions
+you[ a == 1 ] Hello!
+hey[ a == 2 || a != 3 ] Hi!
+Hello [ when a == 3 ] you!
+
+[ not bl ] This is a line inside a condition
+
+
+-- events
+trigger [ trigger some_event ] this!
+plz [ trigger some_event, another_event ] trigger me daddy!!
+
