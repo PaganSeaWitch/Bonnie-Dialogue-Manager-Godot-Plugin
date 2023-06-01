@@ -39,3 +39,4 @@ The functions within this file should consume the token/s that you craeted in st
 ## Step 5: Create new Interpreter 
 
 Create a new interpreter sub file in the Interpreter folder that extends MiscInterpreter.
+The functions within this file should take the node that was created from the parser and determined what should occur and whether it should return something. Keep in mind what is returned should be able to be used as dialogue. 
