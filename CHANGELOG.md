@@ -2,7 +2,25 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## 4.0.0 (2022-04-12)
+## 5.0.0 (2023-05-31)
+
+- Add Dependent Logic blocks for writing intra line logic. 
+	- Dependent Logic blocks are siginified with `[ ]` brackets and can be used in lines and variations but not option labels. For more information, check language doc.
+
+### Breaking Changes
+
+- as `[ ]` have now become special characters, they cannot be used without \\\ in front of them.
+
+Old way:
+```
+[ this is a generic line]
+```
+New way:
+```
+\\[ this is a generic line \\]
+```
+
+## 4.0.0 (2023-04-12)
 
 - Implemented the entire project in Classes
 - Added ability to randomly select blocks
