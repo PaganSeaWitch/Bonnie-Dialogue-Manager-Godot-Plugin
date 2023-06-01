@@ -35,12 +35,15 @@ func check_next_line_part_is_valid(line_part : LinePartNode):
 		if(index != -1 && content_node.content.back() != line_part):
 			for i in range(index + 1, content_node.content.size()):
 				var next_part = content_node.content[i]
-				match(next_part.part.get_node_class()):
-					"LineNode":
-						return false
-					"ActionContentNode":
-						return false
-					"ConditionalContentNode":
-						if interpreter.logic_interpreter.check_condition(next_part.part.conditions):
+				if(next_part != null):
+					match(next_part.part.get_node_class()):
+						"LineNode":
 							return false
+						"ActionContentNode":
+							var content = ContentNode.new()
+							if(!next_part.part.content.is_empty()):
+								return false
+						"ConditionalContentNode":
+							if interpreter.logic_interpreter.check_condition(next_part.part.conditions):
+								return false
 	return true
