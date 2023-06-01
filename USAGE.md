@@ -92,7 +92,20 @@ Restarting a dialogue won't reset the variables already set.
 
 You should use `dialogue.get_content()` to get the next available content.
 
-This method may return one of the following values that are child classes of `DialogueNode`:
+This method may return one of the following values that are child classes of `ClydeNode`:
+
+
+#### Line Part
+A single part of a line that has been split up by Dependent logic blocks. it contains the actual useful dialogue within it's part.
+
+``` gdscript
+class_name LinePartNode
+
+var end_line : bool = false     # Indicates whether this is the end of a line or not
+var part : ClydeNode            # The current part of the line, returned as a LineNode
+
+```
+
 
 #### Line
 
