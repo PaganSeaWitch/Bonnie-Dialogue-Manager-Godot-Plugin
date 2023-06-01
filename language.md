@@ -892,7 +892,7 @@ A good use case for placement dependent logic blocks is triggers mid dialogue or
 Hey how r you doing? [when weather = 'rainy'] Terrible weather we are having today huh?
 
 ```
-
+Placement dependent logic cannot be used in Options as it doesn't make sense to have a option be displayed in part. 
 
 ### Using variables in text
 
