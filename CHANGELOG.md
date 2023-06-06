@@ -3,6 +3,7 @@
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## 6.0.0 (2023-06-06)
+- New output visualizer that makes it easy to understand how your clyde file is being turned into nodes.
 - Changed Dependent Logic blocks from `[]` to `{[]}`
 - Added new `bb_code_before_line` member to `LineNode` 
 	- Now all bb codes in lines (NOT Options) is given within the `LineNode` member `bb_code_before_line` rather then just in `value`. This will make it easier to intergrate bb code into your dialogue without having to parse them manually.
