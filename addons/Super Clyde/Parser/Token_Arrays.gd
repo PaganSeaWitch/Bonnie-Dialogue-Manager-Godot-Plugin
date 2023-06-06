@@ -131,6 +131,12 @@ const dedent : Array[String]  = [Syntax.TOKEN_DEDENT]
 
 const divert : Array[String]  = [Syntax.TOKEN_DIVERT, Syntax.TOKEN_DIVERT_PARENT]
 
+const bb_code_open : Array[String] = [Syntax.TOKEN_BEGINNING_BB_CODE_OPEN, Syntax.TOKEN_ENDING_BB_CODE_OPEN]
+
+const bb_code_close : Array[String] = [Syntax.TOKEN_BB_CODE_CLOSE]
+
+const bb_code : Array[String] = [Syntax.TOKEN_BB_CODE]
+
 const eof : Array[String]  = [Syntax.TOKEN_EOF]
 
 const variations : Array[String]  = [Syntax.TOKEN_VARIATIONS_MODE]
