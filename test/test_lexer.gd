@@ -1,14 +1,8 @@
-extends "res://addons/gut/test.gd"
-
-
+extends GutTestFunctions
 
 
 func test_text():
-	var lexer = Lexer.new()
-	var tokens = lexer.init('this is a line').get_all()
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens('this is a line')
 	assert_eq_deep(jsonTokens.size(), 2)
 	assert_eq_deep(jsonTokens[0], {
 		"name": Syntax.TOKEN_TEXT,
@@ -19,11 +13,7 @@ func test_text():
 
 
 func test_text_with_multiple_lines():
-	var lexer = Lexer.new()
-	var tokens = lexer.init('this is a line\nthis is another line 2').get_all()
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens('this is a line\nthis is another line 2')
 	assert_eq_deep(jsonTokens.size(), 3)
 	assert_eq_deep(jsonTokens[0], {
 		"name": Syntax.TOKEN_TEXT,
@@ -40,12 +30,7 @@ func test_text_with_multiple_lines():
 
 
 func test_text_with_quotes():
-	var lexer = Lexer.new()
-	var tokens = lexer.init('"this is a line with: special# characters $.\\" Enjoy"').get_all()
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens('"this is a line with: special# characters $.\\" Enjoy"')
 	assert_eq_deep(jsonTokens, [
 		{
 			"name": Syntax.TOKEN_TEXT,
@@ -58,11 +43,7 @@ func test_text_with_quotes():
 
 
 func test_text_with_single_quotes():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("'this is a line with: special# characters $.\\' Enjoy'").get_all()
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens("'this is a line with: special# characters $.\\' Enjoy'")
 	assert_eq_deep(jsonTokens, [
 		{
 			"name": Syntax.TOKEN_TEXT,
@@ -75,12 +56,7 @@ func test_text_with_single_quotes():
 
 
 func test_text_with_both_leading_quote_types():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("\"'this' is a 'line'\"").get_all()
-	
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens("\"'this' is a 'line'\"")
 	assert_eq_deep(jsonTokens, [
 		{
 			"name": Syntax.TOKEN_TEXT,
@@ -90,10 +66,7 @@ func test_text_with_both_leading_quote_types():
 		},
 		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 20, "value": "" },
 	])
-	tokens = lexer.init('\'this is a "line"\'').get_all()
-	jsonTokens = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	jsonTokens = _get_lexer_json_tokens('\'this is a "line"\'')
 	assert_eq_deep(jsonTokens, [
 		{
 			"name": Syntax.TOKEN_TEXT,
@@ -106,12 +79,7 @@ func test_text_with_both_leading_quote_types():
 
 
 func test_variable_with_both_quote_types():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("{ set characters = '{\"name\": \"brain\"}' }").get_all()
-	
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens("{ set characters = '{\"name\": \"brain\"}' }")
 	assert_eq_deep(jsonTokens, [
 		{"column":0, "line":0, "name":Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN, "value": ""},
 		{"column":2, "line":0, "name":Syntax.TOKEN_KEYWORD_SET, "value": ""},
@@ -124,13 +92,7 @@ func test_variable_with_both_quote_types():
 
 
 func test_escape_characters_in_regular_text():
-	var lexer = Lexer.new()
-	var tokens = lexer.init('this is a line with\\: special\\# characters \\$.\\" Enjoy').get_all()
-	
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
-	
+	var jsonTokens = _get_lexer_json_tokens('this is a line with\\: special\\# characters \\$.\\" Enjoy')
 	assert_eq_deep(jsonTokens, [
 		{
 			"name": Syntax.TOKEN_TEXT,
@@ -143,13 +105,7 @@ func test_escape_characters_in_regular_text():
 
 
 func test_count_lines_correctly_in_quotted_text_with_line_breaks():
-	var lexer = Lexer.new()
-	var tokens = lexer.init('"this is a line with\nline break"\nthis should be on line 2').get_all()
-	
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
-	
+	var jsonTokens = _get_lexer_json_tokens('"this is a line with\nline break"\nthis should be on line 2')
 	assert_eq_deep(jsonTokens, [
 		{
 			"name": Syntax.TOKEN_TEXT,
@@ -168,17 +124,13 @@ func test_count_lines_correctly_in_quotted_text_with_line_breaks():
 
 
 func test_ignores_comments():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""-- this is a comment
+	var jsonTokens = _get_lexer_json_tokens("""-- this is a comment
 -- this is another comment
 this is a line
 -- this is a third comment
 this is another line 2
 -- another one
-""").get_all()
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens.size(), 3)
 	assert_eq_deep(jsonTokens[0], {
 		"name": Syntax.TOKEN_TEXT,
@@ -194,8 +146,7 @@ this is another line 2
 	})
 
 func test_count_lines_correctly():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""-- this is a comment
+	var jsonTokens = _get_lexer_json_tokens("""-- this is a comment
 -- this is another comment
 this is a line
 -- this is a third comment
@@ -203,14 +154,7 @@ this is another line 2
 "this is another line 3"
 this is another line 4
 -- another one
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
-		
-		
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'this is a line', "line": 2, "column": 0, },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'this is another line 2', "line": 4, "column": 0 },
@@ -221,8 +165,7 @@ this is another line 4
 
 
 func test_detects_indents_and_dedents():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""normal line
+	var jsonTokens = _get_lexer_json_tokens("""normal line
 				indented line
 				indented line
 						another indent
@@ -233,13 +176,7 @@ now another dedent
 dedent all the way
 		tab test
 he he
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
-
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, },
 		{ "name": Syntax.TOKEN_INDENT, "line": 1, "column": 0, "value": "" },
@@ -267,8 +204,7 @@ he he
 
 
 func test_detects_indents_and_dedents_after_quoted_options():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 \"indented line\"
 		* indented line
 				hello
@@ -276,12 +212,7 @@ func test_detects_indents_and_dedents_after_quoted_options():
 \"indented line\"
 		* indented line
 				hello
-""").get_all()
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
-
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 1, },
 		{ "name": Syntax.TOKEN_INDENT, "line": 2, "column": 0, "value": "" },
@@ -302,16 +233,13 @@ func test_detects_indents_and_dedents_after_quoted_options():
 
 
 func test_returns_EOF():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("normal line")
+	var jsonTokens = _get_lexer_json_tokens("normal line")
+	assert_eq_deep(jsonTokens, [{ "name": Syntax.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, },
+	{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 11, "value": "" }])
 
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, })
-	assert_eq_deep(Token.to_JSON_object(tokens.next()),{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 11, "value": "" })
-	assert_eq_deep(tokens.next(), null)
 
 func test_options():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 this is something
 		* this is another thing
 				hello
@@ -323,12 +251,7 @@ this is something
 		hi
 		and this is some text with * and + and >
 > this is a fallback
-""").get_all()
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
-
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 0 },
 		{ "name": Syntax.TOKEN_INDENT, "line": 2, "column": 0, "value": "" },
@@ -362,19 +285,14 @@ this is something
 
 
 func test_speaker():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 speaker1: this is something
 		* speaker2: this is another thing
 				speaker3: hello
 		+ speaker4: this is a sticky option
 *= speaker5: hello
 		speaker 1: this is ok
-""").get_all()
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
@@ -401,16 +319,11 @@ speaker1: this is something
 	])
 
 func test_line_id():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 speaker1: this is something $123
 * this is another thing $abc
 *= hello $a1b2
-speaker1: this is something $123""").get_all()
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+speaker1: this is something $123""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
@@ -430,16 +343,10 @@ speaker1: this is something $123""").get_all()
 
 
 func test_id_suffixes():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 speaker1: this is something $123&var1
 * this is another thing $abc&var1&var2
-*= hello $a1b2&var1 #tag""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+*= hello $a1b2&var1 #tag""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_SPEAKER, "value": 'speaker1', "line": 1, "column": 0 },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 10 },
@@ -461,15 +368,9 @@ speaker1: this is something $123&var1
 
 
 func test_tags():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 this is something #hello #happy #something_else
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'this is something', "line": 1, "column": 0 },
 		{ "name": Syntax.TOKEN_TAG, "value": 'hello', "line": 1, "column": 18 },
@@ -480,8 +381,7 @@ this is something #hello #happy #something_else
 
 
 func test_blocks():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 == first_block
 line
 line 2
@@ -489,12 +389,7 @@ line 2
 == second block
 line 3
 line 4
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_BLOCK, "value": 'first_block', "line": 1, "column": 0, },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'line', "line": 2, "column": 0, },
@@ -507,8 +402,7 @@ line 4
 
 
 func test_diverts():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 hello
 -> first divert
 
@@ -516,12 +410,7 @@ hello
 		-> divert
 		<-
 		-> END
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 1, "column": 0, },
 		{ "name": Syntax.TOKEN_DIVERT, "value": 'first divert', "line": 2, "column": 0, },
@@ -540,12 +429,7 @@ hello
 
 
 func test_divert_on_eof():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("-> div").get_all()
-	
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens("-> div")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_DIVERT, "value": 'div', "line": 0, "column": 0, },
 		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 6, "value": ""},
@@ -553,12 +437,7 @@ func test_divert_on_eof():
 
 
 func test_divert_parent_on_eof():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("<-").get_all()
-	
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens("<-")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_DIVERT_PARENT, "value": "", "line": 0, "column": 0, },
 		{ "name": Syntax.TOKEN_EOF, "line": 0, "column": 2, "value": ""},
@@ -566,8 +445,7 @@ func test_divert_parent_on_eof():
 
 
 func test_variations():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 (
 		- nope
 		- yep
@@ -586,11 +464,7 @@ func test_variations():
 		)
 )
 
-""").get_all()
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_BRACKET_OPEN, "line": 1, "column": 0, "value": "" },
 		{ "name": Syntax.TOKEN_INDENT, "line": 2, "column": 0, "value": "" },
@@ -638,8 +512,7 @@ func test_variations():
 
 
 func test_variables_conditions():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 { variable }
 { not variable }
 { !variable }
@@ -664,12 +537,7 @@ func test_variables_conditions():
 { variable == \"s1\" }
 { variable == null }
 
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": "" },
 		{ "name": Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN, "line": 1, "column": 0, "value": "", },
@@ -842,16 +710,11 @@ func test_variables_conditions():
 
 
 func test_variables_indent():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
  { a }
 { a }
 
-""").get_all()
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_INDENT, "line": 1, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": "", },
@@ -873,8 +736,7 @@ func test_variables_indent():
 
 
 func test_variables_assignements():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 { set variable = 1 }
 { set variable -= 1 }
 { set variable += 1 }
@@ -895,12 +757,7 @@ func test_variables_assignements():
 { set a = 1, set b = 2 }
 { when a }
 
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_LINE_BREAK, "line": 1, "column": 0, "value": "" },
 		{ "name": Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN, "line": 1, "column": 0, "value": "", },
@@ -1077,13 +934,7 @@ func test_variables_assignements():
 
 
 func test_variables_assignment_after_line():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("this line { set variable = 1 }").get_all()
-	
-	
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens("this line { set variable = 1 }")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'this line', "line": 0, "column": 0, },
 		{ "name": Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN, "line": 0, "column": 10, "value": "", },
@@ -1097,18 +948,12 @@ func test_variables_assignment_after_line():
 
 
 func test_includes_line_break_when_just_after_or_before_a_logic_block():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 after {}
 {} before
 both
 {}
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'after', "line": 1, "column": 0, },
 		{ "name": Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN, "line": 1, "column": 6, "value": "", },
@@ -1130,20 +975,21 @@ both
 
 
 func test_returns_line_by_line():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""normal line
+	var jsonTokens = _get_lexer_json_tokens("""normal line
 				indented line
 						another indent
 now another dedent""")
-
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, })
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_INDENT, "line": 1, "column": 0 , "value": ""})
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 4 })
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_INDENT, "line": 2, "column": 4, "value": "" })
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'another indent', "line": 2, "column": 6 })
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_DEDENT, "line": 3, "column": 4, "value": "" })
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_DEDENT, "line": 3, "column": 0, "value": "" })
-	assert_eq_deep(Token.to_JSON_object(tokens.next()), { "name": Syntax.TOKEN_TEXT, "value": 'now another dedent', "line": 3, "column": 0 })
+	assert_eq_deep(jsonTokens, [
+		{ "name": Syntax.TOKEN_TEXT, "value": 'normal line', "line": 0, "column": 0, },
+		{ "name": Syntax.TOKEN_INDENT, "line": 1, "column": 0 , "value": ""},
+		{ "name": Syntax.TOKEN_TEXT, "value": 'indented line', "line": 1, "column": 4 },
+		{ "name": Syntax.TOKEN_INDENT, "line": 2, "column": 4, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'another indent', "line": 2, "column": 6 },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 3, "column": 4, "value": "" },
+		{ "name": Syntax.TOKEN_DEDENT, "line": 3, "column": 0, "value": "" },
+		{ "name": Syntax.TOKEN_TEXT, "value": 'now another dedent', "line": 3, "column": 0 },
+		{ "name": Syntax.TOKEN_EOF, "line": 3, "column": 18, "value": "", },
+	])
 
 func test_parse_token_friendly_hint():
 	assert_eq_deep(Lexer.get_token_friendly_hint(Syntax.TOKEN_LINE_ID), '$id')
@@ -1157,8 +1003,7 @@ func test_does_not_fail_when_leaving_mode():
 
 
 func test_produces_same_blocks_for_tabbed_and_spaced_indentation():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
+	var jsonTokens = _get_lexer_json_tokens("""
 Pick an option.
  + Quest test
   { QUEST_STARTED } How's that quest going? (you should see this line at some point)
@@ -1167,12 +1012,8 @@ Pick an option.
 {no QUEST_STARTED}
  blah { not QUEST_STARTED} 
  bleh { QUEST_STARTED}
-""").get_all()
-
-	var json2Tokens : Array = []
-	for token in tokens:
-		json2Tokens.append(Token.to_JSON_object(token))
-	var tab_tokens = lexer.init("""
+""")
+	var json2Tokens = _get_lexer_json_tokens("""
 Pick an option.
 	+ Quest test
 		{ QUEST_STARTED } How's that quest going? (you should see this line at some point)
@@ -1181,44 +1022,34 @@ Pick an option.
 {no QUEST_STARTED}
 	blah { not QUEST_STARTED}	
 	bleh { QUEST_STARTED}
-""").get_all()
-
-	var jsonTokens : Array = []
-	for token in tab_tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, json2Tokens)
 
 
 
 func test_variables_assignements_dependent():
-	var lexer = Lexer.new()
-	var tokens = lexer.init("""
-[ set variable = 1 ]
-[ set variable -= 1 ]
-[ set variable += 1 ]
-[ set variable *= 1 ]
-[ set variable /= 1 ]
-[ set variable ^= 1 ]
-[ set variable %= 1 ]
-[ set variable = a = b ]
+	var jsonTokens = _get_lexer_json_tokens("""
+[{ set variable = 1 }]
+[{ set variable -= 1 }]
+[{ set variable += 1 }]
+[{ set variable *= 1 }]
+[{ set variable /= 1 }]
+[{ set variable ^= 1 }]
+[{ set variable %= 1 }]
+[{ set variable = a = b }]
 
-[ set variable = 1 + 2 ]
-[ set variable = 1 - 2 ]
-[ set variable = 1 * 2 ]
-[ set variable = 1 / 2 ]
-[ set variable = 1 ^ 2 ]
-[ set variable = 1 % 2 ]
+[{ set variable = 1 + 2 }]
+[{ set variable = 1 - 2 }]
+[{ set variable = 1 * 2 }]
+[{ set variable = 1 / 2 }]
+[{ set variable = 1 ^ 2 }]
+[{ set variable = 1 % 2 }]
 
-[ trigger event_name ]
-[ set a = 1, set b = 2 ]
-[ when a ]
+[{ trigger event_name }]
+[{ set a = 1, set b = 2 }]
+[{ when a }]
 
-""").get_all()
-
-
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+""")
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN, "line": 1, "column": 0, "value": "", },
 		{ "name": Syntax.TOKEN_KEYWORD_SET, "line": 1, "column": 2, "value": "", },
@@ -1392,11 +1223,7 @@ func test_variables_assignements_dependent():
 
 
 func test_lexer_placement_depentdent_block():
-	var lexer = Lexer.new()
-	var tokens = lexer.init('[ set x = 5 ]').get_all()
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens('[{ set x = 5 }]')
 	assert_eq_deep(jsonTokens.size(), 7)
 	assert_eq_deep(jsonTokens[0], {
 		"name": Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN,
@@ -1414,11 +1241,7 @@ func test_lexer_placement_depentdent_block():
 
 
 func test_lexer_placement_depentdent_slice_text():
-	var lexer = Lexer.new()
-	var tokens = lexer.init('cheese [ set x = 5 ] cakes').get_all()
-	var jsonTokens : Array = []
-	for token in tokens:
-		jsonTokens.append(Token.to_JSON_object(token))
+	var jsonTokens = _get_lexer_json_tokens('cheese [{ set x = 5 }] cakes')
 	assert_eq_deep(jsonTokens.size(), 9)
 	assert_eq_deep(jsonTokens[0], {
 		"name": Syntax.TOKEN_TEXT,
@@ -1432,4 +1255,110 @@ func test_lexer_placement_depentdent_slice_text():
 		"value": " cakes",
 		"line": 0,
 		"column": 21,
+	})
+
+func test_lexer_basic_bb_code():
+	var jsonTokens = _get_lexer_json_tokens('cheese [b] cakes [/b]')
+	assert_eq_deep(jsonTokens.size(), 9)
+	assert_eq_deep(jsonTokens[0], {
+		"name": Syntax.TOKEN_TEXT,
+		"value": "cheese ",
+		"line": 0,
+		"column": 0,
+	})
+	assert_eq_deep(jsonTokens[1],{
+		"name": Syntax.TOKEN_BEGINNING_BB_CODE_OPEN,
+		"value": "",
+		"line": 0,
+		"column": 7,
+	})
+	assert_eq_deep(jsonTokens[2],{
+		"name": Syntax.TOKEN_BB_CODE,
+		"value": "b",
+		"line": 0,
+		"column": 8,
+	})
+	assert_eq_deep(jsonTokens[3],{
+		"name": Syntax.TOKEN_BB_CODE_CLOSE,
+		"value": "",
+		"line": 0,
+		"column": 9,
+	})
+	assert_eq_deep(jsonTokens[4],{
+		"name": Syntax.TOKEN_TEXT,
+		"value": " cakes ",
+		"line": 0,
+		"column": 11,
+	})
+	assert_eq_deep(jsonTokens[5],{
+		"name": Syntax.TOKEN_ENDING_BB_CODE_OPEN,
+		"value": "",
+		"line": 0,
+		"column": 17,
+	})
+	assert_eq_deep(jsonTokens[6],{
+		"name": Syntax.TOKEN_BB_CODE,
+		"value": "b",
+		"line": 0,
+		"column": 18,
+	})
+	assert_eq_deep(jsonTokens[7],{
+		"name": Syntax.TOKEN_BB_CODE_CLOSE,
+		"value": "",
+		"line": 0,
+		"column": 19,
+	})
+
+
+func test_lexer_complex_bb_code():
+	var jsonTokens = _get_lexer_json_tokens('cheese [b=10] cakes [/b]')
+	
+	assert_eq_deep(jsonTokens.size(), 9)
+	assert_eq_deep(jsonTokens[0], {
+		"name": Syntax.TOKEN_TEXT,
+		"value": "cheese ",
+		"line": 0,
+		"column": 0,
+	})
+	assert_eq_deep(jsonTokens[1],{
+		"name": Syntax.TOKEN_BEGINNING_BB_CODE_OPEN,
+		"value": "",
+		"line": 0,
+		"column": 7,
+	})
+	assert_eq_deep(jsonTokens[2],{
+		"name": Syntax.TOKEN_BB_CODE,
+		"value": "b=10",
+		"line": 0,
+		"column": 8,
+	})
+	assert_eq_deep(jsonTokens[3],{
+		"name": Syntax.TOKEN_BB_CODE_CLOSE,
+		"value": "",
+		"line": 0,
+		"column": 12,
+	})
+	assert_eq_deep(jsonTokens[4],{
+		"name": Syntax.TOKEN_TEXT,
+		"value": " cakes ",
+		"line": 0,
+		"column": 14,
+	})
+	assert_eq_deep(jsonTokens[5],{
+		"name": Syntax.TOKEN_ENDING_BB_CODE_OPEN,
+		"value": "",
+		"line": 0,
+		"column": 20,
+	})
+	assert_eq_deep(jsonTokens[6],{
+		"name": Syntax.TOKEN_BB_CODE,
+		"value": "b",
+		"line": 0,
+		"column": 21,
+	})
+	assert_eq_deep(jsonTokens[7],{
+		"name": Syntax.TOKEN_BB_CODE_CLOSE,
+		"value": "",
+		"line": 0,
+		"column": 22,
 	})

@@ -1,13 +1,8 @@
-extends "res://addons/gut/test.gd"
-
-
-func parse(input):
-	var parser = Parser.new()
-	return parser.to_JSON_object(parser.parse(input))
+extends GutTestFunctions
 
 
 func test_parse_blocks():
-	var result = parse("""
+	var result = _parse("""
 == first block
 line 1
 line 2
@@ -17,29 +12,29 @@ line 3
 line 4
 
 """)
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		"content": [],
-		"blocks": [
-			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'first block', 
+	var expected = _create_doc_payload([],
+		[
+			_block({
+				"block_name": 'first block', 
 				"content": [
-					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+					_line({ "value": 'line 1' }),
+					_line({ "value": 'line 2' }),
 				]
-			},
-			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'second_block', 
+			}),
+			_block({
+				"block_name": 'second_block', 
 				"content": [
-					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 4', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+					_line({ "value": 'line 3' }),
+					_line({ "value": 'line 4' }),
 				]
-			},
+			}),
 		]
-	}
+	)
 	assert_eq_deep(result, expected)
 
 
 func test_parse_blocks_and_lines():
-	var result = parse("""
+	var result = _parse("""
 line outside block 1
 line outside block 2
 
@@ -52,35 +47,24 @@ line 3
 line 4
 
 """)
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		
-		"content": [
-			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line outside block 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-			{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line outside block 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
+	var expected = _create_doc_payload(
+		[_line({ "value": 'line outside block 1'}), _line({ "value": 'line outside block 2'}),],
+		[
+			_block({
+				"block_name": 'first block', 
+				"content": [_line({ "value": 'line 1' }),_line({ "value": 'line 2' })]
+			}),
+			_block({  
+				"block_name": 'second_block', 
+				"content": [_line({ "value": 'line 3'}), _line({ "value": 'line 4' })]
+			}),
 		]
-		,
-		"blocks": [
-			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'first block', 
-				"content": [
-					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 1', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 2', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-				]
-			},
-			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'second_block', 
-				
-				"content": [
-					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 3', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-					{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'line 4', "speaker": "", "id": "", "tags": [], "id_suffixes": [], },
-				]
-			},
-		]
-	}
+	)
 	assert_eq_deep(result, expected)
 
 
 func test_parse_diverts():
-	var result = parse("""
+	var result = _parse("""
 -> one
 -> END
 <-
@@ -90,40 +74,34 @@ func test_parse_diverts():
 * does it work this way?
 	-> go
 """)
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		"content": [
-				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'one' },
-				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<end>' },
-				{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<parent>' },
-				{ "type": NodeFactory.NODE_TYPES.OPTIONS, "speaker": "", "id": "", "tags": [], "value": "", "id_suffixes": [], "content": [
-						{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'thats it', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [], 
-								"content": [
-									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'somewhere' },
-									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": '<parent>' },
-								],
-						},
-						{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'does it work this way?', "mode": 'once', "speaker": "", "id": "", "tags": [], "id_suffixes": [], "content":  [
-									{ "type": NodeFactory.NODE_TYPES.DIVERT, "target": 'go' },
-								],
-						},
-				]},
+	var expected = _create_doc_payload([
+			_divert('one'),
+			_divert('<end>'),
+			_divert('<parent>'),
+			_options({ 
+				"content": [
+					_option({
+						"value": 'thats it', 
+						"mode": 'once', 
+						"content": [
+							_divert('somewhere'),
+							_divert('<parent>'),
+						],
+					}),
+					_option({ 
+						"value": 'does it work this way?', 
+						"mode": 'once', 
+						"content":  [_divert('go')],
+					}),
+			]}),
 			
-		],
-		"blocks": []
-	}
+	])
 	assert_eq_deep(result, expected)
 
 
 func test_parse_empty_block():
-	var result = parse("""
+	var result = _parse("""
 == first block
 """)
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		"content": [],
-		"blocks": [
-			{ "type": NodeFactory.NODE_TYPES.BLOCK, "block_name": 'first block',"content": [] },
-		]
-	}
+	var expected = _create_doc_payload([],[_block({ "block_name": 'first block'})])
 	assert_eq_deep(result, expected)
