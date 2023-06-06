@@ -15,6 +15,8 @@ const expected  : Array[String] = [
 	Syntax.TOKEN_LINE_BREAK,
 	Syntax.TOKEN_BLOCK,
 	Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN,
+	Syntax.TOKEN_BEGINNING_BB_CODE_OPEN,
+	Syntax.TOKEN_ENDING_BB_CODE_OPEN
 ]
 
 const acceptable_next : Array[String] = [
@@ -29,6 +31,8 @@ const acceptable_next : Array[String] = [
 	Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,
 	Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN,
 	Syntax.TOKEN_LINE_BREAK,
+	Syntax.TOKEN_BEGINNING_BB_CODE_OPEN, 
+	Syntax.TOKEN_ENDING_BB_CODE_OPEN
 ]
 
 
