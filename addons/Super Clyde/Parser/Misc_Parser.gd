@@ -75,10 +75,12 @@ func lines() -> Array[ClydeNode]:
 			if token_walker.peek(TokenArray.curly_brace_open):
 				token_walker.consume(TokenArray.curly_brace_open)
 				lines = [parser.logic_parser.line_with_action(line)]
-			
 			elif token_walker.peek(TokenArray.brace_open):
 				token_walker.consume(TokenArray.brace_open)
 				lines = [parser.dependent_parser.line_part_with_action(line)]
+			elif (token_walker.peek(TokenArray.bb_code_open)):
+				token_walker.consume(TokenArray.bb_code_open)
+				lines = [parser.bb_code_parser.line_part_with_bb_code(line)]
 			else:
 				lines = [line]
 				
@@ -87,7 +89,12 @@ func lines() -> Array[ClydeNode]:
 			
 		Syntax.TOKEN_DIVERT, Syntax.TOKEN_DIVERT_PARENT:
 			lines = [divert()]
-#			
+			
+		Syntax.TOKEN_BEGINNING_BB_CODE_OPEN, Syntax.TOKEN_ENDING_BB_CODE_OPEN:
+			token_walker.consume(TokenArray.bb_code_open)
+			lines = [parser.bb_code_parser.line_part_with_bb_code()]
+		
+		
 		Syntax.TOKEN_BRACKET_OPEN:
 			token_walker.consume(TokenArray.bracket_open)
 			lines = [parser.variations_parser.variations()]

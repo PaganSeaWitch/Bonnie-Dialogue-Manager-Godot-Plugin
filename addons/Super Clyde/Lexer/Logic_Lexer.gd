@@ -21,12 +21,12 @@ func handle_logic_block_stop_and_start(syntax_token : String) -> Array[Token]:
 		lexer.line, setup_dict["initial_column"])
 	var linebreak : Token = null
 	
-	if(syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE) && lexer.line != lexer.line_with_dependent_logic:
+	if(syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE) && lexer.line != lexer.line_in_parts:
 		linebreak = LexerHelperFunctions.get_following_line_break(lexer.input,
 			lexer.line, lexer.column, lexer.position)
 	
 	if((syntax_token == Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN) 
-	&& lexer.line != lexer.line_with_dependent_logic):
+	&& lexer.line != lexer.line_in_parts):
 		if(lexer.added_space):
 			lexer.added_space = false
 		else:
@@ -47,13 +47,15 @@ func handle_logic_block() -> Array[Token]:
 		if lexer.current_quote.is_empty():
 			lexer.current_quote = lexer.input[lexer.position]
 		return handle_logic_string()
-	
+
+	if lexer.input.substr(lexer.position, 2) == '}]':
+		return lexer.dependent_logic_lexer.handle_dependent_logic_block_stop()
+
 	# Rule : if } in logic block, end logic block
 	if lexer.input[lexer.position] == '}':
 		return handle_logic_block_stop()
 	
-	if lexer.input[lexer.position] == ']':
-		return lexer.dependent_logic_lexer.handle_dependent_logic_block_stop()
+
 	
 	# Rule : if number in logic block, return number
 	if lexer.input[lexer.position].is_valid_int():

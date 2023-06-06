@@ -11,8 +11,13 @@ func dialogue_line() -> DialogueNode:
 	return null
 
 
-func _line_with_speaker() -> DialogueNode:
+func _line_with_speaker():
 	var token_value : String = token_walker.current_token.value
+	if(token_walker.peek(TokenArray.bb_code_open) || token_walker.peek(TokenArray.brace_open)):
+		var line : DialogueNode = LineNode.new()
+		line.speaker = token_value
+		return line
+
 	token_walker.consume(TokenArray.text)
 	var line : DialogueNode = dialogue_line()
 	line.speaker =  token_value

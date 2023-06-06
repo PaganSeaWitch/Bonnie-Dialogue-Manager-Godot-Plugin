@@ -1,57 +1,52 @@
-extends "res://addons/gut/test.gd"
-
-
-func parse(input):
-	var parser = Parser.new()
-	return parser.to_JSON_object(parser.parse(input))
+extends GutTestFunctions
 
 
 func test_simple_variations():
-	var result = parse("""
+	var result = _parse("""
 (
 	- yes
 	- no
 )
 """)
 
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		"blocks": [],
-		"content": [
-			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
-					[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
-					[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
-			]},
+	var expected = _create_doc_payload([
+			_variations({
+				"mode": 'sequence', 
+				"content": [
+					[_line({"value": 'yes'})],
+					[_line({"value": 'no' })],
+				]
+			}),
 		],
-	}
+	)
 
 	assert_eq_deep(result, expected)
 
 
 func test_simple_variations_with_no_indentation():
-	var result = parse("""
+	var result = _parse("""
 (
 - yes
 - no
 )
 """)
 
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		"blocks": [],
-		"content": [
-			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
-					[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
-					[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
-			],},
-		],
-	}
+	var expected = _create_doc_payload([
+			_variations({
+				"mode": 'sequence', 
+				"content": [
+					[_line({"value": 'yes'})],
+					[_line({"value": 'no'})],
+				]
+			}),
+		]
+	)
 
 	assert_eq_deep(result, expected)
 
 
 func test_nested_variations():
-	var result = parse("""
+	var result = _parse("""
 (
 	- yes
 	- no
@@ -61,19 +56,20 @@ func test_nested_variations():
 )
 """)
 
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		"blocks": [],
-		"content":  [
-			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
-				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
-				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
-				[{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', 
-					"content": 
-						[[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'nested 1', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }]]}],
-			]},
+	var expected = _create_doc_payload([
+			_variations({
+				"mode": 'sequence', 
+				"content": [
+					[_line({"value": 'yes'})],
+					[_line({"value": 'no'})],
+					[_variations({
+						"mode": 'sequence', 
+						"content": [[_line({"value": 'nested 1'})]]
+					})],
+				]
+			}),
 		],
-	}
+	)
 
 	assert_eq_deep(result, expected)
 
@@ -83,29 +79,26 @@ func test_variations_modes():
 		_mode_test(mode)
 
 func _mode_test(mode):
-	var result = parse("""
+	var result = _parse("""
 ( %s
 	- yes
 	- no
 )
 """ % mode)
 
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		"blocks": [],
-		"content":  [
-			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": mode, "content": [
-				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
-				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'no', "id": "", "speaker": "", "tags": [], "id_suffixes": [], }],
-			]},
+	var expected = _create_doc_payload([
+			_variations({ 
+				"mode": mode,
+				"content": [[_line({"value": 'yes'})],[_line({"value": 'no' })],]
+			}),
 		],
-	}
+	)
 
 	assert_eq_deep(result, expected)
 
 
 func test_variations_with_options():
-	var result = parse("""
+	var result = _parse("""
 (
 - *= works?
 		yes
@@ -120,35 +113,43 @@ func test_variations_with_options():
 )
 """)
 
-	var expected = {
-		"type": NodeFactory.NODE_TYPES.DOCUMENT,
-		"blocks": [],
-		"content": [
-			{ "type": NodeFactory.NODE_TYPES.VARIATIONS, "mode": 'sequence', "content": [
-				[{ "type": NodeFactory.NODE_TYPES.OPTIONS, "value": "", "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
-					{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'works?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": 
-						[ 
-							{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'works?', "id": "", "speaker": "", "tags": [], "id_suffixes": []}, 
-							{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}
-						],
-					},
-					{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'yep?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
-						{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
-					}
-				]}],
-				[{ "type": NodeFactory.NODE_TYPES.LINE, "value": 'nice', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
-				[{ "type": NodeFactory.NODE_TYPES.OPTIONS, "value": "", "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
-					{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'works?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": [
-						{"type": NodeFactory.NODE_TYPES.LINE, "value": 'works?', "id": "", "speaker": "", "tags": [], "id_suffixes": []},
-						{"type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []},
-					]},
-					{ "type": NodeFactory.NODE_TYPES.OPTION, "value": 'yep?', "mode": 'once', "id": "", "speaker": "", "tags": [], "id_suffixes": [], "content": 
-						[ { "type": NodeFactory.NODE_TYPES.LINE, "value": 'yes', "id": "", "speaker": "", "tags": [], "id_suffixes": []}],
-					},
-				]}]
-			]}
+	var expected = _create_doc_payload([
+			_variations({ 
+				"mode": 'sequence', 
+				"content": [
+					[
+						_options({ 
+							"content": [
+								_option({
+									"value": 'works?', 
+									"mode": 'once',
+									"content": [ _line({"value": 'works?'}), _line({"value": 'yes'})],
+								}),
+								_option({
+									"value": 'yep?', 
+									"mode": 'once',
+									"content": [_line({"value": 'yes'})],
+								})
+							]
+						})
+					],
+					[_line({"value": 'nice'})],
+					[_options({
+						"content": [
+						_option({"value": 'works?', 
+							"mode": 'once', 
+							"content": [_line({"value": 'works?'}),_line({"value": 'yes'})]
+						}),
+						_option({ 
+							"value": 'yep?', 
+							"mode": 'once',
+							"content": [ _line({"value": 'yes'})],
+						}),
+						]
+					})]
+			]})
 		]
-	}
+	)
 
 	assert_eq_deep(result, expected)
 

@@ -1,11 +1,7 @@
-extends "res://addons/gut/test.gd"
+extends GutTestFunctions
 
 
 const SAMPLES_FOLDER = "res://test/dialogue_samples/"
-
-func parse(input):
-	var parser = Parser.new()
-	return parser.to_JSON_object(parser.parse(input), true)
 
 
 func test_samples():
@@ -35,7 +31,7 @@ func test_samples():
 			FileAccess.READ)
 
 		var result = result_file.get_as_text()
-		var pased = parse(source)
+		var pased = _parse(source, true)
 		expect(pased, JSON.parse_string(result))
 		pass_test("passed")
 

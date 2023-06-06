@@ -20,7 +20,7 @@ func handle_line_breaks() -> Array[Token]:
 		LexerHelperFunctions.increase_lexer_position(lexer, 1, lexer.column * -1)
 		if lexer.is_current_mode(Syntax.MODE_OPTION):
 			lexer.pop_mode()
-	if(token.line == lexer.line_with_dependent_logic):
+	if(token.line == lexer.line_in_parts):
 		lexer.added_space = true
 		return [token]
 	return []

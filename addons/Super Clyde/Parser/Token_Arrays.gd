@@ -15,6 +15,8 @@ const expected  : Array[String] = [
 	Syntax.TOKEN_LINE_BREAK,
 	Syntax.TOKEN_BLOCK,
 	Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN,
+	Syntax.TOKEN_BEGINNING_BB_CODE_OPEN,
+	Syntax.TOKEN_ENDING_BB_CODE_OPEN
 ]
 
 const acceptable_next : Array[String] = [
@@ -29,6 +31,8 @@ const acceptable_next : Array[String] = [
 	Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,
 	Syntax.TOKEN_PLACEMENT_DEPENENT_OPEN,
 	Syntax.TOKEN_LINE_BREAK,
+	Syntax.TOKEN_BEGINNING_BB_CODE_OPEN, 
+	Syntax.TOKEN_ENDING_BB_CODE_OPEN
 ]
 
 
@@ -130,6 +134,12 @@ const id_suffixes : Array[String]  = [Syntax.TOKEN_ID_SUFFIX]
 const dedent : Array[String]  = [Syntax.TOKEN_DEDENT]
 
 const divert : Array[String]  = [Syntax.TOKEN_DIVERT, Syntax.TOKEN_DIVERT_PARENT]
+
+const bb_code_open : Array[String] = [Syntax.TOKEN_BEGINNING_BB_CODE_OPEN, Syntax.TOKEN_ENDING_BB_CODE_OPEN]
+
+const bb_code_close : Array[String] = [Syntax.TOKEN_BB_CODE_CLOSE]
+
+const bb_code : Array[String] = [Syntax.TOKEN_BB_CODE]
 
 const eof : Array[String]  = [Syntax.TOKEN_EOF]
 
