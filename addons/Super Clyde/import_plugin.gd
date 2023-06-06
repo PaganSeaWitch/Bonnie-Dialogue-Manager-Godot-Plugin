@@ -42,8 +42,10 @@ func _get_option_visibility(option :String,optionName : StringName,  options : D
 func _get_import_order():
 	return 0
 
+
 func _get_priority():
 	return 1.0
+
 
 func _import(source_file, save_path, options, platform_variants, gen_files):
 	var file : FileAccess = FileAccess.open(source_file, FileAccess.READ)
@@ -53,7 +55,7 @@ func _import(source_file, save_path, options, platform_variants, gen_files):
 	var result = parser.parse(clyde)
 
 	var container = PackedDataContainer.new()
-	print(JSON.stringify(parser.to_JSON_object(result)))
+	print(result)
 	container.__data__ = JSON.stringify(parser.to_JSON_object(result)).to_utf8_buffer()
 
 	return ResourceSaver.save(container,"%s.%s" % [save_path, _get_save_extension()])

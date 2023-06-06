@@ -3,18 +3,29 @@ extends MiscInterpreter
 
 
 func handle_line_part_node(line_part : LinePartNode):
-
 	match(line_part.part.get_node_class()):
+		"LineNode":
+			line_part.part = interpreter.line_interpreter.handle_line_node(line_part.part)
+		"LinePartNode":
+			return handle_line_part_node(line_part.part)
 		"ActionContentNode":
 			interpreter.logic_interpreter.handle_action(line_part.part)
 			var content = ContentNode.new()
 			content.content = line_part.part.content
-			line_part.part = interpreter.line_interpreter.handle_content_node(content, false)
+			var gotten = interpreter.line_interpreter.handle_content_node(content, false)
+			if(gotten is LinePartNode):
+				line_part = gotten
+			else:
+				line_part.part = gotten
 		"ConditionalContentNode":
 			if interpreter.logic_interpreter.check_condition(line_part.part.conditions):
 				var content = ContentNode.new()
 				content.content = line_part.part.content
-				line_part.part = interpreter.line_interpreter.handle_content_node(content, false)
+				var gotten = interpreter.line_interpreter.handle_content_node(content, false)
+				if(gotten is LinePartNode):
+					line_part = gotten
+				else:
+					line_part.part = gotten
 			else:
 				return interpreter.handle_next_node(stack.stack_head().node)
 
