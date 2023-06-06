@@ -15,27 +15,32 @@ func is_node_class(className : String ) -> bool:
 
 func _to_string() -> String:
 	var dictionary : Dictionary = Parser.new().to_JSON_object(self, true)
-	print("###############################")
 	var indent : int = 0;
-	_to_node_string(dictionary, indent)
-	print("###############################")
-	return "" 
+	return _to_node_string(dictionary, indent)
 
 
-func _to_node_string(dictionary : Dictionary, indent : int):
+func _to_node_string_array(array : Array, indent : int) -> String:
+	var result = ""
+	for val in array:
+		if val is Dictionary:
+			result = result + _to_node_string(val, indent + 1)
+		if val is Array:
+			result = result + _to_node_string_array(val, indent + 1)
+	return result;
+
+
+func _to_node_string(dictionary : Dictionary, indent : int) -> String:
+	var result = "\t".repeat(indent)+ "|" + "---" + "\n"
+	var array_result = ""
+	var dic_result = ""
 	for key in dictionary.keys():
 		if(dictionary[key] is Array && !dictionary[key].is_empty()):
+			array_result = array_result + "\t".repeat(indent)+ "|" + key + " : " + "\n"
+			array_result = array_result + _to_node_string_array(dictionary[key], indent + 1)
+		elif dictionary[key] is Dictionary:
+			dic_result = dic_result + "\t".repeat(indent)+ "|" + key + " : " + "\n"
+			dic_result = dic_result + _to_node_string(dictionary[key], indent + 1)
+		else:
+			result = result + "\t".repeat(indent)+ "|" + key +" : " + str(dictionary[key]) + "\n"
+	return result + dic_result + array_result
 
-			if(dictionary[key][0] is Dictionary):
-				print(" ".repeat(indent) + key + " : ")
-				for dict in dictionary[key]:
-					_to_node_string(dict, indent + 1)
-			else:
-				var string = ""
-				for val in dictionary[key]:
-					string =  val +", " +  string
-				string = string.substr(0, string.length() - 2)
-				print(" ".repeat(indent) + key + " : " + string)
-
-		elif(dictionary[key] is String && !dictionary[key].is_empty()):
-			print(" ".repeat(indent) + key +" : " + dictionary[key])
