@@ -582,7 +582,6 @@ func test_speaker_before_and_after_dependent():
 		),
 		_line_part(
 			_conditional_content({
-
 				"conditions": _variable("chicken"),
 				"content": [_line({"speaker": "npc", "value": ' want to talk about?'})],
 			}),
@@ -599,7 +598,6 @@ func test_tag_before_and_after_dependent():
 		_line_part(_line({"value": "what do you","tags":["conspiracy"]}),false),
 		_line_part(
 			_conditional_content({
-				"type":  NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 				"conditions": _variable("chicken"),
 				"content": [_line({"tags":["conspiracy"], "value": ' want to talk about?'})],
 			}),
@@ -619,7 +617,7 @@ func test_id_before_and_after_dependent():
 		_line_part(
 			_conditional_content({
 				"conditions": _variable("chicken"),
-				"content": [_line({"id": "line_id_1","value": ' want to talk about?'})],
+				"content": [_line({"id": "line_id_1_0","value": ' want to talk about?'})],
 			}),
 			true
 		)
@@ -637,7 +635,7 @@ func test_id_suffix_before_and_after_dependent():
 		_line_part(
 			_conditional_content({
 				"conditions": _variable("chicken"),
-				"content": [_line({"id": "line_id_1","value": ' want to talk about?',"id_suffixes":["fren"]})],
+				"content": [_line({"id": "line_id_1_0","value": ' want to talk about?',"id_suffixes":["fren"]})],
 			}),
 			true
 		)
@@ -661,7 +659,7 @@ func test_full_line_after_dependent():
 		_line_part(
 			_conditional_content({
 				"conditions": _variable("chicken"),
-				"content": [_line({"speaker" : "npc", "id": "line_id_1","id_suffixes": ["fren"],"tags" : ["conspiracy"]})],
+				"content": [_line({"speaker" : "npc", "id": "line_id_1_0","id_suffixes": ["fren"],"tags" : ["conspiracy"]})],
 			}),
 			true
 		)
@@ -688,7 +686,7 @@ func test_full_line_tag_before_after_dependent():
 				"content": [_line({
 					"speaker": "npc",
 					"value": " to talk about?",
-					"id": "line_id_1",
+					"id": "line_id_1_0",
 					"id_suffixes":["fren"],
 					"tags" : ["only_this","conspiracy"]
 				})],
@@ -698,7 +696,7 @@ func test_full_line_tag_before_after_dependent():
 		_line_part(
 			_conditional_content({
 				"conditions": _variable("chicken"),
-				"content": [_line({"speaker" : "npc", "id": "line_id_2","id_suffixes": ["fren"],"tags" : ["conspiracy"]})]
+				"content": [_line({"speaker" : "npc", "id": "line_id_2_0","id_suffixes": ["fren"],"tags" : ["conspiracy"]})]
 			}),
 			true
 		)

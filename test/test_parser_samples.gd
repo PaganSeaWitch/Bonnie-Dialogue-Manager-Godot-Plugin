@@ -31,7 +31,7 @@ func test_samples():
 			FileAccess.READ)
 
 		var result = result_file.get_as_text()
-		var pased = _parse(source)
+		var pased = _parse(source, true)
 		expect(pased, JSON.parse_string(result))
 		pass_test("passed")
 

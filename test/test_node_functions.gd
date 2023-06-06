@@ -3,9 +3,11 @@ extends GutTest
 
 
 
-func _parse(input):
+func _parse(input, print= false):
 	var parser = Parser.new()
-	return parser.to_JSON_object(parser.parse(input))
+	var obj = parser.parse(input)
+	print(obj)
+	return parser.to_JSON_object(parser.parse(input), print)
 
 
 func _line(line):
