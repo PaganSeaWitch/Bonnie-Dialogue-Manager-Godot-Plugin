@@ -1,0 +1,22 @@
+-- logic example
+
+-- assignments
+variable was[{ set some_value = 1 }] [b] initialized with %some_value%
+setting [{ set a = 1, b = 2, c = 3 }]multiple [b] variables[/b] 
+[{ set some_value += a += b }]  %some_value% == 4.  %a% == 3
+
+--  conditions
+[b]you[{ a == 1 }] Hello![/b]
+hey[{ a == 2 || a != 3 }] Hi![/b]
+Hello [{ when a == 3 }] you! [/b]
+
+[{ not bl }] This is a [b]line[b] inside [b]a [b]condition
+
+[b][b][b][b][b][b][b][b][b][b]
+-- events
+[b]trigger[b] [{ trigger some_event }][b] this![b]
+plz [{ trigger some_event, another_event }][b] trigger me daddy!!
+
+[{ set logic = true}]
+
+{ when logic } logic happening
