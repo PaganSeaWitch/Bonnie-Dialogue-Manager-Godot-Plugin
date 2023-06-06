@@ -89,10 +89,10 @@ func lines() -> Array[ClydeNode]:
 			
 		Syntax.TOKEN_DIVERT, Syntax.TOKEN_DIVERT_PARENT:
 			lines = [divert()]
-#			
+			
 		Syntax.TOKEN_BEGINNING_BB_CODE_OPEN, Syntax.TOKEN_ENDING_BB_CODE_OPEN:
 			token_walker.consume(TokenArray.bb_code_open)
-			lines = [parser.bb_parser.line_part_with_bb_code()]
+			lines = [parser.bb_code_parser.line_part_with_bb_code()]
 		
 		
 		Syntax.TOKEN_BRACKET_OPEN:

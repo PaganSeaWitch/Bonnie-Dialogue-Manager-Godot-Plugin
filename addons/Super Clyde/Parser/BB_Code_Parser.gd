@@ -1,38 +1,53 @@
 class_name BBCodeParser
 extends LinePartParser
 
+func get_line_part_with_bb_code(content_node : ContentNode = null):
+	var line_part : LinePartNode = LinePartNode.new()
+	var bb_code_value = _get_bb_code_value()
+	
+	var line : DialogueNode = LineNode.new()
+	
+	if token_walker.peek(TokenArray.dialogue):
+		token_walker.consume(TokenArray.dialogue)
+		line = parser.line_parser.dialogue_line()
+
+		
+	elif(token_walker.peek(TokenArray.tag_and_id)):
+		line = parser.line_parser._text_line()
+
+	line.bb_code_before_line = bb_code_value
+	line_part.part = line
+	
+	if token_walker.peek(TokenArray.lineBreak):
+		line_part.end_line = true
+
+	if token_walker.peek(TokenArray.eof):
+		line_part.end_line = true
+	
+	return line_part
+
+func inner_line_part_with_bb_code():
+	
+	var line_part_array : Array[LinePartNode] = []
+	line_part_array.append(get_line_part_with_bb_code())
+	while(token_walker.peek(TokenArray.bb_code_open)):
+		token_walker.consume(TokenArray.bb_code_open)
+		line_part_array.append(get_line_part_with_bb_code())
+	
+	return line_part_array
 
 func line_part_with_bb_code(line : ClydeNode = null, content_node : ContentNode = null) -> ClydeNode:
 
 	if(content_node == null):
 		content_node = ContentNode.new()
-	var line_part : LinePartNode = LinePartNode.new()
-	
-	var bb_code_value = _get_bb_code_value()
-
 
 	if line != null:
 		content_node.content.append(node_factory.create_node(node_factory.NODE_TYPES.LINE_PART,
 			{"part" = line}))
 
-	if token_walker.peek(TokenArray.dialogue):
-		token_walker.consume(TokenArray.dialogue)
-		line_part.part = parser.line_parser.dialogue_line()
-		line_part.part.bb_code_before_line = bb_code_value
-		
-	elif(token_walker.peek(TokenArray.tag_and_id)):
-		line_part.part = parser.line_parser._text_line()
-		line_part.part.bb_code_before_line = bb_code_value
-
-	if token_walker.peek(TokenArray.lineBreak):
-		token_walker.consume(TokenArray.lineBreak)
-		line_part.end_line = true
+	var bb_code_line = get_line_part_with_bb_code(content_node)
 	
-	if token_walker.peek(TokenArray.eof):
-		line_part.end_line = true
-	
-
-	return _update_line_parts(content_node, line_part)
+	return _update_line_parts(content_node, bb_code_line)
 
 
 func _get_bb_code_value() -> String:
