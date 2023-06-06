@@ -113,12 +113,13 @@ A dialogue line (`LineNode`).
 
 ```gdscript
 class_name LineNode
-    var value : String      # The value of the line
-    var id : String         # The ID of the  line
-    var speaker : String    # The speaker of the  line
+    var value : String                      # The value of the line
+    var id : String                         # The ID of the  line
+    var speaker : String                    # The speaker of the  line
     
-    var tags : Array        # The tags of the line
-    var id_suffixes : Array # The id_suffixes of the line 
+    var tags : Array                        # The tags of the line
+    var id_suffixes : Array                 # The id_suffixes of the line 
+    var bb_code_before_line : String        # The bb code just before the line, returned with its brackets
 ```
 
 #### Options
@@ -135,7 +136,8 @@ Options list with options/topics the player may choose from (`OptionsNode`).
     var id_suffixes : Array                 # The id_suffixes of the Options 
     var content : Array[OptionNode] = []    # The option set that the options holds
     var name : String = ""                  # the name of the options
-    
+    var bb_code_before_line : String        # The bb code just before the line, returned with its brackets (NOT FUNCTIONAL)
+
     
     class_name OptionNode
     
@@ -147,6 +149,8 @@ Options list with options/topics the player may choose from (`OptionsNode`).
     var content : Array[ClydeNode] = []     # The nodes that will be parsed if this option is chosen
     var name : String = ""                  # the name of the option
     var mode : String = ""                  # the mode of the option: 'Once, sticky, fallback'
+    var bb_code_before_line : String        # The bb code just before the line, returned with its brackets (NOT FUNCTIONAL)
+
 ```
 
 #### Null
