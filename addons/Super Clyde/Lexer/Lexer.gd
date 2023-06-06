@@ -8,7 +8,7 @@ var logic_lexer : LogicLexer = LogicLexer.new()
 var option_lexer : OptionLexer = OptionLexer.new()
 var variations_lexer : VariationsLexer = VariationsLexer.new()
 var dependent_logic_lexer : DependentLogicLexer = DependentLogicLexer.new()
-
+var bb_code_lexer : BBCodelexer = BBCodelexer.new()
 # The data recieved
 var input : String = ""
 
@@ -20,7 +20,7 @@ var position: int = 0
 var line : int = 0
 var column: int = 0
 var length : int= 0
-var line_with_dependent_logic : int = -1;
+var line_in_parts : int = -1;
 var added_space : bool = false
 
 func init(_input : String) -> Lexer:
@@ -37,6 +37,7 @@ func init(_input : String) -> Lexer:
 	option_lexer.init(self)
 	variations_lexer.init(self)
 	dependent_logic_lexer.init(self)
+	bb_code_lexer.init(self)
 	return self
 
 
@@ -113,7 +114,7 @@ func _get_next_tokens() -> Array[Token]:
 	if  (input.substr(position, 2) == '--' 
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
 		return line_lexer.handle_comments()
-	
+
 	# Rule : If \n in not quote mode, consume line break
 	if ((chr == '\n' || chr == '\r')
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
@@ -125,14 +126,24 @@ func _get_next_tokens() -> Array[Token]:
 	&&  !is_current_mode(Syntax.MODE_LOGIC)):
 		return misc_lexer.handle_indent()
 
-	if (chr == '['
+	if (input.substr(position, 2) == '[{'
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
 		return dependent_logic_lexer.handle_dependent_logic_block_start()
 
+	if (chr == '[') && !is_current_mode(Syntax.MODE_QSTRING):
+		if input.substr(position, 2) == "[/":
+			return bb_code_lexer.handle_BB_block_start(Syntax.TOKEN_ENDING_BB_CODE_OPEN)
+		return bb_code_lexer.handle_BB_block_start(Syntax.TOKEN_BEGINNING_BB_CODE_OPEN)
 	# Rule : if { in not quote mode, start logic mode
 	if (chr == '{'
 	&& !is_current_mode(Syntax.MODE_QSTRING)):
 		return logic_lexer.handle_logic_block_start()
+
+	# Rule : if we are in bb code mode, consume as a bb code block
+	if is_current_mode(Syntax.MODE_BB_CODE):
+		var response : Array[Token] = bb_code_lexer.handle_BB_block();
+		if !response.is_empty():
+			return response
 
 	# Rule : if we are in logic mode, consume as a logic block
 	if is_current_mode(Syntax.MODE_LOGIC):
@@ -155,19 +166,19 @@ func _get_next_tokens() -> Array[Token]:
 		return line_lexer.handle_qtext()
 
 	# Rule : ignore and consume spaces
-	if input[position] == ' ':
+	if chr == ' ':
 		return misc_lexer.handle_space()
 
 	# Rule : ignore and consume non logic tabs
-	if LexerHelperFunctions.is_tab_char(input[position]):
+	if LexerHelperFunctions.is_tab_char(chr):
 		return misc_lexer.handle_rogue_tab()
 	
 	# Rule : if (, start variations mode
-	if input[position] == '(':
+	if chr == '(':
 		return variations_lexer.handle_start_variations()
 
 	# Rule : if ), end variations mode
-	if input[position] == ')':
+	if chr == ')':
 		return variations_lexer.handle_stop_variations()
 
 	# Rule : if == at zeroth column, consume block
