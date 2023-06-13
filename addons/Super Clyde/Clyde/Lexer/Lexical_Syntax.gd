@@ -82,6 +82,8 @@ const VARIATIONS_MODE_SHUFFLE_SEQUENCE = "shuffle sequence"
 const VARIATIONS_MODE_SHUFFLE_ONCE = "shuffle once"
 const VARIATIONS_MODE_SHUFFLE_CYCLE = "shuffle cycle"
 
+const CACHE_PATH = "user://super_clyde_cache.json"
+const USER_CONFIG_PATH = "user://super_clyde_user_config.json"
 # hints for tokens
 const token_hints = {
 	TOKEN_TEXT: 'text',
@@ -125,3 +127,13 @@ const variations_modes = [VARIATIONS_MODE_SEQUENCE, VARIATIONS_MODE_ONCE,
 	VARIATIONS_MODE_CYCLE, VARIATIONS_MODE_SHUFFLE, 
 	VARIATIONS_MODE_SHUFFLE_SEQUENCE,
 	VARIATIONS_MODE_SHUFFLE_ONCE, VARIATIONS_MODE_SHUFFLE_CYCLE ]
+
+static func translate(string: String) -> String:
+	var language: String = TranslationServer.get_tool_locale().substr(0, 2)
+	var translations_path: String = "res://addons/Super Clyde/l10n/%s.po" % language
+	var fallback_translations_path: String = "res://addons/Super Clyde/l10n/en.po"
+	var translations: Translation = load(translations_path if FileAccess.file_exists(translations_path) else fallback_translations_path)
+	return translations.get_message(string)
+
+
+

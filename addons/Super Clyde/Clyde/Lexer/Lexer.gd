@@ -1,4 +1,4 @@
-class_name Lexer
+class_name ClydeLexer
 extends RefCounted
 
 # The handlers for lines recieved 
@@ -23,7 +23,7 @@ var length : int= 0
 var line_in_parts : int = -1;
 var added_space : bool = false
 
-func init(_input : String) -> Lexer:
+func init(_input : String) -> ClydeLexer:
 	input = _input
 	indent = [0]
 	position = 0

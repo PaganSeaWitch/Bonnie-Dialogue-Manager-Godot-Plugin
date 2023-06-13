@@ -1,10 +1,10 @@
 class_name MiscLexer
 extends RefCounted
 
-var lexer : Lexer
+var lexer : ClydeLexer
 
 
-func init(_lexer : Lexer) -> void:
+func init(_lexer : ClydeLexer) -> void:
 	lexer = _lexer
 
 

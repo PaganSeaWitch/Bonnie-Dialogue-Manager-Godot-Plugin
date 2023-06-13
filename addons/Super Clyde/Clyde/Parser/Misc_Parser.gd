@@ -3,10 +3,10 @@ extends RefCounted
 
 var node_factory : NodeFactory
 var token_walker : TokenWalker
-var parser : Parser
+var parser : ClydeParser
 
 
-func init(_parser : Parser, _token_walker : TokenWalker):
+func init(_parser : ClydeParser, _token_walker : TokenWalker):
 	token_walker = _token_walker
 	parser = _parser
 	node_factory = NodeFactory.new()

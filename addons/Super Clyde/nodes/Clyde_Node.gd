@@ -14,7 +14,7 @@ func is_node_class(className : String ) -> bool:
 
 
 func _to_string() -> String:
-	var dictionary : Dictionary = Parser.new().to_JSON_object(self, true)
+	var dictionary : Dictionary = ClydeParser.new().to_JSON_object(self, true)
 	var indent : int = 0;
 	return _to_node_string(dictionary, indent)
 

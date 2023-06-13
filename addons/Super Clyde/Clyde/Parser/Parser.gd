@@ -1,7 +1,7 @@
-class_name Parser
+class_name ClydeParser
 extends RefCounted
 
-var _lexer : Lexer = Lexer.new()
+var _lexer : ClydeLexer = ClydeLexer.new()
 var misc_parser : MiscParser = MiscParser.new()
 var logic_parser : LogicParser = LogicParser.new()
 var line_parser : LineParser = LineParser.new()
@@ -9,6 +9,7 @@ var variations_parser : VariationsParser = VariationsParser.new()
 var options_parser : OptionsParser = OptionsParser.new()
 var dependent_parser : DependentParser = DependentParser.new()
 var bb_code_parser : BBCodeParser = BBCodeParser.new()
+
 
 # Parses given string data into a DocumentNode
 func parse(doc : String) -> DocumentNode:

@@ -2,7 +2,7 @@ class_name TokenWalker
 extends RefCounted
 
 
-var _lexer : Lexer
+var _lexer : ClydeLexer
 
 # The current token that is being consumed
 var current_token : Token;
@@ -12,7 +12,7 @@ var _look_ahead_lexer : Array[Token]= [];
 var is_multiline_enabled : bool = true
 
 
-func set_lexer(l : Lexer) -> void:
+func set_lexer(l : ClydeLexer) -> void:
 	_lexer = l
 
 # Returns the next token the lexer has produced
@@ -54,11 +54,11 @@ func peek(expected : Array[String] = [], offset : int = 0) -> Token:
 func _wrong_token_error(token : Token, expected : Array[String]) -> void:
 	var expected_hints : Array[String]= []
 	for e in expected:
-		expected_hints.push_back(Lexer.get_token_friendly_hint(e))
+		expected_hints.push_back(ClydeLexer.get_token_friendly_hint(e))
 
 	assert(false,
 		"Unexpected token \"%s\" checked line %s column %s. Expected %s" % [
-			Lexer.get_token_friendly_hint(token.name),
+			ClydeLexer.get_token_friendly_hint(token.name),
 			token.line+1,
 			token.column+1,
 			expected_hints

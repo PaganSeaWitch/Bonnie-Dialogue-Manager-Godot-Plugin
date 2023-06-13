@@ -3,7 +3,7 @@ extends RefCounted
 
 
 # Creates a simple token without a value
-static func create_simple_token(lexer : Lexer, token_name : String, 
+static func create_simple_token(lexer : ClydeLexer, token_name : String, 
 pos_length : int = 1, col_length : int = 0) -> Token:
 	var setupDict : Dictionary = internal_setup(lexer)
 	increase_lexer_position(lexer, pos_length, col_length)
@@ -66,7 +66,7 @@ static func is_block_identifier(character : String) -> bool:
 
 
 # Creates a dictionary of line and column and values so we can manipulate them
-static func internal_setup(lexer : Lexer) -> Dictionary:
+static func internal_setup(lexer : ClydeLexer) -> Dictionary:
 	var initial_line : int = lexer.line
 	var initial_column : int= lexer.column
 	var values : String = ""
@@ -74,7 +74,7 @@ static func internal_setup(lexer : Lexer) -> Dictionary:
 		"initial_line" :initial_line ,"values": values}
 
 
-static func increase_lexer_position(lexer : Lexer, pos_amt : int = 1, 
+static func increase_lexer_position(lexer : ClydeLexer, pos_amt : int = 1, 
 col_amt : int = 1 ) -> void:
 	lexer.position += pos_amt
 	lexer.column += col_amt

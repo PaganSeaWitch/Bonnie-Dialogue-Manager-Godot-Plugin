@@ -44,7 +44,7 @@ var config : Config = Config.new()
 
 
 func init(document_dict : Dictionary, interpreter_options :Dictionary = {}) -> void:
-	doc = Parser.new().to_node(document_dict) as DocumentNode
+	doc = ClydeParser.new().to_node(document_dict) as DocumentNode
 	if(doc == null):
 		printerr("Failed to load dictionary into nodes")
 		return
