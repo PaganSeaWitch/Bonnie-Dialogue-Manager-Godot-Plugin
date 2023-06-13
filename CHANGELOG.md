@@ -2,6 +2,9 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 6.1.0 (2023-06-12)
+- Took (stole) code from [Dialogue Manager](https://github.com/nathanhoad/godot_dialogue_manager) to allow Clyde files to be edited in Editor! Try it out!
+
 ## 6.0.0 (2023-06-06)
 - New output visualizer that makes it easy to understand how your clyde file is being turned into nodes.
 - Changed Dependent Logic blocks from `[]` to `{[]}`
