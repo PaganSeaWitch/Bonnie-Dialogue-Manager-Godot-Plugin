@@ -14,9 +14,17 @@ config/name="clyde-plugin"
 config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
 
+[autoload]
+
+DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/Super Clyde/plugin.cfg")
+
+[internationalization]
+
+locale/translations_pot_files=PackedStringArray("res://dialogues/variables.clyde", "res://dialogues/options.clyde", "res://dialogues/diverts.clyde", "res://dialogues/variations.clyde", "res://dialogues/new.clyde", "res://dialogues/logic.clyde", "res://dialogues/dependent_logic.clyde", "res://dialogues/new_file.clyde", "res://dialogues/simple_lines.clyde", "res://dialogues/bb_code.clyde", "res://test/dialogue_samples/variables.clyde", "res://test/dialogue_samples/nesting.clyde", "res://test/dialogue_samples/options.clyde", "res://test/dialogue_samples/diverts.clyde", "res://test/dialogue_samples/variations.clyde", "res://test/dialogue_samples/tab_indentation.clyde", "res://test/dialogue_samples/empty.clyde", "res://test/dialogue_samples/logic.clyde", "res://test/dialogue_samples/blocks.clyde", "res://test/dialogue_samples/simple_lines.clyde", "res://test/dialogue_samples/all_features.clyde", "res://test/dialogue_samples/pulp_with_blocks.clyde")
 
 [locale]
 

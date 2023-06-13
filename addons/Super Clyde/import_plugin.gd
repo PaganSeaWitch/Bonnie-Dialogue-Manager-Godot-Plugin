@@ -51,7 +51,7 @@ func _import(source_file, save_path, options, platform_variants, gen_files):
 	var file : FileAccess = FileAccess.open(source_file, FileAccess.READ)
 	var clyde = file.get_as_text()
 	print(clyde)
-	var parser = Parser.new()
+	var parser = ClydeParser.new()
 	var result = parser.parse(clyde)
 
 	var container = PackedDataContainer.new()

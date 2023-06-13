@@ -5,6 +5,8 @@
 { set a = 1, b = 2, c = 3 } setting multiple variables
 { set some_value += a += b } %some_value% == 4.  %a% == 3
 
+
+== fr fr no cap
 --  conditions
 { a == 1 } Hello!
 { a == 2 || a != 3 } Hi!
@@ -18,6 +20,3 @@ Hello { when a == 2 }
 -- events
 { trigger some_event }
 { trigger some_event, another_event }
-
-
-

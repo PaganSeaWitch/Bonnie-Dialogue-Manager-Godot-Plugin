@@ -1,8 +1,8 @@
 -- logic example
 
 -- assignments
-variable was[{ set some_value = 1 }] initialized with %some_value%
-setting [{ set a = 1, b = 2, c = 3 }]multiple variables
+variable was[{ set some_value = 1 }] initialized with %some_value% 
+setting[{ set a = 1, b = 2, c = 3 }] multiple variables
 [{ set some_value += a += b }]  %some_value% == 4.  %a% == 3
 
 --  conditions
@@ -14,8 +14,8 @@ Hello [{ when a == 3 }] you!
 
 
 -- events
-trigger [{ trigger some_event }] this!
-plz [{ trigger some_event, another_event }] trigger me daddy!!
+trigger [{ trigger some_event }] this! 
+plz [{ trigger some_event, another_event }] trigger me daddy!! 
 
 [{ set logic = true}]
 

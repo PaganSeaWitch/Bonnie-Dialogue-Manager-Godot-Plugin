@@ -1,0 +1,10 @@
+== this is a basic block
+
+{ set variable = 5 } 
+npc: Hey wanna know something cool?
+* yes
+	player: sure! 
+	npc: your hot.
+* no
+	player: no i dont.
+	npc: well ur lame #annoyed

@@ -15,12 +15,12 @@ npc: what do you want to talk about?
 -> END
 
 == about_life
-player: I want to talk about life!
+player: I want to talk about life! 
 npc: Well! That's too complicated...
 <-
 
 == about_universe
-player: I want to talk about the universe!
+player: I want to talk about the universe! 
 npc: That's too complex!
 <-
 
