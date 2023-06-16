@@ -95,11 +95,11 @@ func set_variable(name, value):
 	return memory.set_variable(name, value)
 
 
-func get_data() -> MemoryInterface.InternalMemory:
+func get_data() -> MemoryInterface.ClydeInternalMemory:
 	return memory.get_all()
 
 
-func load_data(data : MemoryInterface.InternalMemory) -> void:
+func load_data(data : MemoryInterface.ClydeInternalMemory) -> void:
 	memory.load_data(data)
 
 

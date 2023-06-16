@@ -63,12 +63,12 @@ func set_random_block() -> bool:
 
 # Return all variables and internal variables. Useful for persisting the dialogue's internal
 # data, such as options already choosen and random variations states.
-func get_data() -> MemoryInterface.InternalMemory:
+func get_data() -> MemoryInterface.ClydeInternalMemory:
 	return _interpreter.get_data()
 
 
 # Load internal data
-func load_data(data : MemoryInterface.InternalMemory) -> void:
+func load_data(data : MemoryInterface.ClydeInternalMemory) -> void:
 	_interpreter.load_data(data)
 
 

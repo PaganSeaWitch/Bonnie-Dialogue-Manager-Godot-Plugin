@@ -1,5 +1,4 @@
 @tool
-class_name ClydeEditorMainView
 extends Control
 
 
@@ -227,7 +226,7 @@ func new_file(path: String, content: String = "") -> void:
 
 
 # Open a dialogue resource for editing
-func open_resource(resource: DialogueResource) -> void:
+func open_resource(resource) -> void:
 	open_file(resource.resource_path)
 
 

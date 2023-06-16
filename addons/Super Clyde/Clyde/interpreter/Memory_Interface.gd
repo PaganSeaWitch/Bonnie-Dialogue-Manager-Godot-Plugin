@@ -2,7 +2,7 @@ class_name MemoryInterface
 extends RefCounted
 
 
-class InternalMemory:
+class ClydeInternalMemory:
 	var access    : Dictionary = {}
 	var	variables : Dictionary =  {}
 	var	internal  : Dictionary = {}
@@ -13,7 +13,7 @@ signal variable_changed(name, value, previous_value)
 
 const SPECIAL_VARIABLE_NAMES : Array[String]= [ 'OPTIONS_COUNT' ];
 
-var internalMemory : InternalMemory = InternalMemory.new()
+var internalMemory : ClydeInternalMemory = ClydeInternalMemory.new()
 
 
 # Sets the id for a block in access as a key for true
@@ -61,15 +61,15 @@ func get_internal_variable(id, default_value):
 
 
 # Returns memory object
-func get_all() -> InternalMemory:
+func get_all() -> ClydeInternalMemory:
 	return internalMemory
 
 
 # Sets data as memory object
-func load_data(data : InternalMemory) -> void:
+func load_data(data : ClydeInternalMemory) -> void:
 	internalMemory = data
 
 
 # Resets memory object
 func clear() -> void:
-	internalMemory = InternalMemory.new()
+	internalMemory = ClydeInternalMemory.new()
