@@ -39,6 +39,7 @@ You can find a simple usage example on [/example/example.gd](./example/example.g
 
 For more about how to write dialogues using Super Clyde, check [LANGUAGE.md](https://github.com/PaganSeaWitch/Super-Clyde-Godot-Plugin/blob/master/LANGUAGE.md)
 
+You now have the option to edit Clyde files in the Godot engine itself, helping streamline usage to a single editor. 
 
 ## Instalation
 
