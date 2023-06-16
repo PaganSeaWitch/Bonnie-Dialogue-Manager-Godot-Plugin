@@ -14,13 +14,9 @@ config/name="clyde-plugin"
 config/features=PackedStringArray("4.0")
 config/icon="res://icon.png"
 
-[autoload]
-
-DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
-
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/Super Clyde/plugin.cfg")
 
 [internationalization]
 
