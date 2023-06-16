@@ -37,7 +37,7 @@ Check [USAGE.md](./USAGE.md) for how to use the interpreter.
 
 You can find a simple usage example on [/example/example.gd](./example/example.gd)
 
-For more about how to write dialogues using Super Clyde, check [LANGUAGE.md](https://github.com/PaganSeaWitch/Super-Clyde-Godot-Plugin/blob/master/language.md)
+For more about how to write dialogues using Super Clyde, check [LANGUAGE.md](https://github.com/PaganSeaWitch/Super-Clyde-Godot-Plugin/blob/master/LANGUAGE.md)
 
 
 ## Instalation
