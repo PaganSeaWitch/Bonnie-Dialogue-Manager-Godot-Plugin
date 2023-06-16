@@ -20,7 +20,7 @@ DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/Super Clyde/plugin.cfg")
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 [internationalization]
 

@@ -6,7 +6,6 @@
 { set some_value += a += b } %some_value% == 4.  %a% == 3
 
 
-== fr fr no cap
 --  conditions
 { a == 1 } Hello!
 { a == 2 || a != 3 } Hi!
