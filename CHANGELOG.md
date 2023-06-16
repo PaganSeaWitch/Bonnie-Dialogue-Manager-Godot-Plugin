@@ -2,6 +2,9 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 6.1.1 (2023-06-16)
+- Fixed plugin so it now works
+
 ## 6.1.0 (2023-06-12)
 - Took (stole) code from [Dialogue Manager](https://github.com/nathanhoad/godot_dialogue_manager) to allow Clyde files to be edited in Editor! Try it out!
 
