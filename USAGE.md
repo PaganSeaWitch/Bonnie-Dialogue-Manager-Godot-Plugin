@@ -19,11 +19,14 @@ signal event_triggered(event_name)
 #            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
 # block: block name to run. This allows keeping
 #        multiple dialogues in the same file.
-func load_dialogue(file_name : String, block  : String= "") -> void:
+# check_access: whether to use block requirements to check whether to set the block or not. 
+func load_dialogue(file_name : String, block  : String= "", check_access: bool = false) -> void:
 
 
 # Start or restart dialogue. Variables are not reset.
-func start(block_name : String = ""):
+#O ptional check_access which will only start the block if it can be accessed per the rules set by the blocks requirements. 
+# Returns whether the block was set
+func start(block_name : String = "", check_access: bool = false) -> bool:
 
 
 # Get next dialogue content.
