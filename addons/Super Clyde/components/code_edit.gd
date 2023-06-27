@@ -23,9 +23,9 @@ var theme_overrides: Dictionary:
 
 		# Titles
 		syntax_highlighter.add_color_region("=="," ", theme_overrides.titles_color)
-		syntax_highlighter.add_color_region("+="," ", theme_overrides.titles_color)
-		syntax_highlighter.add_color_region("*="," ", theme_overrides.titles_color)
-		syntax_highlighter.add_color_region(">="," ", theme_overrides.titles_color)
+		syntax_highlighter.add_color_region("=+"," ", theme_overrides.titles_color)
+		syntax_highlighter.add_color_region("=*"," ", theme_overrides.titles_color)
+		syntax_highlighter.add_color_region("=>"," ", theme_overrides.titles_color)
 		
 		# Variations
 		syntax_highlighter.add_color_region("-"," ", theme_overrides.titles_color)
@@ -44,6 +44,7 @@ var theme_overrides: Dictionary:
 		syntax_highlighter.add_color_region("="," ", theme_overrides.titles_color)
 		syntax_highlighter.add_color_region("!="," ", theme_overrides.titles_color)
 		syntax_highlighter.add_keyword_color("isnt", theme_overrides.titles_color)
+		syntax_highlighter.add_keyword_color("req", theme_overrides.titles_color)
 		syntax_highlighter.add_keyword_color("is", theme_overrides.titles_color)
 		syntax_highlighter.add_color_region("!"," ", theme_overrides.titles_color)
 		syntax_highlighter.add_keyword_color("not", theme_overrides.titles_color)
@@ -55,6 +56,7 @@ var theme_overrides: Dictionary:
 		syntax_highlighter.add_color_region("/="," ", theme_overrides.titles_color)
 		syntax_highlighter.add_color_region("^="," ", theme_overrides.titles_color)
 		syntax_highlighter.add_color_region("%="," ", theme_overrides.titles_color)
+		
 		# Comments
 		syntax_highlighter.add_color_region("--","", theme_overrides.comments_color)
 
@@ -217,16 +219,16 @@ func _request_code_completion(force: bool) -> void:
 
 		# Get all titles, including those in imports
 		var parser: ClydeParser = ClydeParser.new()
-		parser.prepare(text, main_view.current_file_path, false)
-		for title in parser.titles:
-			if "/" in title:
-				var bits = title.split("/")
-				if matches_prompt(prompt, bits[0]) or matches_prompt(prompt, bits[1]):
-					add_code_completion_option(CodeEdit.KIND_CLASS, title, title.substr(prompt.length()), theme_overrides.text_color, get_theme_icon("CombineLines", "EditorIcons"))
-			elif matches_prompt(prompt, title):
-				add_code_completion_option(CodeEdit.KIND_CLASS, title, title.substr(prompt.length()), theme_overrides.text_color, get_theme_icon("ArrowRight", "EditorIcons"))
-		update_code_completion_options(true)
-		parser.free()
+		#parser.prepare(text, main_view.current_file_path, false)
+		#for title in parser.titles:
+		#	if "/" in title:
+		#		var bits = title.split("/")
+		#		if matches_prompt(prompt, bits[0]) or matches_prompt(prompt, bits[1]):
+		#			add_code_completion_option(CodeEdit.KIND_CLASS, title, title.substr(prompt.length()), theme_overrides.text_color, get_theme_icon("CombineLines", "EditorIcons"))
+		#	elif matches_prompt(prompt, title):
+		#		add_code_completion_option(CodeEdit.KIND_CLASS, title, title.substr(prompt.length()), theme_overrides.text_color, get_theme_icon("ArrowRight", "EditorIcons"))
+		#update_code_completion_options(true)
+		#parser.free()
 		return
 
 #	var last_character: String = current_line.substr(cursor.x - 1, 1)
