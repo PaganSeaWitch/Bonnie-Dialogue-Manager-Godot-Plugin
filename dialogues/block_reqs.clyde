@@ -1,0 +1,24 @@
+{ set x = 5 }
+
+req {x == 5}
+== block1
+
+req {x == 6}
+== block2
+
+req block1
+== block3
+{ set x = 6}
+
+req block2, {x == 6}
+== block4
+{ set y = true}
+{ set x = 7}
+
+req { y}, { x <= 7}, !block6
+== block5
+
+
+req block5
+== block6
+everything works!
