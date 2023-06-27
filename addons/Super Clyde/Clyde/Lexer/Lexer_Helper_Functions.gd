@@ -34,7 +34,7 @@ line : int, position :  int) -> Token:
 	while is_tab_char(input[lookup_position]):
 		lookup_position -= 1
 
-	if input[lookup_position] == '\n':
+	if is_valid_position(input, position) && input[lookup_position] == '\n':
 		return Token.new(Syntax.TOKEN_LINE_BREAK, line, 0)
 	return null
 
@@ -61,7 +61,7 @@ static func is_identifier(character : String) -> bool:
 
 static func is_block_identifier(character : String) -> bool:
 	var regex : RegEx = RegEx.new()
-	regex.compile("[A-Z|a-z|0-9|_| ]")
+	regex.compile("[A-Z|a-z|0-9|_| |.]")
 	return regex.search(character) != null
 
 

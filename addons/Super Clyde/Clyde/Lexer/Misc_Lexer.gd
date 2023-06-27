@@ -18,7 +18,7 @@ func handle_line_breaks() -> Array[Token]:
 		
 		# Move position forward and reset column
 		LexerHelperFunctions.increase_lexer_position(lexer, 1, lexer.column * -1)
-		if lexer.is_current_mode(Syntax.MODE_OPTION):
+		if lexer.is_current_mode(Syntax.MODE_OPTION) || lexer.is_current_mode(Syntax.MODE_BLOCK_REQ):
 			lexer.pop_mode()
 	if(token.line == lexer.line_in_parts):
 		lexer.added_space = true
@@ -100,9 +100,17 @@ func handle_block() -> Array[Token]:
 	&& LexerHelperFunctions.is_block_identifier(lexer.input[lexer.position])):
 		setup_dict["values"] += lexer.input[lexer.position]
 		LexerHelperFunctions.increase_lexer_position(lexer)
-	
+
 	return [Token.new(token_name, lexer.line, 
 		setup_dict["initial_column"], setup_dict["values"].strip_edges())]
+
+
+func handle_block_requirement() -> Array[Token]:
+	var setup_dict : Dictionary = LexerHelperFunctions.internal_setup(lexer)
+	LexerHelperFunctions.increase_lexer_position(lexer,4,4)
+	lexer.stack_mode(Syntax.MODE_BLOCK_REQ)
+	return [Token.new(Syntax.TOKEN_KEYWORD_BLOCK_REQ, lexer.line, 
+		setup_dict["initial_column"], "")]
 
 
 # Consume and returns divert and linebreak if one exists

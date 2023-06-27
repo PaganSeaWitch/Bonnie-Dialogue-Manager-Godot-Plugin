@@ -84,7 +84,10 @@ func handle_logic_block() -> Array[Token]:
 		return handle_logic_not()
 	
 	var identifier : RegEx = RegEx.new()
-	identifier.compile("[A-Z|a-z]")
+	if(lexer.is_current_mode(Syntax.MODE_BLOCK_REQ)):
+		identifier.compile("[A-Z|a-z|0-9|_| |.]")
+	else:
+		identifier.compile("[A-Z|a-z]")
 	if identifier.search(lexer.input[lexer.position]) != null:
 		return handle_logic_identifier()
 	return []
@@ -95,17 +98,25 @@ func handle_logic_identifier() -> Array[Token]:
 	var setup_dict : Dictionary= LexerHelperFunctions.internal_setup(lexer)
 	
 	# Get logic identifier
-	while (LexerHelperFunctions.is_valid_position(lexer.input, lexer.position) 
-	&& LexerHelperFunctions.is_identifier(lexer.input[lexer.position])):
-		setup_dict["values"] += lexer.input[lexer.position]
-		LexerHelperFunctions.increase_lexer_position(lexer)
+	if(lexer.is_current_mode(Syntax.MODE_BLOCK_REQ)):
+		while  (LexerHelperFunctions.is_valid_position(lexer.input, lexer.position) 
+		&& LexerHelperFunctions.is_block_identifier(lexer.input[lexer.position])):
+			setup_dict["values"] += lexer.input[lexer.position]
+			LexerHelperFunctions.increase_lexer_position(lexer)
+	else:
+		while (LexerHelperFunctions.is_valid_position(lexer.input, lexer.position) 
+		&& LexerHelperFunctions.is_identifier(lexer.input[lexer.position])):
+			setup_dict["values"] += lexer.input[lexer.position]
+			LexerHelperFunctions.increase_lexer_position(lexer)
 
-	# Rule : if logic identifier is descriptive operator, consume it as that
-	if Syntax.keywords.has(setup_dict["values"].to_lower()):
-		return handle_logic_descriptive_operator( 
-			setup_dict["values"].to_lower(), setup_dict["initial_column"])
-	return [Token.new(Syntax.TOKEN_IDENTIFIER, lexer.line, 
-		setup_dict["initial_column"], setup_dict["values"].strip_edges())]
+	if(setup_dict["values"].strip_edges() != ""):
+		# Rule : if logic identifier is descriptive operator, consume it as that
+		if Syntax.keywords.has(setup_dict["values"].to_lower()):
+			return handle_logic_descriptive_operator( 
+				setup_dict["values"].to_lower(), setup_dict["initial_column"])
+		return [Token.new(Syntax.TOKEN_IDENTIFIER, lexer.line, 
+			setup_dict["initial_column"], setup_dict["values"].strip_edges())]
+	return []
 
 
 # Consume logic descriptive operator

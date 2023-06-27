@@ -146,7 +146,7 @@ func _get_next_tokens() -> Array[Token]:
 			return response
 
 	# Rule : if we are in logic mode, consume as a logic block
-	if is_current_mode(Syntax.MODE_LOGIC):
+	if is_current_mode(Syntax.MODE_LOGIC) || is_current_mode(Syntax.MODE_BLOCK_REQ):
 		var response : Array[Token] = logic_lexer.handle_logic_block()
 		if !response.is_empty():
 			return response
@@ -189,6 +189,9 @@ func _get_next_tokens() -> Array[Token]:
 	&& column == 0):
 		return misc_lexer.handle_block()
 
+	if (input.substr(position, 4).to_lower() == 'req ' && column == 0):
+		return misc_lexer.handle_block_requirement()
+	
 	# Rule : if ->, consume divert
 	if input.substr(position, 2) == '->':
 		return misc_lexer.handle_divert()
