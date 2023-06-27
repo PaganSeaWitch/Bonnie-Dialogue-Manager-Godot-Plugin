@@ -17,7 +17,7 @@ var _interpreter : ClydeInterpreter
 #            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
 # block: block name to run. This allows keeping
 #        multiple dialogues in the same file.
-func load_dialogue(file_name : String, block  : String= "") -> void:
+func load_dialogue(file_name : String, block  : String= "", check_access :bool = false) -> void:
 	var fileDict : Dictionary = _load_file(_get_file_path(file_name))
 	_interpreter = ClydeInterpreter.new()
 	_interpreter.init(fileDict, {
@@ -26,12 +26,12 @@ func load_dialogue(file_name : String, block  : String= "") -> void:
 	_interpreter.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
 	_interpreter.connect("event_triggered",Callable(self,"_trigger_event_triggered"))
 	if !block.is_empty():
-		_interpreter.select_block(block)
+		_interpreter.select_block(block,check_access)
 
 
 # Start or restart dialogue. Variables are not reset.
-func start(block_name : String = ""):
-	_interpreter.select_block(block_name)
+func start(block_name : String = "", check_access : bool = false) -> bool:
+	return _interpreter.select_block(block_name, check_access)
 
 
 # Get next dialogue content.
@@ -57,8 +57,8 @@ func get_variable(name : String):
 	return _interpreter.get_variable(name)
 
 
-func set_random_block() -> bool:
-	return _interpreter.set_random_block()
+func set_random_block(check_access : bool = false) -> bool:
+	return _interpreter.set_random_block(check_access)
 
 
 # Return all variables and internal variables. Useful for persisting the dialogue's internal
