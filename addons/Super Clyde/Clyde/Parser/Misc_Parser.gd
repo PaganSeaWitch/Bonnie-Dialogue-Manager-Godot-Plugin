@@ -22,8 +22,8 @@ func document() -> DocumentNode:
 	match(nextToken.name):
 		Syntax.TOKEN_EOF:
 			return node_factory.create_node(node_factory.NODE_TYPES.DOCUMENT, {})
-		
-		Syntax.TOKEN_BLOCK, Syntax.TOKEN_RANDOM_BLOCK:
+
+		Syntax.TOKEN_BLOCK, Syntax.TOKEN_RANDOM_BLOCK, Syntax.TOKEN_KEYWORD_BLOCK_REQ:
 			return node_factory.create_node(node_factory.NODE_TYPES.DOCUMENT,
 				{"content"= [], "blocks"= _blocks()})
 		
@@ -34,13 +34,69 @@ func document() -> DocumentNode:
 	var result =  node_factory.create_node(node_factory.NODE_TYPES.DOCUMENT, 
 		{"content" = lines()})
 
-	if token_walker.peek(TokenArray.block_types):
+	if token_walker.peek(TokenArray.blocks_and_reqs):
 		result.blocks = _blocks()
 
 	return result
 
 
-func _blocks() -> Array[BlockNode]:
+func _block_with_requirements() -> BlockNode:
+	token_walker.consume(TokenArray.block_req)
+	var req_block_names : Array[String] = []
+	var req_not_block_names : Array[String] = []
+	var condtions : Array[NamedNode] = []
+	var next_token : Token = token_walker.peek(TokenArray.acceptable_req)
+	if next_token == null:
+		token_walker._wrong_token_error(next_token, TokenArray.acceptable_req)
+		return null
+	var getting_req = true
+
+	while(getting_req):
+		getting_req = false
+		match (next_token.name):
+			Syntax.TOKEN_IDENTIFIER:
+				req_block_names.append(next_token.value)
+				token_walker.consume(TokenArray.acceptable_req)
+				
+			Syntax.TOKEN_NOT:
+				token_walker.consume(TokenArray.logical_not)
+				var token = token_walker.consume(TokenArray.identifier)
+				req_not_block_names.append(token.value)
+
+			
+			Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN:
+				token_walker.consume(TokenArray.logic_open)
+				if token_walker.peek(TokenArray.when) != null:
+					token_walker.consume(TokenArray.when)
+				condtions.append(parser.logic_parser._condition())
+		
+		if(token_walker.peek(TokenArray.comma)):
+			token_walker.consume(TokenArray.comma)
+			getting_req = true
+		if(token_walker.peek(TokenArray.lineBreak)):
+			token_walker.consume(TokenArray.lineBreak)
+
+		if(token_walker.peek(TokenArray.block_req)):
+			token_walker.consume(TokenArray.block_req)
+			getting_req = true
+
+		next_token = token_walker.peek(TokenArray.acceptable_req)
+		if next_token == null && getting_req:
+			token_walker._wrong_token_error(next_token, TokenArray.acceptable_req)
+			return null
+		
+	var block : BlockNode = _get_block();
+	if(block is RandomBlockNode):
+		if(block.mode == "fallback"):
+			assert(false,"tried to put requirement on fallback block!")
+			return null
+	block.block_requirements = req_block_names
+	block.conditions = condtions
+	block.block_not_requirements = req_not_block_names
+	return block
+
+
+func _get_block() -> BlockNode:
 	var token : Token = token_walker.consume(TokenArray.block_types)
 	var node = BlockNode
 
@@ -51,10 +107,18 @@ func _blocks() -> Array[BlockNode]:
 		node = node_factory.create_node(node_factory.NODE_TYPES.RANDOM_BLOCK, 
 			{"mode" = SyntaxDictionaries.random_block_types[token.name], 
 			"block_name" = token_walker.current_token.value, "content" = lines()})
+	
+	return node
 
-	var blocks : Array[BlockNode] =  [node]
-	while token_walker.peek(TokenArray.block) != null:
-		blocks.append_array(_blocks())
+
+func _blocks() -> Array[BlockNode]:
+	var blocks : Array[BlockNode] = []
+
+	while token_walker.peek(TokenArray.blocks_and_reqs) != null:
+		if(token_walker.peek(TokenArray.block_req)):
+			blocks.append(_block_with_requirements())
+		else:
+			blocks.append(_get_block())
 
 	return blocks
 
@@ -107,7 +171,6 @@ func lines() -> Array[ClydeNode]:
 	
 			if token_walker.peek(TokenArray.set_trigger) != null:
 				lines = [parser.logic_parser.line_with_action()]
-				
 			else:
 				if token_walker.peek(TokenArray.when) != null:
 					token_walker.consume(TokenArray.when)

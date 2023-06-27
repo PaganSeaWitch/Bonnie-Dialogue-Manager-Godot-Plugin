@@ -57,7 +57,8 @@ func to_JSON_object(node : ClydeNode, to_print : bool = false) -> Dictionary:
 		match(property.type):
 			TYPE_ARRAY:
 				var array : Array = []
-				if(name != "tags" && name != "id_suffixes"):
+				if(name != "tags" && name != "id_suffixes" 
+				&& name != "block_requirements" && name != "block_not_requirements"):
 					for val in node[name]:
 						if(val is ClydeNode):
 							array.append(to_JSON_object(val,to_print))
