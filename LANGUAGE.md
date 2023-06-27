@@ -523,6 +523,33 @@ npc: I don't have time for this...
 
 Blocks also allow you to have multiple dialogues in the same file and run them independently from each other.
 
+## Block  Requirements
+You have the ability to set Requirements for accessing blocks. This will allow you to be able to check whether a logical condition has been met or another block has or has not been accessed before playing a certain block. To set a requirement you have to write a line above a block with the `req` keyword followed by another block name or by a independent logic block. You can string several requirements in one line by placing a comma between them or by writing several req lines. Fallback blocks cannot use Requirements. If a block has a requirement on it, you can always set the block anyway by setting check_access to false in the start function.
+
+``` javascript
+//This block will only be accessed if block2 has been accessed
+req block2
+== block1
+
+//this block will only be accessed if block2 has not been accessed
+req !block2
+== block3
+
+
+//this block will only be accessed if x is 5
+req {x == 5}
+== block4
+
+//this block will be only accessed if block2 has been accessed
+//and x is 5
+req {x == 5}, block2
+== block5
+
+//same as above but on seperate lines
+req {x == 5}
+req block2
+== block6
+```
 
 ### Divert to parent
 
