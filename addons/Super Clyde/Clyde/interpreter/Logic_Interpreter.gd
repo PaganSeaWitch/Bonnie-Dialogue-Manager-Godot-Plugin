@@ -97,7 +97,6 @@ func check_condition(condition : NamedNode):
 
 
 func check_expression(node : ExpressionNode):
-	print(node)
 	match node.name:
 		Syntax.TOKEN_EQUAL:
 			return _get_node_value(node.elements[0]) == _get_node_value(node.elements[1])

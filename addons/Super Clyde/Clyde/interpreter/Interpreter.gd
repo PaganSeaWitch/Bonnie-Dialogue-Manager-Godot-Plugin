@@ -35,7 +35,8 @@ var _handlers = {
 		OptionNode.new().get_node_class(): options_interpreter.handle_option_node,
 		OptionsNode.new().get_node_class(): options_interpreter.handle_options_node,
 		VariationsNode.new().get_node_class(): variations_interpreter.handle_variations_node,
-		LinePartNode.new().get_node_class(): dependent_interpreter.handle_line_part_node}
+		LinePartNode.new().get_node_class(): dependent_interpreter.handle_line_part_node,
+		RandomBlockNode.new().get_node_class():misc_interpreter.handle_block_node}
 	
 
 
@@ -70,13 +71,36 @@ func get_current_node():
 	return handle_next_node(stack.stack_head().node)
 
 
-func select_block(block_name : String = ""):
+func select_block(block_name : String = "", check_access : bool = false) -> bool:
 	#assert(!block_name.is_empty() && anchors.has(block_name),
 	#	"Block name was given but no such block exists!")
-	if anchors.has(block_name):
-		stack.initialise_stack(anchors[block_name])
+	if(!check_access):
+		if anchors.has(block_name):
+			memory.set_as_accessed(block_name)
+			stack.initialise_stack(anchors[block_name])
+		else:
+			stack.initialise_stack(doc)
+		return true
 	else:
-		stack.initialise_stack(doc)
+		if anchors.has(block_name) && can_access(block_name):
+			memory.set_as_accessed(block_name)
+			stack.initialise_stack(anchors[block_name])
+			return true
+		else:
+			stack.initialise_stack(doc)
+		return false
+
+
+func can_access(block_name : String) -> bool:
+	var block : BlockNode = anchors[block_name]
+	var block_reqs = true
+	for name in block.block_requirements:
+		block_reqs = block_reqs && memory.was_already_accessed(name)
+	for name in block.block_not_requirements:
+		block_reqs = block_reqs && !memory.was_already_accessed(name)
+	for condition in block.conditions:
+		block_reqs = block_reqs && logic_interpreter.check_condition(condition)
+	return block_reqs
 
 
 func get_variable(name : String):
@@ -87,8 +111,8 @@ func choose(option_index : int):
 	options_interpreter.choose(option_index)
 
 
-func set_random_block() -> bool:
-	return random_block_interpreter.set_random_block()
+func set_random_block(check_access : bool = false) -> bool:
+	return random_block_interpreter.set_random_block(check_access)
 
 
 func set_variable(name, value):
