@@ -725,3 +725,35 @@ func test_bb_code():
 		assert_eq_deep(null, null)
 	else:
 		assert_eq_deep(line_part, null)
+
+
+func test_block_reqs():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('block_reqs')
+	assert_eq_deep(null, dialogue.get_content())
+	assert_eq_deep(true, dialogue.start("block1", true))
+	assert_eq_deep(false, dialogue.start("block2", true))
+	assert_eq_deep(true, dialogue.start("block3", true))
+	assert_eq_deep(null, dialogue.get_content())
+	assert_eq_deep(true, dialogue.start("block2", true))
+	assert_eq_deep(true, dialogue.start("block4", true))
+	assert_eq_deep(null, dialogue.get_content())
+	assert_eq_deep(true, dialogue.start("block5", true))
+	assert_eq_deep(true, dialogue.start("block6", true))
+	assert_eq_deep("everything works!", dialogue.get_content().value)
+
+
+func test_random_block_reqs():
+	var dialogue = ClydeDialogue.new()
+	dialogue.load_dialogue('random_block_reqs')
+	assert_eq_deep(null, dialogue.get_content())
+	assert_eq_deep(true, dialogue.set_random_block(true))
+	assert_eq_deep(true, dialogue.set_random_block(true))
+	assert_eq_deep(null, dialogue.get_content())
+	assert_eq_deep(true, dialogue.set_random_block(true))
+	assert_eq_deep(true, dialogue.set_random_block(true))
+	assert_eq_deep(null, dialogue.get_content())
+	assert_eq_deep(true, dialogue.set_random_block(true))
+	assert_eq_deep(true, dialogue.set_random_block(true))
+	assert_eq_deep("everything works!", dialogue.get_content().value)
+	

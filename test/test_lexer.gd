@@ -1260,105 +1260,101 @@ func test_lexer_placement_depentdent_slice_text():
 func test_lexer_basic_bb_code():
 	var jsonTokens = _get_lexer_json_tokens('cheese [b] cakes [/b]')
 	assert_eq_deep(jsonTokens.size(), 9)
-	assert_eq_deep(jsonTokens[0], {
-		"name": Syntax.TOKEN_TEXT,
-		"value": "cheese ",
-		"line": 0,
-		"column": 0,
-	})
-	assert_eq_deep(jsonTokens[1],{
-		"name": Syntax.TOKEN_BEGINNING_BB_CODE_OPEN,
-		"value": "",
-		"line": 0,
-		"column": 7,
-	})
-	assert_eq_deep(jsonTokens[2],{
-		"name": Syntax.TOKEN_BB_CODE,
-		"value": "b",
-		"line": 0,
-		"column": 8,
-	})
-	assert_eq_deep(jsonTokens[3],{
-		"name": Syntax.TOKEN_BB_CODE_CLOSE,
-		"value": "",
-		"line": 0,
-		"column": 9,
-	})
-	assert_eq_deep(jsonTokens[4],{
-		"name": Syntax.TOKEN_TEXT,
-		"value": " cakes ",
-		"line": 0,
-		"column": 11,
-	})
-	assert_eq_deep(jsonTokens[5],{
-		"name": Syntax.TOKEN_ENDING_BB_CODE_OPEN,
-		"value": "",
-		"line": 0,
-		"column": 17,
-	})
-	assert_eq_deep(jsonTokens[6],{
-		"name": Syntax.TOKEN_BB_CODE,
-		"value": "b",
-		"line": 0,
-		"column": 18,
-	})
-	assert_eq_deep(jsonTokens[7],{
-		"name": Syntax.TOKEN_BB_CODE_CLOSE,
-		"value": "",
-		"line": 0,
-		"column": 19,
-	})
+	assert_eq_deep(jsonTokens, [
+		{"name": Syntax.TOKEN_TEXT,"value": "cheese ","line": 0,"column": 0},
+		{"name": Syntax.TOKEN_BEGINNING_BB_CODE_OPEN,"value": "","line": 0,"column": 7},
+		{"name": Syntax.TOKEN_BB_CODE,"value": "b","line": 0,"column": 8},
+		{"name": Syntax.TOKEN_BB_CODE_CLOSE,"value": "","line": 0,"column": 9},
+		{"name": Syntax.TOKEN_TEXT,"value": " cakes ","line": 0,"column": 11},
+		{"name": Syntax.TOKEN_ENDING_BB_CODE_OPEN,"value": "","line": 0,"column": 17},
+		{"name": Syntax.TOKEN_BB_CODE,"value": "b","line": 0,"column": 18},
+		{"name": Syntax.TOKEN_BB_CODE_CLOSE,"value": "","line": 0,"column": 19},
+		{"name": Syntax.TOKEN_EOF, "value": "", "line": 0, "column": 20},
+	])
+
 
 
 func test_lexer_complex_bb_code():
 	var jsonTokens = _get_lexer_json_tokens('cheese [b=10] cakes [/b]')
 	
 	assert_eq_deep(jsonTokens.size(), 9)
-	assert_eq_deep(jsonTokens[0], {
-		"name": Syntax.TOKEN_TEXT,
-		"value": "cheese ",
-		"line": 0,
-		"column": 0,
-	})
-	assert_eq_deep(jsonTokens[1],{
-		"name": Syntax.TOKEN_BEGINNING_BB_CODE_OPEN,
-		"value": "",
-		"line": 0,
-		"column": 7,
-	})
-	assert_eq_deep(jsonTokens[2],{
-		"name": Syntax.TOKEN_BB_CODE,
-		"value": "b=10",
-		"line": 0,
-		"column": 8,
-	})
-	assert_eq_deep(jsonTokens[3],{
-		"name": Syntax.TOKEN_BB_CODE_CLOSE,
-		"value": "",
-		"line": 0,
-		"column": 12,
-	})
-	assert_eq_deep(jsonTokens[4],{
-		"name": Syntax.TOKEN_TEXT,
-		"value": " cakes ",
-		"line": 0,
-		"column": 14,
-	})
-	assert_eq_deep(jsonTokens[5],{
-		"name": Syntax.TOKEN_ENDING_BB_CODE_OPEN,
-		"value": "",
-		"line": 0,
-		"column": 20,
-	})
-	assert_eq_deep(jsonTokens[6],{
-		"name": Syntax.TOKEN_BB_CODE,
-		"value": "b",
-		"line": 0,
-		"column": 21,
-	})
-	assert_eq_deep(jsonTokens[7],{
-		"name": Syntax.TOKEN_BB_CODE_CLOSE,
-		"value": "",
-		"line": 0,
-		"column": 22,
-	})
+	assert_eq_deep(jsonTokens, [
+		{"name": Syntax.TOKEN_TEXT,"value": "cheese ","line": 0,"column": 0,},
+		{"name": Syntax.TOKEN_BEGINNING_BB_CODE_OPEN,"value": "","line": 0,"column": 7,},
+		{"name": Syntax.TOKEN_BB_CODE,"value": "b=10","line": 0,"column": 8,},
+		{"name": Syntax.TOKEN_BB_CODE_CLOSE,"value": "","line": 0,"column": 12,},
+		{"name": Syntax.TOKEN_TEXT,"value": " cakes ","line": 0,"column": 14,},
+		{"name": Syntax.TOKEN_ENDING_BB_CODE_OPEN,"value": "","line": 0,"column": 20,},
+		{"name": Syntax.TOKEN_BB_CODE,"value": "b","line": 0,"column": 21,},
+		{"name": Syntax.TOKEN_BB_CODE_CLOSE,"value": "","line": 0,"column": 22,},
+		{"name": Syntax.TOKEN_EOF, "value": "", "line": 0, "column": 23},
+	])
+
+
+
+func test_block_with_prereq_block():
+	var jsonTokens = _get_lexer_json_tokens('''
+req this_has_to_happen_before_hand
+== this_is_block_name''')
+
+	assert_eq_deep(jsonTokens, [
+		{"name": Syntax.TOKEN_KEYWORD_BLOCK_REQ,"value": "","line": 1,"column": 0},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this_has_to_happen_before_hand","line": 1,"column": 4,},
+		{"name": Syntax.TOKEN_BLOCK,"value": "this_is_block_name","line": 2,"column": 0,},
+		{"name": Syntax.TOKEN_EOF, "value": "", "line": 2, "column": 21},
+	])
+
+func test_block_with_prereq_blocks():
+	var jsonTokens = _get_lexer_json_tokens('''
+req this_has_to_not_happen_before_hand, this too
+req !this_has_to_happen_before_hand_too
+== this_is_block_name''')
+
+	assert_eq_deep(jsonTokens, [
+		{"name": Syntax.TOKEN_KEYWORD_BLOCK_REQ,"value": "","line": 1,"column": 0},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this_has_to_not_happen_before_hand","line": 1,"column": 4},
+		{"name": Syntax.TOKEN_COMMA,"value": "","line": 1,"column": 38},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this too","line": 1,"column": 39},
+		{"name": Syntax.TOKEN_KEYWORD_BLOCK_REQ,"value": "","line": 2,"column": 0},
+		{"name": Syntax.TOKEN_NOT,"value": "","line": 2,"column":4},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this_has_to_happen_before_hand_too","line": 2,"column": 5},
+		{"name": Syntax.TOKEN_BLOCK,"value": "this_is_block_name","line": 3,"column": 0,},
+		{"name": Syntax.TOKEN_EOF, "value": "", "line": 3, "column": 21}
+	])
+
+
+func test_block_with_prereq_condition():
+	var jsonTokens = _get_lexer_json_tokens('''
+req {x == 5}
+== this_is_block_name''')
+	assert_eq_deep(jsonTokens, [
+		{"name": Syntax.TOKEN_KEYWORD_BLOCK_REQ,"value": "","line": 1,"column": 0},
+		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,"value": "","line": 1,"column": 4},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "x","line": 1,"column": 5,},
+		{"name": Syntax.TOKEN_EQUAL,"value": "","line": 1,"column": 7,},
+		{"name": Syntax.TOKEN_NUMBER_LITERAL,"value": "5","line": 1,"column": 10,},
+		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE,"value": "","line": 1,"column": 11},
+		{"name": Syntax.TOKEN_LINE_BREAK,"value": "","line": 1,"column": 12},
+		{"name": Syntax.TOKEN_BLOCK,"value": "this_is_block_name","line": 2,"column": 0,},
+		{"name": Syntax.TOKEN_EOF, "value": "", "line": 2, "column": 21}
+	])
+
+	
+func test_block_with_mixed_prereq_condition():
+	var jsonTokens = _get_lexer_json_tokens('''
+req {x == 5 }
+req this_block_needs_to_happen_first
+== this_is_block_name''')
+	assert_eq_deep(jsonTokens, [
+		{"name": Syntax.TOKEN_KEYWORD_BLOCK_REQ,"value": "","line": 1,"column": 0},
+		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,"value": "","line": 1,"column": 4},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "x","line": 1,"column": 5,},
+		{"name": Syntax.TOKEN_EQUAL,"value": "","line": 1,"column": 7,},
+		{"name": Syntax.TOKEN_NUMBER_LITERAL,"value": "5","line": 1,"column": 10,},
+		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE,"value": "","line": 1,"column": 12},
+		{"name": Syntax.TOKEN_LINE_BREAK,"value": "","line": 1,"column": 13},
+		{"name": Syntax.TOKEN_KEYWORD_BLOCK_REQ,"value": "","line": 2,"column": 0},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this_block_needs_to_happen_first","line": 2,"column": 4,},
+		{"name": Syntax.TOKEN_BLOCK,"value": "this_is_block_name","line": 3,"column": 0,},
+		{"name": Syntax.TOKEN_EOF, "value": "", "line": 3, "column": 21}
+	])

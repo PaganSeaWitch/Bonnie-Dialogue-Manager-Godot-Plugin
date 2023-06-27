@@ -159,9 +159,18 @@ func _line_part(part : Dictionary, end_line = false):
 func _block(block):
 	return {
 		"type" : NodeFactory.NODE_TYPES.BLOCK,
+		"block_not_requirements" : block.get("block_not_requirements") if block.get("block_not_requirements") != null else [],
+		"block_requirements" : block.get("block_requirements") if block.get("block_requirements") != null else [],
+		"conditions": block.get("conditions") if block.get("conditions") != null else [],
 		"block_name" : block.get("block_name") if block.get("block_name") != null else "",
-		"content" : block.get("content") if block.get("content") != null else []
+		"content" : block.get("content") if block.get("content") != null else [],
 	}
+
+func _random_block(block):
+	var gotten_block = _block(block)
+	gotten_block["type"] = NodeFactory.NODE_TYPES.RANDOM_BLOCK
+	gotten_block["mode"] = block.get("mode") if block.get("mode") != null else ""
+	return gotten_block
 
 
 func _variations(variation):
