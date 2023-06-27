@@ -22,11 +22,13 @@ func _to_string() -> String:
 func _to_node_string_array(array : Array, indent : int) -> String:
 	var result = ""
 	for val in array:
+		if val is String:
+			result += "\t".repeat(indent + 1) + "'" +val+ "'" + "," + "\n"
 		if val is Dictionary:
 			result = result + _to_node_string(val, indent + 1)
 		if val is Array:
 			result = result + _to_node_string_array(val, indent + 1)
-	return result;
+	return result  + "\t".repeat(indent-1) + "]" + "\n";
 
 
 func _to_node_string(dictionary : Dictionary, indent : int) -> String:
@@ -35,12 +37,17 @@ func _to_node_string(dictionary : Dictionary, indent : int) -> String:
 	var dic_result = ""
 	for key in dictionary.keys():
 		if(dictionary[key] is Array && !dictionary[key].is_empty()):
-			array_result = array_result + "\t".repeat(indent)+ "|" + key + " : " + "\n"
+			array_result = array_result + "\t".repeat(indent)+ "|" + key + " : " + "[\n"
 			array_result = array_result + _to_node_string_array(dictionary[key], indent + 1)
 		elif dictionary[key] is Dictionary:
 			dic_result = dic_result + "\t".repeat(indent)+ "|" + key + " : " + "\n"
 			dic_result = dic_result + _to_node_string(dictionary[key], indent + 1)
+		elif dictionary[key] is String && key != "type":
+			result = result + "\t".repeat(indent)+ "|" + key +" : " + "'" + str(dictionary[key]) + "'" + "\n"
 		else:
-			result = result + "\t".repeat(indent)+ "|" + key +" : " + str(dictionary[key]) + "\n"
+			var string = str(dictionary[key])
+			if(string == ""):
+				string = "null"
+			result = result + "\t".repeat(indent)+ "|" + key +" : " +  string  + "\n"
 	return result + dic_result + array_result
 
