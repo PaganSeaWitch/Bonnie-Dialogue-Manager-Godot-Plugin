@@ -7,41 +7,27 @@ signal variable_changed(name, value, previous_value)
 signal event_triggered(event_name)
 
 var memory : MemoryInterface
-var logic_interpreter : LogicInterpreter = LogicInterpreter.new()
-var variations_interpreter : VariationsInterpreter = VariationsInterpreter.new()
-var misc_interpreter : MiscInterpreter = MiscInterpreter.new()
-var line_interpreter : LineInterpreter = LineInterpreter.new()
-var options_interpreter : OptionsInterpreter = OptionsInterpreter.new()
-var random_block_interpreter : RandomBlockInterpreter = RandomBlockInterpreter.new()
-var dependent_interpreter : DependentInterpreter = DependentInterpreter.new()
+var logic_interpreter : LogicInterpreter 
+var variations_interpreter : VariationsInterpreter 
+var misc_interpreter : MiscInterpreter 
+var line_interpreter : LineInterpreter 
+var options_interpreter : OptionsInterpreter 
+var random_block_interpreter : RandomBlockInterpreter
+var dependent_interpreter : DependentInterpreter 
 
 class Config:
 	var id_suffix_lookup_separator : String
 
 var doc : DocumentNode
 
-var stack : InterpreterStack = InterpreterStack.new()
+var stack : InterpreterStack 
 
-var _handlers = {
-		ActionContentNode.new().get_node_class(): logic_interpreter.handle_action_content_node,
-		AssignmentsNode.new().get_node_class(): logic_interpreter.handle_assignments_node,
-		BlockNode.new().get_node_class(): misc_interpreter.handle_block_node,
-		ConditionalContentNode.new().get_node_class(): logic_interpreter.handle_conditional_content_node,
-		ContentNode.new().get_node_class(): line_interpreter.handle_content_node,
-		DocumentNode.new().get_node_class(): misc_interpreter.handle_document_node,
-		DivertNode.new().get_node_class(): misc_interpreter.handle_divert_node,
-		EventsNode.new().get_node_class(): logic_interpreter.handle_events_node,
-		LineNode.new().get_node_class(): line_interpreter.handle_line_node,
-		OptionNode.new().get_node_class(): options_interpreter.handle_option_node,
-		OptionsNode.new().get_node_class(): options_interpreter.handle_options_node,
-		VariationsNode.new().get_node_class(): variations_interpreter.handle_variations_node,
-		LinePartNode.new().get_node_class(): dependent_interpreter.handle_line_part_node,
-		RandomBlockNode.new().get_node_class():misc_interpreter.handle_block_node}
+
 	
 
 
 var anchors = {}
-var config : Config = Config.new()
+var config : Config 
 
 
 func init(document_dict : Dictionary, interpreter_options :Dictionary = {}) -> void:
@@ -52,8 +38,15 @@ func init(document_dict : Dictionary, interpreter_options :Dictionary = {}) -> v
 	doc.node_index = 1
 	memory = MemoryInterface.new()
 	memory.connect("variable_changed",Callable(self,"_trigger_variable_changed"))
-
-
+	stack = InterpreterStack.new()
+	config = Config.new()
+	logic_interpreter = LogicInterpreter.new()
+	variations_interpreter = VariationsInterpreter.new()
+	misc_interpreter = MiscInterpreter.new()
+	line_interpreter = LineInterpreter.new()
+	options_interpreter = OptionsInterpreter.new()
+	random_block_interpreter = RandomBlockInterpreter.new()
+	dependent_interpreter = DependentInterpreter.new()
 	logic_interpreter.init(self, memory, stack)
 	misc_interpreter.init(self, memory, stack)
 	variations_interpreter.init(self, memory, stack)
@@ -138,8 +131,24 @@ func _initialise_blocks(doc : DocumentNode) -> void:
 
 
 func handle_next_node(node : ClydeNode) -> ClydeNode:
-	if _handlers.has(node.get_node_class()):
-		return _handlers[node.get_node_class()].call(node)
+	var handlers = {
+		"ActionContentNode": logic_interpreter.handle_action_content_node,
+		"AssignmentsNode": logic_interpreter.handle_assignments_node,
+		"BlockNode": misc_interpreter.handle_block_node,
+		"ConditionalContentNode": logic_interpreter.handle_conditional_content_node,
+		"ContentNode": line_interpreter.handle_content_node,
+		"DocumentNode": misc_interpreter.handle_document_node,
+		"DivertNode": misc_interpreter.handle_divert_node,
+		"EventsNode": logic_interpreter.handle_events_node,
+		"LineNode": line_interpreter.handle_line_node,
+		"OptionNode": options_interpreter.handle_option_node,
+		"OptionsNode": options_interpreter.handle_options_node,
+		"VariationsNode": variations_interpreter.handle_variations_node,
+		"LinePartNode": dependent_interpreter.handle_line_part_node,
+		"RandomBlockNode":misc_interpreter.handle_block_node
+	}
+	if handlers.has(node.get_node_class()):
+		return handlers[node.get_node_class()].call(node)
 	
 	printerr("Unkown node type '%s'" % node.type)
 	return null

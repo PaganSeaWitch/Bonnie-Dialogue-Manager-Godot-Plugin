@@ -1,18 +1,27 @@
 class_name ClydeParser
 extends RefCounted
 
-var _lexer : ClydeLexer = ClydeLexer.new()
-var misc_parser : MiscParser = MiscParser.new()
-var logic_parser : LogicParser = LogicParser.new()
-var line_parser : LineParser = LineParser.new()
-var variations_parser : VariationsParser = VariationsParser.new()
-var options_parser : OptionsParser = OptionsParser.new()
-var dependent_parser : DependentParser = DependentParser.new()
-var bb_code_parser : BBCodeParser = BBCodeParser.new()
+var _lexer : ClydeLexer 
+var misc_parser : MiscParser 
+var logic_parser : LogicParser 
+var line_parser : LineParser 
+var variations_parser : VariationsParser 
+var options_parser : OptionsParser 
+var dependent_parser : DependentParser
+var bb_code_parser : BBCodeParser
 
 
 # Parses given string data into a DocumentNode
 func parse(doc : String) -> DocumentNode:
+	
+	_lexer = ClydeLexer.new()
+	misc_parser = MiscParser.new()
+	logic_parser = LogicParser.new()
+	line_parser = LineParser.new()
+	variations_parser = VariationsParser.new()
+	options_parser = OptionsParser.new()
+	dependent_parser = DependentParser.new()
+	bb_code_parser = BBCodeParser.new()
 	var token_walker = TokenWalker.new()
 	token_walker.set_lexer(_lexer.init(doc))
 	misc_parser.init(self, token_walker)
@@ -25,7 +34,6 @@ func parse(doc : String) -> DocumentNode:
 	var result : DocumentNode = misc_parser.document()
 	if token_walker.peek() != null:
 		token_walker.consume(TokenArray.eof)
-
 	return result
 
 

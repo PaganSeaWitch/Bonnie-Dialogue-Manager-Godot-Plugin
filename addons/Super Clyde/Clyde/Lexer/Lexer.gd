@@ -2,26 +2,26 @@ class_name ClydeLexer
 extends RefCounted
 
 # The handlers for lines recieved 
-var line_lexer : LineLexer = LineLexer.new()
-var misc_lexer : MiscLexer = MiscLexer.new()
-var logic_lexer : LogicLexer = LogicLexer.new()
-var option_lexer : OptionLexer = OptionLexer.new()
-var variations_lexer : VariationsLexer = VariationsLexer.new()
-var dependent_logic_lexer : DependentLogicLexer = DependentLogicLexer.new()
-var bb_code_lexer : BBCodelexer = BBCodelexer.new()
+var line_lexer : LineLexer 
+var misc_lexer : MiscLexer 
+var logic_lexer : LogicLexer 
+var option_lexer : OptionLexer 
+var variations_lexer : VariationsLexer 
+var dependent_logic_lexer : DependentLogicLexer
+var bb_code_lexer : BBCodelexer 
 # The data recieved
-var input : String = ""
+var input : String
 
 # keeps track of the indentation of the files
-var indent: Array[int] = [0]
+var indent: Array[int]
 
 # The current position of the data in the file
-var position: int = 0
-var line : int = 0
-var column: int = 0
-var length : int= 0
-var line_in_parts : int = -1;
-var added_space : bool = false
+var position: int 
+var line : int 
+var column: int 
+var length : int 
+var line_in_parts : int 
+var added_space : bool
 
 func init(_input : String) -> ClydeLexer:
 	input = _input
@@ -31,6 +31,16 @@ func init(_input : String) -> ClydeLexer:
 	column = 0
 	length = _input.length()
 	_pending_tokens = []
+	line_in_parts = -1
+	added_space = false
+	
+	line_lexer = LineLexer.new()
+	misc_lexer = MiscLexer.new()
+	logic_lexer = LogicLexer.new()
+	option_lexer = OptionLexer.new()
+	variations_lexer = VariationsLexer.new()
+	dependent_logic_lexer = DependentLogicLexer.new()
+	bb_code_lexer = BBCodelexer.new()
 	line_lexer.init(self)
 	misc_lexer.init(self)
 	logic_lexer.init(self)
