@@ -4,7 +4,7 @@
 
 Importer and interpreter for Super Clyde based on [Clyde Dialogue Language](https://github.com/viniciusgerevini/clyde). Completely written in GDScript. No external dependencies. Super Clyde is entirely backwards campatiable with Clyde. 
 
-> Super Clyde is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events.
+> Super Clyde is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events. now with (shitty) [videos](https://www.youtube.com/playlist?list=PL5jCxg8GFqU4noTnHmy_O1lISN8bFMK8Z)!
 
 ```
 The Wolf:   Jimmie – lead the way, boys – get to work.
