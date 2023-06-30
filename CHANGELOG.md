@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 8.0.0 (2023-06-29)
+- Changed file extension from .clyde to .superclyde
+
+### Breaking Changes
+- All files previouslly with the extension .clyde should be changed to .superclyde. Also remove old imports cuz idk those get deleted.
+
 ## 7.0.1 (2023-06-29)
 - Fixed memory leak
 
