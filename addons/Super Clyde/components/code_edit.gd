@@ -190,7 +190,7 @@ func _drop_data(at_position: Vector2, data) -> void:
 		# Don't import the file into itself
 		if file == main_view.current_file_path: continue
 
-		var path = file.replace("res://", "").replace(".clyde", "")
+		var path = file.replace("res://", "").replace(".superclyde", "")
 		# Find the first non-import line in the file to add our import
 		var lines = text.split("\n")
 		for i in range(0, lines.size()):
@@ -441,7 +441,7 @@ func move_line(offset: int) -> void:
 
 
 func _on_code_edit_symbol_validate(symbol: String) -> void:
-	if symbol.begins_with("res://") and symbol.ends_with(".clyde"):
+	if symbol.begins_with("res://") and symbol.ends_with(".superclyde"):
 		set_symbol_lookup_word_as_valid(true)
 		return
 
@@ -453,7 +453,7 @@ func _on_code_edit_symbol_validate(symbol: String) -> void:
 
 
 func _on_code_edit_symbol_lookup(symbol: String, line: int, column: int) -> void:
-	if symbol.begins_with("res://") and symbol.ends_with(".clyde"):
+	if symbol.begins_with("res://") and symbol.ends_with(".superclyde"):
 		emit_signal("external_file_requested", symbol, "")
 	else:
 		go_to_title(symbol)

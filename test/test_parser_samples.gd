@@ -14,13 +14,13 @@ func test_samples():
 		if file == "":
 			break
 
-		if file.ends_with(".clyde"):
+		if file.ends_with(".superclyde"):
 			files.append(file)
 
 	dir.list_dir_end()
 
 	for file_name in files:
-		var result_filename = file_name.replace('.clyde', '.json')
+		var result_filename = file_name.replace('.superclyde', '.json')
 		var source_file : FileAccess = FileAccess.open("%s%s" % [ SAMPLES_FOLDER, file_name ], 
 			FileAccess.READ)
 

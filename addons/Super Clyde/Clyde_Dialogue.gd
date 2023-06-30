@@ -78,7 +78,7 @@ func clear_data() -> void:
 
 
 func _load_file(path : String) -> Dictionary:
-	if path.get_extension() == 'clyde':
+	if path.get_extension() == 'superclyde':
 		return _load_clyde_file(path)
 
 
@@ -123,7 +123,7 @@ func _get_file_path(file_name : String) -> String:
 	var extension : String= file_name.get_extension()
 
 	if extension.is_empty():
-		p = "%s.clyde" % file_name
+		p = "%s.superclyde" % file_name
 
 	if p.begins_with('./') || p.begins_with('res://'):
 		return p

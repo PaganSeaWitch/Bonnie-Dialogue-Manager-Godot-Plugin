@@ -1,0 +1,14 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+uid="uid://l4l7xxcmdgek"
+path="res://.godot/imported/logic.superclyde-763d1c60d0192f08e38db212e68817b6.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/logic.superclyde"
+dest_files=["res://.godot/imported/logic.superclyde-763d1c60d0192f08e38db212e68817b6.res"]
+
+[params]
+

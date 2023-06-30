@@ -1,0 +1,14 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+uid="uid://kl4qdalivg03"
+path="res://.godot/imported/nesting.superclyde-55b9ca048d57827ec3c50ab9d4f8b4a6.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/nesting.superclyde"
+dest_files=["res://.godot/imported/nesting.superclyde-55b9ca048d57827ec3c50ab9d4f8b4a6.res"]
+
+[params]
+

@@ -1,0 +1,14 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+uid="uid://dlt5ds578hq14"
+path="res://.godot/imported/simple_lines.superclyde-954f181e6add7d6536540ef2339c5aa9.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/simple_lines.superclyde"
+dest_files=["res://.godot/imported/simple_lines.superclyde-954f181e6add7d6536540ef2339c5aa9.res"]
+
+[params]
+

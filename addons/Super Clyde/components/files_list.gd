@@ -82,7 +82,7 @@ func update_file_map() -> void:
 
 
 func get_nice_file(file_path: String, path_bit_count: int = 1) -> String:
-	var bits = file_path.replace("res://", "").replace(".dialogue", "").split("/")
+	var bits = file_path.replace("res://", "").replace(".superclyde", "").split("/")
 	bits = bits.slice(-path_bit_count)
 	return "/".join(bits)
 

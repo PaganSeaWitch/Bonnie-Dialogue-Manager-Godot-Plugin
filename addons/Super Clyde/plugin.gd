@@ -42,8 +42,6 @@ func _enter_tree():
 
 
 func _exit_tree():
-	remove_import_plugin(_import_plugin)
-	_import_plugin = null
 	if is_instance_valid(main_view):
 		main_view.queue_free()
 
@@ -213,7 +211,7 @@ func _get_dialogue_files_in_filesystem(path: String = "res://") -> PackedStringA
 			if dir.current_is_dir():
 				if not file_name in [".godot", ".tmp"]:
 					files.append_array(_get_dialogue_files_in_filesystem(file_path))
-			elif file_name.get_extension() == "clyde":
+			elif file_name.get_extension() == "superclyde":
 				files.append(file_path)
 			file_name = dir.get_next()
 	

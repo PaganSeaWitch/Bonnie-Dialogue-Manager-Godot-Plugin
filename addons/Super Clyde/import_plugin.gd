@@ -11,7 +11,7 @@ func _get_visible_name():
 
 
 func _get_recognized_extensions():
-	return ["clyde"]
+	return ["superclyde"]
 
 
 func _get_save_extension():

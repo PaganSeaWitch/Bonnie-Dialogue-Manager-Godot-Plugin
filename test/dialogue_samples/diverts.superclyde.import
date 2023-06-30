@@ -1,0 +1,14 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+uid="uid://0m06gv1vheux"
+path="res://.godot/imported/diverts.superclyde-8c6368f59948933042e93d71cf1c079a.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/diverts.superclyde"
+dest_files=["res://.godot/imported/diverts.superclyde-8c6368f59948933042e93d71cf1c079a.res"]
+
+[params]
+
