@@ -2,6 +2,9 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 7.0.1 (2023-06-29)
+- Fixed memory leak
+
 ## 7.0.0 (2023-06-26)
 - New keyword `req` that goes above blocks and signifies that the identifier or logic block following it it gets checked in order to access the block.
 - Fixed functionality of random blocks.
