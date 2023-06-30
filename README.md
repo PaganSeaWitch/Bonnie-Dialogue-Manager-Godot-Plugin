@@ -52,5 +52,5 @@ Go to `Project > Project Settings > General > Dialogue`.
 
 | Field                   | Description |
 | ----------------------- | ----------- |
-| Source Folder: | Default folder where the interpreter will look for `.clyde` files when just the filename is provided. Default: `res://dialogues/` |
+| Source Folder: | Default folder where the interpreter will look for `.superclyde` files when just the filename is provided. Default: `res://dialogues/` |
 | Id Suffix Lookup Separator: | When using id suffixes, this is the separator used in the translation keys. Default. `&`.|
