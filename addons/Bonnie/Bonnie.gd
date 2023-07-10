@@ -1,22 +1,29 @@
 class_name Bonnie
 extends RefCounted
+## A Dialogue Manager for Bonnie Dialogue Language files. 
+##
+## @tutorial(Bonnie Language Docs):            https://github.com/PaganSeaWitch/Bonnie-Dialogue-Manager-Godot-Plugin/blob/4.1/LANGUAGE.md
 
 
+## This signal fires whenever variable is changed in the bonnie file
 signal variable_changed(name, value, previous_value)
+
+## this signal fires whenever a event is triggered in the bonnie file
 signal event_triggered(name)
 
-# Custom folder where the interpreter should look for dialogue files
-# in case just the name is provided.
-# by default, it loads from ProjectSettings dialogue/source_folder
+## Custom folder where the interpreter should look for dialogue files
+## in case just the name is provided.
+## by default, it loads from ProjectSettings dialogue/source_folder
 var dialogue_folder : String = ""
 
 var _interpreter : BonnieInterpreter
 
-# Load dialogue file
-# file_name: path to the dialogue file.
-#            i.e 'my_dialogue', 'res://my_dialogue.bonnie', res://my_dialogue.json
-# block: block name to run. This allows keeping
-#        multiple dialogues in the same file.
+## Load dialogue file
+## file_name: path to the dialogue file.
+##            i.e 'my_dialogue', 'res://my_dialogue.bonnie', res://my_dialogue.json
+## block: block name to run. This allows keeping
+##        multiple dialogues in the same file.
+## check_access: when true, will check whether the requirements for accessing this block are met before allowing access
 func load_dialogue(file_name : String, block  : String= "", check_access :bool = false) -> void:
 	var fileDict : Dictionary = _load_file(_get_file_path(file_name))
 	_interpreter = BonnieInterpreter.new()
@@ -29,50 +36,53 @@ func load_dialogue(file_name : String, block  : String= "", check_access :bool =
 		_interpreter.select_block(block,check_access)
 
 
-# Start or restart dialogue. Variables are not reset.
+## Start or restart dialogue. Variables are not reset.
+## block_name: when set, will try to select the specific block name otherwise will default to top of file
+## check_access: when true, will check whether the requirements for accessing this block are met before allowing access
 func start(block_name : String = "", check_access : bool = false) -> bool:
 	return _interpreter.select_block(block_name, check_access)
 
 
-# Get next dialogue content.
-# The content may be a line, options or null.
-# If null, it means the dialogue reached an end.
+## Get next dialogue content.
+## The content may be a line, options or null.
+## If null, it means the dialogue reached an end.
 func get_content() -> BonnieNode:
 	return _interpreter.get_current_node()
 
 
-# Choose one of the available options.
+## Choose one of the available options by index.
 func choose(option_index : int) -> Bonnie:
 	return _interpreter.choose(option_index)
 
 
-# Set variable to be used in the dialogue
+## Set variable to be used in the dialogue
 func set_variable(name : String, value):
 	_interpreter.set_variable(name, value)
 
 
-# Get current value of a variable inside the dialogue.
-# name: variable name
+## Get current value of a variable inside the dialogue.
+## name: variable name
 func get_variable(name : String):
 	return _interpreter.get_variable(name)
 
-
+## Sets a random block as the starting block if one is avaliable 
+## check_access: when true, will check whether the requirements for accessing this block are met before allowing access
 func set_random_block(check_access : bool = false) -> bool:
 	return _interpreter.set_random_block(check_access)
 
 
-# Return all variables and internal variables. Useful for persisting the dialogue's internal
-# data, such as options already choosen and random variations states.
+## Return all variables and internal variables. Useful for persisting the dialogue's internal
+## data, such as options already choosen and random variations states.
 func get_data() -> MemoryInterface.ClydeInternalMemory:
 	return _interpreter.get_data()
 
 
-# Load internal data
+## Load internal data
 func load_data(data : MemoryInterface.ClydeInternalMemory) -> void:
 	_interpreter.load_data(data)
 
 
-# Clear all internal data
+## Clear all internal data
 func clear_data() -> void:
 	_interpreter.clear_data()
 
