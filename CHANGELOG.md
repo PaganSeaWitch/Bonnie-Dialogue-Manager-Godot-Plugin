@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 9.0.0 (2023-07-10)
+- Changed file extension from .superclyde to .bonnie
+
+### Breaking Changes
+- All files previouslly with the extension .superclyde should be changed to .bonnie. Also remove old imports cuz idk those get deleted.
+  
 ## 8.0.0 (2023-06-29)
 - Changed file extension from .clyde to .superclyde
 
