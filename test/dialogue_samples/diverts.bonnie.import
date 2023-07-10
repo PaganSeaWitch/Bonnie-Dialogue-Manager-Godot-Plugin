@@ -1,0 +1,14 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+uid="uid://bao6bf5k0dc6w"
+path="res://.godot/imported/diverts.bonnie-41344dec47840eb07a2be927cd383f3b.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/diverts.bonnie"
+dest_files=["res://.godot/imported/diverts.bonnie-41344dec47840eb07a2be927cd383f3b.res"]
+
+[params]
+

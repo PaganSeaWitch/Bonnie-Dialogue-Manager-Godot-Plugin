@@ -1,0 +1,14 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+uid="uid://cappftbmiuf2k"
+path="res://.godot/imported/simple_lines.bonnie-e55ae1f733e7e6c8c38941079543134d.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/simple_lines.bonnie"
+dest_files=["res://.godot/imported/simple_lines.bonnie-e55ae1f733e7e6c8c38941079543134d.res"]
+
+[params]
+

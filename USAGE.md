@@ -4,9 +4,9 @@ For details about Clyde and how to write dialogues, check [Clyde/LANGUAGE.md](ht
 
 ## Interpreter's interface
 
-This plugin exposes the interpreter as `ClydeDialogue`.
+This plugin exposes the interpreter as `Bonnie`.
 
-This is `ClydeDialogue`'s interface:
+This is `Bonnie`'s interface:
 
 ```gdscript
 extends Node
@@ -16,7 +16,7 @@ signal event_triggered(event_name)
 
 # Load dialogue file
 # file_name: path to the dialogue file.
-#            i.e 'my_dialogue', 'res://my_dialogue.clyde', res://my_dialogue.json
+#            i.e 'my_dialogue', 'res://my_dialogue.bonnie', res://my_dialogue.json
 # block: block name to run. This allows keeping
 #        multiple dialogues in the same file.
 # check_access: whether to use block requirements to check whether to set the block or not. 
@@ -32,11 +32,11 @@ func start(block_name : String = "", check_access: bool = false) -> bool:
 # Get next dialogue content.
 # The content may be a line, options or null.
 # If null, it means the dialogue reached an end.
-func get_content() -> ClydeNode:
+func get_content() -> BonnieNode:
 
 
 # Choose one of the available options.
-func choose(option_index : int) -> ClydeDialogue:
+func choose(option_index : int) -> Bonnie:
 
 
 # Set variable to be used in the dialogue
@@ -51,23 +51,23 @@ func get_variable(name : String):
 
 ### Creating an object
 
-You need to instantiate a `ClydeDialogue` object.
+You need to instantiate a `Bonnie` object.
 
 ``` gdscript
-var dialogue = ClydeDialogue.new()
+var dialogue = Bonnie.new()
 ```
 
 
 ### Loading files
 
-The interpreter supports loading parsed JSON files, as well as `.clyde` files imported in the project.
+The interpreter supports loading parsed JSON files, as well as `.bonnie` files imported in the project.
 
 When only the file name is provided, the interpreter will look into the default folder defined on `Project > Project Settings > Dialogue > Source Folder`.
 
 ``` gdscript
 dialogue.load_dialogue('my_dialogue')
 # or
-dialogue.load_dialogue('res://dialogues/my_dialogue.clyde')
+dialogue.load_dialogue('res://dialogues/my_dialogue.bonnie')
 # or
 dialogue.load_dialogue('res://dialogues/my_dialogue.json')
 ```
@@ -95,7 +95,7 @@ Restarting a dialogue won't reset the variables already set.
 
 You should use `dialogue.get_content()` to get the next available content.
 
-This method may return one of the following values that are child classes of `ClydeNode`:
+This method may return one of the following values that are child classes of `BonnieNode`:
 
 
 #### Line Part
@@ -105,7 +105,7 @@ A single part of a line that has been split up by Dependent logic blocks. it con
 class_name LinePartNode
 
 var end_line : bool = false     # Indicates whether this is the end of a line or not
-var part : ClydeNode            # The current part of the line, returned as a LineNode
+var part : BonnieNode            # The current part of the line, returned as a LineNode
 
 ```
 
@@ -149,7 +149,7 @@ Options list with options/topics the player may choose from (`OptionsNode`).
     
     var tags : Array                        # The tags of the Option
     var id_suffixes : Array                 # The id_suffixes of the Options
-    var content : Array[ClydeNode] = []     # The nodes that will be parsed if this option is chosen
+    var content : Array[BonnieNode] = []     # The nodes that will be parsed if this option is chosen
     var name : String = ""                  # the name of the option
     var mode : String = ""                  # the mode of the option: 'Once, sticky, fallback'
     var bb_code_before_line : String        # The bb code just before the line, returned with its brackets (NOT FUNCTIONAL)
@@ -198,7 +198,7 @@ func _on_event_triggered(event_name):
 
 To be able to use variations, single-use options and internal variables properly, you need to persist the dialogue data after each execution.
 
-If you create a new `ClydeDialogue` without doing it so, the interpreter will show the dialogue as if it was the first time it was run.
+If you create a new `Bonnie` without doing it so, the interpreter will show the dialogue as if it was the first time it was run.
 
 You can use `dialogue.get_data()` to retrieve all internal data, and then later use `dialogue.load_data(data)` to re-populate the internal memory.
 
@@ -218,7 +218,7 @@ var _dialogue_filename = 'first_dialogue'
 var _dialogue
 
 func _ready():
-    _dialogue = ClydeDialogue.new()
+    _dialogue = Bonnie.new()
     _dialogue.load_dialogue(_dialogue_filename)
     _dialogue.load_data(persistence.dialogues[_dialogue_filename]) # load data
 
@@ -247,7 +247,7 @@ You should not change this object manually. If you want't to change a variable u
 
 ``` gdscript
     # ...
-    _dialogue = ClydeDialogue.new()
+    _dialogue = Bonnie.new()
     _dialogue.load_dialogue(_dialogue_filename)
     _dialogue.load_data(persistence.dialogues[_dialogue_filename])
 
@@ -271,9 +271,9 @@ By default, the interpreter will look for files under `res://dialogues/`. In cas
 Alternatively, you can use the full path when loading dialogues:
 
 ```gdscript
-var dialogue = ClydeDialogue.new()
+var dialogue = Bonnie.new()
 
-dialogue.load_dialogue("res://samples/banana.clyde")
+dialogue.load_dialogue("res://samples/banana.bonnie")
 
 ```
 

@@ -1,10 +1,10 @@
-# Super Clyde Dialogue Plugin for Godot
+# Bonnie Dialogue Plugin for Godot
 
 <p align="center"><img src="icon.png" alt=/></p>
 
-Importer and interpreter for Super Clyde based on [Clyde Dialogue Language](https://github.com/viniciusgerevini/clyde). A plugin for that can be found [here](https://github.com/viniciusgerevini/godot-clyde-dialogue). Completely written in GDScript. No external dependencies. Super Clyde is entirely backwards campatiable with Clyde baring some breaking changes which can be found in the changelog. 
+Importer and interpreter for Bonnie based on [Clyde Dialogue Language](https://github.com/viniciusgerevini/clyde). A plugin for that can be found [here](https://github.com/viniciusgerevini/godot-clyde-dialogue). Completely written in GDScript. No external dependencies. Bonnie is entirely backwards campatiable with Clyde baring some breaking changes which can be found in the changelog. 
 
-> Super Clyde is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events. now with (shitty) [videos](https://www.youtube.com/playlist?list=PL5jCxg8GFqU4noTnHmy_O1lISN8bFMK8Z)!
+> Bonnie is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events. now with (shitty) [videos](https://www.youtube.com/playlist?list=PL5jCxg8GFqU4noTnHmy_O1lISN8bFMK8Z)!
 
 ```
 The Wolf:   Jimmie – lead the way, boys – get to work.
@@ -31,13 +31,13 @@ The Wolf:   If I'm curt with you, it's because time is
 
 ## Usage
 
-The importer automatically imports `.superclyde` files to be used with the interpreter. This improves performance, as the dialogue is parsed beforehand.
+The importer automatically imports `.bonnie` files to be used with the interpreter. This improves performance, as the dialogue is parsed beforehand.
 
 Check [USAGE.md](./USAGE.md) for how to use the interpreter.
 
 You can find a simple usage example on [/example/example.gd](./example/example.gd)
 
-For more about how to write dialogues using Super Clyde, check [LANGUAGE.md](https://github.com/PaganSeaWitch/Super-Clyde-Godot-Plugin/blob/master/LANGUAGE.md)
+For more about how to write dialogues using Bonnie, check [LANGUAGE.md](https://github.com/PaganSeaWitch/Super-Clyde-Godot-Plugin/blob/master/LANGUAGE.md)
 
 You now have the option to edit Clyde files in the Godot engine itself, helping streamline usage to a single editor. 
 
@@ -52,5 +52,5 @@ Go to `Project > Project Settings > General > Dialogue`.
 
 | Field                   | Description |
 | ----------------------- | ----------- |
-| Source Folder: | Default folder where the interpreter will look for `.clyde` files when just the filename is provided. Default: `res://dialogues/` |
+| Source Folder: | Default folder where the interpreter will look for `.bonnie` files when just the filename is provided. Default: `res://dialogues/` |
 | Id Suffix Lookup Separator: | When using id suffixes, this is the separator used in the translation keys. Default. `&`.|

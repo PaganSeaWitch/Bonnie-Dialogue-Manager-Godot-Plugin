@@ -992,12 +992,12 @@ now another dedent""")
 	])
 
 func test_parse_token_friendly_hint():
-	assert_eq_deep(ClydeLexer.get_token_friendly_hint(Syntax.TOKEN_LINE_ID), '$id')
-	assert_eq_deep(ClydeLexer.get_token_friendly_hint('some_unkown_token'), 'some_unkown_token')
+	assert_eq_deep(BonnieLexer.get_token_friendly_hint(Syntax.TOKEN_LINE_ID), '$id')
+	assert_eq_deep(BonnieLexer.get_token_friendly_hint('some_unkown_token'), 'some_unkown_token')
 
 
 func test_does_not_fail_when_leaving_mode():
-	var lexer = ClydeLexer.new()
+	var lexer = BonnieLexer.new()
 	lexer.init('))').get_all()
 	pass_test("didn't fail")
 

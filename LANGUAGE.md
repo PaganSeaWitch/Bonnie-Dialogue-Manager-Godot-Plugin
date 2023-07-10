@@ -6,10 +6,10 @@ It was heavily inspired by [Ink](https://github.com/inkle/ink), but it focuses o
 
 You can play with the online editor [here](https://viniciusgerevini.github.io/clyde/).
 
-# Super Clyde
+# Bonnie
 
-Super Clyde is a sucessor to Clyde in terms of its features and scope. 
-Super Clyde manages the data of multiple clyde files allowing for cross file communication without the user needing to do this themselves. 
+Bonnie is a offshoot of [Clyde](https://github.com/viniciusgerevini/clyde). 
+Bonnie manages the data of multiple clyde files allowing for cross file communication without the user needing to do this themselves. 
 It also supports mid dialogue events and variables. 
 
 ### Principles

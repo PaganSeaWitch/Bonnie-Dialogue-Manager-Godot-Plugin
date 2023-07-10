@@ -10,7 +10,7 @@ extends Node
 @onready var options_container = $"%optionsContainer"
 @onready var stage_controller = %StageController
 
-var dialogue : ClydeDialogue
+var dialogue : Bonnie
 var clydeFile : String
 
 var playerName := ""
@@ -31,7 +31,7 @@ func _ready():
 func loadDialogue(file: String, block : String, startingValues : Array, loadInFirstLine : bool = false):
 	clydeFile = file
 
-	dialogue = ClydeDialogue.new();
+	dialogue = Bonnie.new();
 	dialogue.load_dialogue(clydeFile)
 
 	if(!block.is_empty()):
@@ -63,7 +63,7 @@ func parseChoice(indexOfChoice : int, contentOfChoice : Array) -> void:
 
 
 # Parses the content taken from clyde file
-func parseContent(content : ClydeNode) -> void:
+func parseContent(content : BonnieNode) -> void:
 	if(content != null):
 		dialogue_container.reset()
 		print(content)

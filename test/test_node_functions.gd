@@ -4,7 +4,7 @@ extends GutTest
 
 
 func _parse(input, print= false):
-	var parser = ClydeParser.new()
+	var parser = BonnieParser.new()
 	var obj = parser.parse(input)
 	print(obj)
 	return parser.to_JSON_object(parser.parse(input), print)
@@ -133,14 +133,14 @@ func _option(option):
 
 
 func _get_next_options_content(dialogue):
-	var content = ClydeParser.new().to_JSON_object(dialogue.get_content())
+	var content = BonnieParser.new().to_JSON_object(dialogue.get_content())
 	while content.type != NodeFactory.NODE_TYPES.OPTIONS:
-		content = ClydeParser.new().to_JSON_object(dialogue.get_content())
+		content = BonnieParser.new().to_JSON_object(dialogue.get_content())
 	return content
 
 
 func _get_lexer_json_tokens(string : String):
-	var lexer = ClydeLexer.new()
+	var lexer = BonnieLexer.new()
 	var tokens = lexer.init(string).get_all()
 	var jsonTokens : Array = []
 	for token in tokens:

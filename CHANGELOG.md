@@ -10,7 +10,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Fixed functionality of random blocks.
 - Fallack blocks cannot use `req` keyword.
 - Fall black blocks will now always be the last blocks to be randomly chosen.
-- Some minor aesthetic changes to the way ClydeNode's print. 
+- Some minor aesthetic changes to the way BonnieNode's print. 
 
 ### Breaking Changes
 - you can no longer start a line with `req `.

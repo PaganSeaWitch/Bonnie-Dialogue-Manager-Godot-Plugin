@@ -1,0 +1,14 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+uid="uid://cdcw02crw5ekr"
+path="res://.godot/imported/variations.bonnie-347c2b36bfc052cb702629c4b1089b64.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/variations.bonnie"
+dest_files=["res://.godot/imported/variations.bonnie-347c2b36bfc052cb702629c4b1089b64.res"]
+
+[params]
+

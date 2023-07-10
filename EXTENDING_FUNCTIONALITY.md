@@ -1,19 +1,19 @@
 # Introduction
 
-Super Clyde is an easy language to modify. The process involves some knowlege of code and gdscript but nothing too complicated beyond that. 
+Bonnie is an easy language to modify. The process involves some knowlege of code and gdscript but nothing too complicated beyond that. 
 Essentially we will create new lexer, parser and interpreter files as well as a new node file if necessary. 
 
 ## Step 1: Test Cases
 
-Before modifying the actual code of Super Clyde, one should create new Test cases for this functionality in order to test whether it is working.
-Making Good test cases can be difficult but at least cover the base case of the new functionality; what Super Clyde will take in and what will it output. 
-Super Clyde relies on the test case tools of GUT and you can learn more about that [here](https://github.com/bitwes/Gut).
+Before modifying the actual code of Bonnie, one should create new Test cases for this functionality in order to test whether it is working.
+Making Good test cases can be difficult but at least cover the base case of the new functionality; what Bonnie will take in and what will it output. 
+Bonnie relies on the test case tools of GUT and you can learn more about that [here](https://github.com/bitwes/Gut).
 but for easy set up, create a file with the prefix test_ extending test.gd and every test function begining with the prefix test_.
 
 
 ## Step 2: (Optional) Create new Node
 
-If the new functionality you wish to implement requires a new node, you should create a file in the Nodes folder that extends `ClydeNode` and has a unique class name. 
+If the new functionality you wish to implement requires a new node, you should create a file in the Nodes folder that extends `BonnieNode` and has a unique class name. 
 The file should also implmenet the `get_node_class()` function which returns a string of the class name. The properites of the node should then be defined as much as they can be. 
 
 

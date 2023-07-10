@@ -1,0 +1,14 @@
+[remap]
+
+importer="clyde.dialogue"
+type="PackedDataContainer"
+uid="uid://dmewk2by0wdg3"
+path="res://.godot/imported/nesting.bonnie-1f7ef83ef58dc82db3481b95f332a627.res"
+
+[deps]
+
+source_file="res://test/dialogue_samples/nesting.bonnie"
+dest_files=["res://.godot/imported/nesting.bonnie-1f7ef83ef58dc82db3481b95f332a627.res"]
+
+[params]
+

@@ -3,7 +3,7 @@ extends MarginContainer
 var _dialogue
 
 func _ready():
-	_dialogue = ClydeDialogue.new()
+	_dialogue = Bonnie.new()
 	_dialogue.load_dialogue('pulp_with_blocks')
 
 	_dialogue.connect("event_triggered",Callable(self,'_on_event_triggered'))
