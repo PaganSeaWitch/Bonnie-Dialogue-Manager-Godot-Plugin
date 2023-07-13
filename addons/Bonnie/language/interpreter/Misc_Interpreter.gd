@@ -4,10 +4,10 @@ extends RefCounted
 
 var memory : MemoryInterface
 var stack : InterpreterStack
-var interpreter : BonnieInterpreter
+var interpreter : IBonnieInterpreter
 
 
-func init(_interpreter : BonnieInterpreter, mem : MemoryInterface, _stack:  InterpreterStack) -> void:
+func init(_interpreter : IBonnieInterpreter, mem : MemoryInterface, _stack:  InterpreterStack) -> void:
 	interpreter = _interpreter
 	memory = mem
 	stack = _stack
@@ -15,6 +15,8 @@ func init(_interpreter : BonnieInterpreter, mem : MemoryInterface, _stack:  Inte
 
 func handle_block_node(block : BlockNode):
 	stack.add_to_stack(block)
+	if(interpreter is BonnieManagerInterpreter):
+		interpreter.current_file = block.document_name
 	var head : InterpreterStack.StackElement = stack.stack_head()
 	var content_index : int = head.content_index + 1
 
@@ -37,13 +39,17 @@ func handle_divert_node(divert : DivertNode):
 
 		if stack.size() > 1:
 			stack.stack_pop()
-			return interpreter.handle_next_node(stack.stack_head().node)
+			var node = stack.stack_head().node
+			if(interpreter is BonnieManagerInterpreter):
+				interpreter.current_file = node.document_name
+			return interpreter.handle_next_node(node)
 	elif divert.target == '<end>':
 		stack.initialise_stack(interpreter.doc)
+		if(interpreter is BonnieManagerInterpreter):
+			interpreter.current_file = interpreter.doc.document_name
 		stack.stack_head().content_index = stack.stack_head().node.content.size();
 	else:
-		return interpreter.handle_next_node(interpreter.anchors[divert.target])
-
+		return interpreter.handle_next_node(interpreter.get_block_from_anchor(divert.target))
 
 
 func handle_document_node(node : DocumentNode) -> DialogueNode:

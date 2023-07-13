@@ -7,7 +7,6 @@ class ClydeInternalMemory:
 	var	variables : Dictionary =  {}
 	var	internal  : Dictionary = {}
 
-
 # Signal to emit when a variable has changed
 signal variable_changed(name, value, previous_value)
 
