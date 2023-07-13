@@ -2,6 +2,10 @@
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## 9.1.0 (2023-07-13)
+- Created a new interface for bonnie, BonnieManager. It can be used to communicate and move between files.
+- You can now use the '@' symbol in front of variables to incidate they are global. BonnieManager use only.
+
 ## 9.0.0 (2023-07-10)
 - Changed file extension from .superclyde to .bonnie
 
