@@ -85,9 +85,9 @@ func handle_logic_block() -> Array[Token]:
 	
 	var identifier : RegEx = RegEx.new()
 	if(lexer.is_current_mode(Syntax.MODE_BLOCK_REQ)):
-		identifier.compile("[A-Z|a-z|0-9|_| |.]")
+		identifier.compile("[A-Z|a-z|0-9|_|.]")
 	else:
-		identifier.compile("[A-Z|a-z|@]")
+		identifier.compile("[A-Z|a-z|@|_|.]")
 	if identifier.search(lexer.input[lexer.position]) != null:
 		return handle_logic_identifier()
 	return []
