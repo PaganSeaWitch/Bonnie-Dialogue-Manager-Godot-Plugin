@@ -281,7 +281,7 @@ func test__null_token():
 				"name": "LOGICAL_NOT_EQUAL",
 				"elements": [
 					_variable('first_time'),
-					{ "type": NodeFactory.NODE_TYPES.NULL},
+					{ "type": NodeFactory.NODE_TYPES.NULL, "document_name" : ""},
 				],
 			}),
 			"content": [_line({"value": 'ho'})],
