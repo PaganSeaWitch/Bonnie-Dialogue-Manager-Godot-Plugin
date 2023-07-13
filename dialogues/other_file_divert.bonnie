@@ -1,0 +1,14 @@
+== block2
+{ set x = 8 } 
+<-
+
+== block4
+{ set y = 7}
+-> divert_to_other_file.block6
+<-
+
+== block8
+{ set x = 54 }
+{ set @x = 15 }
+-> divert_to_other_file.block9
+<-

@@ -1,0 +1,4 @@
+{ set x = 15 }
+
+=* block1
+{ set x = 75}
