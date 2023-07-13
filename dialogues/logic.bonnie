@@ -7,8 +7,8 @@
 
 
 --  conditions
-{ a == 1 } Hello!
-{ a == 2 || a != 3 } Hi!
+{ a == 1 } Hello! 
+{ a == 2 || a != 3 } Hi! 
 Hello { when a == 2 }
 
 { not bl }

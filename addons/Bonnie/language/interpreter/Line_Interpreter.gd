@@ -1,16 +1,5 @@
 class_name LineInterpreter
-extends RefCounted
-
-
-var memory : MemoryInterface
-var stack : InterpreterStack
-var interpreter : BonnieInterpreter
-
-
-func init(_interpreter : BonnieInterpreter, mem : MemoryInterface, _stack:  InterpreterStack) -> void:
-	interpreter = _interpreter
-	memory = mem
-	stack = _stack
+extends MiscInterpreter
 
 
 func handle_content_node(content_node : ContentNode, fallback = true) -> DialogueNode:
@@ -53,7 +42,7 @@ func translate_text(key : String, text : String, id_suffixes : Array):
 	if !id_suffixes.is_empty():
 		var lookup_key : String = key
 		for ids in id_suffixes:
-			var value = memory.get_variable(ids)
+			var value = interpreter.get_variable(ids)
 			if value:
 				lookup_key += "%s%s" % [interpreter.config.id_suffix_lookup_separator, value]
 		var position = tr(lookup_key)
@@ -73,7 +62,7 @@ func replace_variables(text : String) -> String:
 	var regex = RegEx.new()
 	regex.compile("\\%(?<variable>[A-z0-9]*)\\%")
 	for result in regex.search_all(text):
-		var value = memory.get_variable(result.get_string("variable"))
+		var value = interpreter.get_variable(result.get_string("variable"))
 		text = text.replace(result.get_string(), str(value) if value != null else "")
 
 	return text

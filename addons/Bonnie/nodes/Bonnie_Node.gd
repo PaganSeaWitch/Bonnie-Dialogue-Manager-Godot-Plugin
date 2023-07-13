@@ -4,6 +4,8 @@ extends RefCounted
 
 var node_index : int = -1
 
+var document_name : String 
+
 
 func get_node_class() -> String:
 	return "BonnieNode"
@@ -42,9 +44,9 @@ func _to_node_string(dictionary : Dictionary, indent : int) -> String:
 		elif dictionary[key] is Dictionary:
 			dic_result = dic_result + "\t".repeat(indent)+ "|" + key + " : " + "\n"
 			dic_result = dic_result + _to_node_string(dictionary[key], indent + 1)
-		elif dictionary[key] is String && key != "type":
+		elif dictionary[key] is String && key != "type" && key != "document_name":
 			result = result + "\t".repeat(indent)+ "|" + key +" : " + "'" + str(dictionary[key]) + "'" + "\n"
-		else:
+		elif key != "document_name":
 			var string = str(dictionary[key])
 			if(string == ""):
 				string = "null"

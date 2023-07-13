@@ -1,0 +1,18 @@
+== block1
+{ set x = 5 } 
+-> other_file_divert.block2
+{ set x = 7 }
+
+== block3
+{ set x = 9}
+-> other_file_divert.block4
+
+
+== block6
+-> third_other_file_divert.block7
+<-
+
+== block9
+{ set @x += 15}
+{ set x = 7}
+<-

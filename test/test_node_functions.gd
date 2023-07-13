@@ -24,13 +24,15 @@ func _line(line):
 		"tags": tags,
 		"id_suffixes": line.get("id_suffixes") if line.get("id_suffixes") != null else [],
 		"bb_code_before_line" : bb_code,
+		"document_name" : line.get("document_name") if line.get("document_name") != null else ""
 	}
 
 
 func _assignments(assignments):
 	return {
 		"type" : NodeFactory.NODE_TYPES.ASSIGNMENTS,
-		"assignments" : assignments
+		"assignments" : assignments,
+		"document_name" : ""
 	}
 
 
@@ -39,6 +41,7 @@ func _expression(expression):
 		"type" : NodeFactory.NODE_TYPES.EXPRESSION,
 		"elements" : expression.get("elements") if expression.get("elements") != null else [],
 		"name": expression.get("name") if expression.get("name") != null else "",
+		"document_name" : expression.get("document_name") if expression.get("document_name") != null else ""
 	}
 
 
@@ -51,50 +54,58 @@ func _assignment(assignment):
 		"variable": variable,
 		"operation": operation,
 		"value": value,
+		"document_name" : assignment.get("document_name") if assignment.get("document_name") != null else ""
 	}
 
 
 func _divert(divert):
 	return {
 		"type" : NodeFactory.NODE_TYPES.DIVERT,
-		"target" : divert
+		"target" : divert,
+		"document_name" : ""
 	}
 
 func _number(number):
 	return {
 		"type" : NodeFactory.NODE_TYPES.NUMBER_LITERAL,
-		"value":number
+		"value":number,
+		"document_name" :""
 	}
 
 
 func _bool(truth):
 	return {
 		"type": NodeFactory.NODE_TYPES.BOOLEAN_LITERAL,
-		"value": truth
+		"value": truth,
+		"document_name" : ""
 	}
 
 func _event(event):
 	return {
 		"type" : NodeFactory.NODE_TYPES.EVENT,
 		"name" : event,
+		"document_name" : ""
 	}
 
 func _string(string):
 	return {
 		"type" : NodeFactory.NODE_TYPES.STRING_LITERAL,
-		"value" : string
+		"value" : string,
+		"document_name" : ""
 	}
 
 func _events(events):
 	return {
 		"type" : NodeFactory.NODE_TYPES.EVENTS,
-		"events" : events
+		"events" : events,
+		"document_name" :  ""
 	}
 
 func _variable(variable):
 	return {
 		"type" : NodeFactory.NODE_TYPES.VARIABLE,
-		"name": variable
+		"name": variable,
+		"document_name" : ""
 	}
 
 
@@ -105,6 +116,7 @@ func _conditional_content(conditional_content):
 		"type" : NodeFactory.NODE_TYPES.CONDITIONAL_CONTENT,
 		"content" : content,
 		"conditions" : conditions,
+		"document_name" : conditional_content.get("document_name") if conditional_content.get("document_name") != null else ""
 	}
 
 
@@ -152,7 +164,8 @@ func _line_part(part : Dictionary, end_line = false):
 	return {
 		"type" : NodeFactory.NODE_TYPES.LINE_PART,
 		"part": part,
-		"end_line": end_line
+		"end_line": end_line,
+		"document_name" : part.get("document_name") if part.get("document_name") != null else ""
 	}
 
 
@@ -164,6 +177,7 @@ func _block(block):
 		"conditions": block.get("conditions") if block.get("conditions") != null else [],
 		"block_name" : block.get("block_name") if block.get("block_name") != null else "",
 		"content" : block.get("content") if block.get("content") != null else [],
+		"document_name" : block.get("document_name") if block.get("document_name") != null else ""
 	}
 
 func _random_block(block):
@@ -177,19 +191,22 @@ func _variations(variation):
 	return{
 		"type": NodeFactory.NODE_TYPES.VARIATIONS,
 		"mode": variation.get("mode") if variation.get("mode") != null else "",
-		"content" : variation.get("content") if variation.get("content") != null else []
+		"content" : variation.get("content") if variation.get("content") != null else [],
+		"document_name" : variation.get("document_name") if variation.get("document_name") != null else ""
 	}
 
 func _create_doc_payload(content = [], blocks = []):
 	return {
 		"type":  NodeFactory.NODE_TYPES.DOCUMENT,
 		"content": content,
-		"blocks": blocks
+		"blocks": blocks,
+		"document_name" : ""
 	}
 
 
 func _create_content_payload(content = []):
 	return {
 		"type": NodeFactory.NODE_TYPES.CONTENT,
-		"content": content
+		"content": content,
+		"document_name" : ""
 	}

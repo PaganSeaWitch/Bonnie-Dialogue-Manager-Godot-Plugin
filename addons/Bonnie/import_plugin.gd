@@ -52,7 +52,14 @@ func _import(source_file, save_path, options, platform_variants, gen_files):
 	var clyde = file.get_as_text()
 	print(clyde)
 	var parser = BonnieParser.new()
-	var result = parser.parse(clyde)
+	var file_name_without_anything = source_file.replace(".bonnie", "")
+	var new_file_name = ""
+	for i in range(file_name_without_anything.length()-1,-1, -1):
+		if(file_name_without_anything[i] == "/"):
+			break
+		new_file_name =  file_name_without_anything[i] + new_file_name
+
+	var result = parser.parse(clyde, new_file_name)
 
 	var container = PackedDataContainer.new()
 	print(result)

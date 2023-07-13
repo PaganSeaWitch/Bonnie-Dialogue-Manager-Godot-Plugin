@@ -55,7 +55,7 @@ static func is_valid_position(input : String, position : int) -> bool:
 # Checks whether something is a alphanumeric or _
 static func is_identifier(character : String) -> bool:
 	var regex : RegEx = RegEx.new()
-	regex.compile("[A-Z|a-z|0-9|_]")
+	regex.compile("[A-Z|a-z|0-9|_|@]")
 	return regex.search(character) != null
 
 

@@ -53,19 +53,19 @@ func handle_action(action_node : ActionContentNode):
 func _handle_assignment_operation(assignment : AssignmentNode, var_name : String, value):
 	match assignment.operation:
 		Syntax.TOKEN_ASSIGN:
-			return memory.set_variable(var_name, value)
+			return interpreter.set_variable(var_name, value)
 		Syntax.TOKEN_ASSIGN_SUM:
-			return memory.set_variable(var_name, memory.get_variable(var_name) + value)
+			return interpreter.set_variable(var_name, interpreter.get_variable(var_name) + value)
 		Syntax.TOKEN_ASSIGN_SUB:
-			return memory.set_variable(var_name, memory.get_variable(var_name) - value)
+			return interpreter.set_variable(var_name, interpreter.get_variable(var_name) - value)
 		Syntax.TOKEN_ASSIGN_MULT:
-			return memory.set_variable(var_name, memory.get_variable(var_name) * value)
+			return interpreter.set_variable(var_name, interpreter.get_variable(var_name) * value)
 		Syntax.TOKEN_ASSIGN_DIV:
-			return memory.set_variable(var_name, memory.get_variable(var_name) / value)
+			return interpreter.set_variable(var_name, interpreter.get_variable(var_name) / value)
 		Syntax.TOKEN_ASSIGN_POW:
-			return memory.set_variable(var_name, pow(memory.get_variable(var_name), value))
+			return interpreter.set_variable(var_name, pow(interpreter.get_variable(var_name), value))
 		Syntax.TOKEN_ASSIGN_MOD:
-			return memory.set_variable(var_name, memory.get_variable(var_name) % value)
+			return interpreter.set_variable(var_name, interpreter.get_variable(var_name) % value)
 		_:
 			printerr("Unknown operation %s" % assignment.operation)
 
@@ -75,7 +75,7 @@ func _get_node_value(node : BonnieNode):
 		"LiteralNode","NumberNode", "BooleanNode", "StringNode":
 			return node.value
 		"VariableNode":
-			return memory.get_variable(node.name)
+			return interpreter.get_variable(node.name)
 		"AssignmentNode":
 			return handle_assignment(node)
 		"ExpressionNode":
@@ -91,7 +91,7 @@ func check_condition(condition : NamedNode):
 		"ExpressionNode":
 			return check_expression(condition)
 		"VariableNode":
-			return memory.get_variable(condition.name)
+			return interpreter.get_variable(condition.name)
 
 	printerr("Unknown condition type %s" % condition.type)
 

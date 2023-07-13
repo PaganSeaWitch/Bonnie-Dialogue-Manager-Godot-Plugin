@@ -1358,3 +1358,15 @@ req this_block_needs_to_happen_first
 		{"name": Syntax.TOKEN_BLOCK,"value": "this_is_block_name","line": 3,"column": 0,},
 		{"name": Syntax.TOKEN_EOF, "value": "", "line": 3, "column": 21}
 	])
+
+func test_lexer_global_varaible():
+	var jsonTokens = _get_lexer_json_tokens('{ set @x = 5 }')
+	assert_eq_deep(jsonTokens, [
+		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,"value": "","line": 0,"column": 0},
+		{"name": Syntax.TOKEN_KEYWORD_SET,"value": "","line": 0,"column": 2,},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "@x","line": 0,"column":6,},
+		{"name": Syntax.TOKEN_ASSIGN,"value": "","line": 0,"column": 9,},
+		{"name": Syntax.TOKEN_NUMBER_LITERAL,"value": "5","line": 0,"column": 11,},
+		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE,"value": "","line": 0,"column": 13},
+		{"name": Syntax.TOKEN_EOF, "value": "", "line": 0, "column": 14}
+	])

@@ -1,0 +1,4 @@
+== block7
+{ set x = 16}
+-> other_file_divert.block2
+<-

@@ -479,6 +479,7 @@ func test_parser_placement_depentdent_slice_conditional_text_trigger():
 			_action_content({
 				"actions": [{
 					"type": NodeFactory.NODE_TYPES.EVENTS,
+					"document_name" : "",
 					"events": [_event('chicken')],
 				}],
 				"content": [_line({"value": ' cakes'})]
