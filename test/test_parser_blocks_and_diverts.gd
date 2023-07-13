@@ -3,7 +3,7 @@ extends GutTestFunctions
 
 func test_parse_blocks():
 	var result = _parse("""
-== first block
+== first_block
 line 1
 line 2
 
@@ -15,7 +15,7 @@ line 4
 	var expected = _create_doc_payload([],
 		[
 			_block({
-				"block_name": 'first block', 
+				"block_name": 'first_block', 
 				"content": [
 					_line({ "value": 'line 1' }),
 					_line({ "value": 'line 2' }),
@@ -38,7 +38,7 @@ func test_parse_blocks_and_lines():
 line outside block 1
 line outside block 2
 
-== first block
+== first_block
 line 1
 line 2
 
@@ -51,7 +51,7 @@ line 4
 		[_line({ "value": 'line outside block 1'}), _line({ "value": 'line outside block 2'}),],
 		[
 			_block({
-				"block_name": 'first block', 
+				"block_name": 'first_block', 
 				"content": [_line({ "value": 'line 1' }),_line({ "value": 'line 2' })]
 			}),
 			_block({  
@@ -101,40 +101,40 @@ func test_parse_diverts():
 
 func test_parse_empty_block():
 	var result = _parse("""
-== first block
+== first_block
 """)
-	var expected = _create_doc_payload([],[_block({ "block_name": 'first block'})])
+	var expected = _create_doc_payload([],[_block({ "block_name": 'first_block'})])
 	assert_eq_deep(result, expected)
 
 
 func test_parse_empty_once_block():
 	var result = _parse("""
-=* first block
+=* first_block
 """)
-	var expected = _create_doc_payload([],[_random_block({ "mode": "once", "block_name": 'first block'})])
+	var expected = _create_doc_payload([],[_random_block({ "mode": "once", "block_name": 'first_block'})])
 	assert_eq_deep(result, expected)
 
 
 func test_parse_empty_sticky_block():
 	var result = _parse("""
-=+ first block
+=+ first_block
 """)
-	var expected = _create_doc_payload([],[_random_block({ "mode": "sticky", "block_name": 'first block'})])
+	var expected = _create_doc_payload([],[_random_block({ "mode": "sticky", "block_name": 'first_block'})])
 	assert_eq_deep(result, expected)
 
 
 func test_parse_empty_fallback_block():
 	var result = _parse("""
-=> first block
+=> first_block
 """)
-	var expected = _create_doc_payload([],[_random_block({ "mode": "fallback", "block_name": 'first block'})])
+	var expected = _create_doc_payload([],[_random_block({ "mode": "fallback", "block_name": 'first_block'})])
 	assert_eq_deep(result, expected)
 
 
 func test_parse_blocks_with_prereq():
 	var result = _parse("""
 req second_block
-== first block
+== first_block
 line 1
 line 2
 
@@ -147,7 +147,7 @@ line 4
 	var expected = _create_doc_payload([],
 		[
 			_block({
-				"block_name": 'first block', 
+				"block_name": 'first_block', 
 				"block_requirements" : ["second_block"],
 				"content": [
 					_line({ "value": 'line 1' }),
@@ -177,7 +177,7 @@ func test_parse_blocks_with_multi_prereq():
 	var result = _parse("""
 req second_block, fourth_block, file.fifth_block
 req !third_block, !sixth_block, !seventh_block
-== first block
+== first_block
 line 1
 line 2
 
@@ -191,7 +191,7 @@ line 4
 	var expected = _create_doc_payload([],
 		[
 			_block({
-				"block_name": 'first block', 
+				"block_name": 'first_block', 
 				"block_requirements" : ["second_block", "fourth_block", "file.fifth_block"],
 				"block_not_requirements" : ["third_block", "sixth_block", "seventh_block"],
 				"content": [
@@ -258,11 +258,11 @@ line 4
 func test_parse_random_blocks_with_prereq():
 	var result = _parse("""
 req second_block
-=* first block
+=* first_block
 line 1
 line 2
 
-req {x == 5}, third block
+req {x == 5}, third_block
 =+ second_block
 line 3
 line 4
@@ -272,7 +272,7 @@ line 4
 		[
 			_random_block({
 				"mode": "once",
-				"block_name": 'first block', 
+				"block_name": 'first_block', 
 				"block_requirements" : ["second_block"],
 				"content": [
 					_line({ "value": 'line 1' }),
@@ -281,7 +281,7 @@ line 4
 			}),
 			_random_block({
 				"mode": "sticky",
-				"block_requirements" : ["third block"],
+				"block_requirements" : ["third_block"],
 				"block_name": 'second_block', 
 				"conditions": [_expression({
 					"name": "LOGICAL_EQUAL",

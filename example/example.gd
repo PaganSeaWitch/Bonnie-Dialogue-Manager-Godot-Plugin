@@ -18,7 +18,7 @@ func _get_next_dialogue_line():
 		$dialogue_ended.show()
 		return
 
-	if content.type == 'line':
+	if content.get_node_class() == 'LineNode':
 		_set_up_line(content)
 		$line.show()
 		$options.hide()
@@ -30,7 +30,7 @@ func _get_next_dialogue_line():
 
 func _set_up_line(content):
 	$line/speaker.text = content.get('speaker') if content.get('speaker') != null else ''
-	$line/text.text = content.text
+	$line/text.text = content.value
 
 
 func _set_up_options(options):
@@ -41,9 +41,9 @@ func _set_up_options(options):
 	$options/speaker.text = options.get('speaker') if options.get('speaker') != null else ''
 
 	var index = 0
-	for option in options.options:
+	for option in options.content:
 		var btn = Button.new()
-		btn.text = option.label
+		btn.text = option.value
 		btn.connect("button_down",Callable(self,"_on_option_selected").bind(index))
 		$options/items.add_child(btn)
 		index += 1
@@ -69,5 +69,7 @@ func _on_variable_changed(variable_name, new_value, previous_value):
 
 func _on_restart_pressed():
 	$dialogue_ended.hide()
+	_dialogue.clear_data()
+	_dialogue.load_dialogue('pulp_with_blocks')
 	_dialogue.start()
 	_get_next_dialogue_line()

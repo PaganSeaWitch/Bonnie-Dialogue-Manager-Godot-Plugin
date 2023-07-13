@@ -386,7 +386,7 @@ func test_blocks():
 line
 line 2
 
-== second block
+== second_block
 line 3
 line 4
 """)
@@ -394,7 +394,7 @@ line 4
 		{ "name": Syntax.TOKEN_BLOCK, "value": 'first_block', "line": 1, "column": 0, },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'line', "line": 2, "column": 0, },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'line 2', "line": 3, "column": 0, },
-		{ "name": Syntax.TOKEN_BLOCK, "value": 'second block', "line": 5, "column": 0, },
+		{ "name": Syntax.TOKEN_BLOCK, "value": 'second_block', "line": 5, "column": 0, },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'line 3', "line": 6, "column": 0, },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'line 4', "line": 7, "column": 0, },
 		{ "name": Syntax.TOKEN_EOF, "line": 8, "column": 0, "value": "" },
@@ -404,7 +404,7 @@ line 4
 func test_diverts():
 	var jsonTokens = _get_lexer_json_tokens("""
 hello
--> first divert
+-> first_divert
 
 * test
 		-> divert
@@ -413,7 +413,7 @@ hello
 """)
 	assert_eq_deep(jsonTokens, [
 		{ "name": Syntax.TOKEN_TEXT, "value": 'hello', "line": 1, "column": 0, },
-		{ "name": Syntax.TOKEN_DIVERT, "value": 'first divert', "line": 2, "column": 0, },
+		{ "name": Syntax.TOKEN_DIVERT, "value": 'first_divert', "line": 2, "column": 0, },
 		{ "name": Syntax.TOKEN_LINE_BREAK, "value": "", "line": 2, "column": 15, },
 		{ "name": Syntax.TOKEN_OPTION, "line": 4, "column": 0, "value": "" },
 		{ "name": Syntax.TOKEN_TEXT, "value": 'test', "line": 4, "column": 2 },
@@ -1306,7 +1306,7 @@ req this_has_to_happen_before_hand
 
 func test_block_with_prereq_blocks():
 	var jsonTokens = _get_lexer_json_tokens('''
-req this_has_to_not_happen_before_hand, this too
+req this_has_to_not_happen_before_hand, this_too
 req !this_has_to_happen_before_hand_too
 == this_is_block_name''')
 
@@ -1314,7 +1314,7 @@ req !this_has_to_happen_before_hand_too
 		{"name": Syntax.TOKEN_KEYWORD_BLOCK_REQ,"value": "","line": 1,"column": 0},
 		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this_has_to_not_happen_before_hand","line": 1,"column": 4},
 		{"name": Syntax.TOKEN_COMMA,"value": "","line": 1,"column": 38},
-		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this too","line": 1,"column": 39},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this_too","line": 1,"column": 40},
 		{"name": Syntax.TOKEN_KEYWORD_BLOCK_REQ,"value": "","line": 2,"column": 0},
 		{"name": Syntax.TOKEN_NOT,"value": "","line": 2,"column":4},
 		{"name": Syntax.TOKEN_IDENTIFIER,"value": "this_has_to_happen_before_hand_too","line": 2,"column": 5},
@@ -1359,6 +1359,7 @@ req this_block_needs_to_happen_first
 		{"name": Syntax.TOKEN_EOF, "value": "", "line": 3, "column": 21}
 	])
 
+
 func test_lexer_global_varaible():
 	var jsonTokens = _get_lexer_json_tokens('{ set @x = 5 }')
 	assert_eq_deep(jsonTokens, [
@@ -1369,4 +1370,17 @@ func test_lexer_global_varaible():
 		{"name": Syntax.TOKEN_NUMBER_LITERAL,"value": "5","line": 0,"column": 11,},
 		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE,"value": "","line": 0,"column": 13},
 		{"name": Syntax.TOKEN_EOF, "value": "", "line": 0, "column": 14}
+	])
+
+
+func test_lexer_other_file_varaible():
+	var jsonTokens = _get_lexer_json_tokens('{ set king.x = 5 }')
+	assert_eq_deep(jsonTokens, [
+		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_OPEN,"value": "","line": 0,"column": 0},
+		{"name": Syntax.TOKEN_KEYWORD_SET,"value": "","line": 0,"column": 2,},
+		{"name": Syntax.TOKEN_IDENTIFIER,"value": "king.x","line": 0,"column":6,},
+		{"name": Syntax.TOKEN_ASSIGN,"value": "","line": 0,"column": 13,},
+		{"name": Syntax.TOKEN_NUMBER_LITERAL,"value": "5","line": 0,"column": 15,},
+		{"name": Syntax.TOKEN_PLACEMENT_INDEPENENT_CLOSE,"value": "","line": 0,"column": 17},
+		{"name": Syntax.TOKEN_EOF, "value": "", "line": 0, "column": 18}
 	])

@@ -101,6 +101,11 @@ func handle_block() -> Array[Token]:
 		setup_dict["values"] += lexer.input[lexer.position]
 		LexerHelperFunctions.increase_lexer_position(lexer)
 
+	var block_name = setup_dict["values"].strip_edges()
+	if(block_name.contains(" ")):
+		assert(false, "Cannot have spaces in block names!")
+		return []
+	
 	return [Token.new(token_name, lexer.line, 
 		setup_dict["initial_column"], setup_dict["values"].strip_edges())]
 
@@ -123,8 +128,13 @@ func handle_divert() -> Array[Token]:
 		setup_dict["values"] += lexer.input[lexer.position]
 		LexerHelperFunctions.increase_lexer_position(lexer)
 
+	var divert = setup_dict["values"].strip_edges()
+	if(divert.contains(" ")):
+		assert(false, "Diverts cannot contain spaces!")
+		return []
 	var token : Token =  Token.new(Syntax.TOKEN_DIVERT, lexer.line, 
-		setup_dict["initial_column"], setup_dict["values"].strip_edges())
+		setup_dict["initial_column"], divert)
+
 
 	var linebreak : Token =  LexerHelperFunctions.get_following_line_break(
 		lexer.input, lexer.line, lexer.column, lexer.position)
