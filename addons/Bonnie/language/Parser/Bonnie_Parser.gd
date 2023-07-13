@@ -12,8 +12,7 @@ var bb_code_parser : BBCodeParser
 
 
 # Parses given string data into a DocumentNode
-func parse(doc : String) -> DocumentNode:
-	
+func parse(doc : String, file_name : String = "") -> DocumentNode:
 	_lexer = BonnieLexer.new()
 	misc_parser = MiscParser.new()
 	logic_parser = LogicParser.new()
@@ -32,6 +31,7 @@ func parse(doc : String) -> DocumentNode:
 	dependent_parser.init(self, token_walker)
 	bb_code_parser.init(self, token_walker)
 	var result : DocumentNode = misc_parser.document()
+	set_node_document_name(result, file_name)
 	if token_walker.peek() != null:
 		token_walker.consume(TokenArray.eof)
 	return result
@@ -124,3 +124,21 @@ func _validate_json_object(json_dictionary : Dictionary) -> bool:
 				if(value.size() != 0):
 					is_not_broken = is_not_broken && _validate_json_object(value)
 	return is_not_broken
+	
+func set_node_document_name(node : BonnieNode, name : String) -> void:
+	
+	node.document_name = name
+	for property in node.get_property_list():
+		var prop_name : String = property.name
+		match(property.type):
+			TYPE_ARRAY:
+				for val in node[prop_name]:
+					if(val is BonnieNode):
+						set_node_document_name(val,name)
+					if(val is Array):
+							var inner_array = []
+							for second_val in val:
+								set_node_document_name(second_val,name)
+			TYPE_OBJECT:
+				if(prop_name != "script" && node[prop_name] != null):
+					set_node_document_name(node[prop_name],name)
