@@ -7,9 +7,9 @@
 { not introductionMade } Jules: Okay now, tell me about that. { set introductionMade =  true, europeTopicsTalked = 0 }
 Vincent: What do you want to know?
   * Is hash legal there?
-    -> about hash <-
+    -> about_hash <-
   + Something about Europe. { when europeTopicsTalked < 4 }
-    -> about europe <-
+    -> about_europe <-
   + Nah, maybe another time { when OPTIONS_COUNT > 1 }
     ( shuffle
        - Vincent: Alright!
@@ -22,7 +22,7 @@ Jules: Enough talk. Let's get to work!
 
 -- blocks
 
-== about hash
+== about_hash
 Jules: Is hash legal there?
 Vincent: Yes, but is ain't a hundred percent legal.
          I mean you can't walk into a restaurant, roll a joint,
@@ -38,7 +38,7 @@ Vincent: Yeah, it breaks down like this\: it's legal to buy it,
 Jules: That did it, man - I'm f**n' goin', that's all there is to it.
 <-
 
-== about europe
+== about_europe
 { europeTopicsTalked == 0 }
          Vincent: You know what the funniest thing about Europe is?
          Jules: what?
@@ -50,20 +50,20 @@ Jules: That did it, man - I'm f**n' goin', that's all there is to it.
 )
 About Europe...
   * You can buy beer in movie theatres.
-    -> beer in theathres <-
+    -> beer_in_theathres <-
   * What they call a Quarter Pounder in Paris
-    -> quarter pounder talk <-
+    -> quarter_pounder_talk <-
   * What they call a Whopper { when quarterPounderTalkCompleted }
-    -> whopper talk <-
+    -> whopper_talk <-
   * What they put on the french fries instead of ketchup.
-    -> french fries talk <-
+    -> french_fries_talk <-
   + { OPTIONS_COUNT > 1 } I'm suddenly not interested anymore.
     Jules: We talk about this another time.
 { set europeTalkCompleted = true }
 <-
 
 
-== beer in theathres
+== beer_in_theathres
 Vincent: Well, in Amsterdam, you can buy beer in a
          movie theatre.
 Vincent: And I don't mean in a paper
@@ -72,7 +72,7 @@ Vincent: And I don't mean in a paper
 <-
 
 
-== quarter pounder talk
+== quarter_pounder_talk
 Vincent: You know what they call a Quarter Pounder with Cheese in Paris?
 Jules: They don't call it a Quarter Pounder with Cheese?
 Vincent: No, they got the metric system there, they wouldn't know what
@@ -86,14 +86,14 @@ Vincent: Big Mac's a Big Mac, but they call it Le Big Mac.
 <-
 
 
-== whopper talk
+== whopper_talk
 Jules: What do they call a Whopper?
 Vincent: I dunno, I didn't go into a Burger King.
 { set europeTopicsTalked += 1}
 <-
 
 
-== french fries talk
+== french_fries_talk
 Vincent: You know what they put on french fries in Holland
          instead of ketchup?
 Jules: What?
