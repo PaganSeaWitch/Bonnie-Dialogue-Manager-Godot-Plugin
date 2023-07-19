@@ -64,12 +64,7 @@ var dialogue = Bonnie.new()
 
 ### Loading files
 
-<<<<<<< HEAD
 The interpreter supports loading parsed JSON files, as well as `.bonnie` files imported in the project.
-=======
-The interpreter supports loading parsed JSON files, as well as `.superclyde` files imported in the project.
->>>>>>> master
-
 When only the file name is provided, the interpreter will look into the default folder defined on `Project > Project Settings > Dialogue > Source Folder`.
 
 ``` gdscript
@@ -285,11 +280,7 @@ Alternatively, you can use the full path when loading dialogues:
 ```gdscript
 var dialogue = Bonnie.new()
 
-<<<<<<< HEAD
 dialogue.load_dialogue("res://samples/banana.bonnie")
-=======
-dialogue.load_dialogue("res://samples/banana.superclyde")
->>>>>>> master
 
 ```
 
