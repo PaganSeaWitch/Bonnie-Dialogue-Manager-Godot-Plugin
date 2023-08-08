@@ -2,7 +2,7 @@
 
 <p align="center"><img src="icon.png" alt=/></p>
 
-Importer and interpreter for Bonnie based on [Clyde Dialogue Language](https://github.com/viniciusgerevini/clyde). A plugin for that can be found [here](https://github.com/viniciusgerevini/godot-clyde-dialogue). Completely written in GDScript. No external dependencies. Bonnie is entirely backwards campatiable with Clyde baring some breaking changes which can be found in the changelog. 
+Importer and interpreter for Bonnie based on [Clyde Dialogue Language](https://github.com/viniciusgerevini/clyde). A plugin for that can be found [here](https://github.com/viniciusgerevini/godot-clyde-dialogue). Completely written in GDScript. No external dependencies. Bonnie is entirely backwards compatible with Clyde baring some breaking changes which can be found in the changelog. 
 
 > Bonnie is a language for writing game dialogues. It supports branching dialogues, translations and interfacing with your game through variables and events. now with (shitty) [videos](https://www.youtube.com/playlist?list=PL5jCxg8GFqU4noTnHmy_O1lISN8bFMK8Z)!
 
@@ -41,9 +41,9 @@ For more about how to write dialogues using Bonnie, check [LANGUAGE.md](https://
 
 You now have the option to edit Clyde files in the Godot engine itself, helping streamline usage to a single editor. 
 
-## Instalation
+## Installation
 
-Follow Godot's [ installing plugins guide ]( https://docs.godotengine.org/en/stable/tutorials/plugins/editor/installing_plugins.html).
+Follow Godot's [installing plugins guide ]( https://docs.godotengine.org/en/stable/tutorials/plugins/editor/installing_plugins.html).
 
 
 ## Settings
