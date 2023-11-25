@@ -1339,7 +1339,7 @@ req {x == 5}
 		{"name": Syntax.TOKEN_EOF, "value": "", "line": 2, "column": 21}
 	])
 
-	
+
 func test_block_with_mixed_prereq_condition():
 	var jsonTokens = _get_lexer_json_tokens('''
 req {x == 5 }

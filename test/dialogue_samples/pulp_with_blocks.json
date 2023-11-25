@@ -62,7 +62,7 @@
 					"content": [
 						{
 							"type": "Divert",
-							"target": "about hash"
+							"target": "about_hash"
 						},
 						{
 							"type": "Divert",
@@ -93,7 +93,7 @@
 						"content": [
 							{
 								"type": "Divert",
-								"target": "about europe"
+								"target": "about_europe"
 							},
 							{
 								"type": "Divert",
@@ -144,7 +144,7 @@
 									[
 										{
 											"type": "Line",
-											"value": "Ok!",
+											"value": "Ok",
 											"speaker": "Vincent"
 										}
 									]
@@ -165,7 +165,7 @@
 	"blocks": [
 		{
 			"type": "Block",
-			"block_name": "about hash",
+			"block_name": "about_hash",
 			"content": [
 				{
 					"type": "Line",
@@ -200,7 +200,7 @@
 		},
 		{
 			"type": "Block",
-			"block_name": "about europe",
+			"block_name": "about_europe",
 			"content": [
 				{
 					"type": "ConditionalContent",
@@ -267,7 +267,7 @@
 							"content": [
 								{
 									"type": "Divert",
-									"target": "beer in theathres"
+									"target": "beer_in_theathres"
 								},
 								{
 									"type": "Divert",
@@ -303,7 +303,7 @@
 								"content": [
 									{
 										"type": "Divert",
-										"target": "whopper talk"
+										"target": "whopper_talk"
 									},
 									{
 										"type": "Divert",
@@ -319,7 +319,7 @@
 							"content": [
 								{
 									"type": "Divert",
-									"target": "french fries talk"
+									"target": "french_fries_talk"
 								},
 								{
 									"type": "Divert",
@@ -383,7 +383,7 @@
 		},
 		{
 			"type": "Block",
-			"block_name": "beer in theathres",
+			"block_name": "beer_in_theathres",
 			"content": [
 				{
 					"type": "Line",
@@ -420,7 +420,7 @@
 		},
 		{
 			"type": "Block",
-			"block_name": "quarter pounder talk",
+			"block_name": "quarter_pounder_talk",
 			"content": [
 				{
 					"type": "Line",
@@ -499,7 +499,7 @@
 		},
 		{
 			"type": "Block",
-			"block_name": "whopper talk",
+			"block_name": "whopper_talk",
 			"content": [
 				{
 					"type": "Line",
@@ -536,7 +536,7 @@
 		},
 		{
 			"type": "Block",
-			"block_name": "french fries talk",
+			"block_name": "french_fries_talk",
 			"content": [
 				{
 					"type": "Line",

@@ -2,7 +2,7 @@ extends GutTestFunctions
 
 
 func test_simple_lines_file():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('simple_lines')
 
 	var lines = [
@@ -55,7 +55,7 @@ func _initialize_dictionary():
 
 
 func _initialize_interpreter_for_suffix_test():
-	var interpreter = BonnieInterpreter.new()
+	var interpreter = BonnieManagerInterpreter.new()
 	var content = _parse("This should be replaced $abc&suffix_1&suffix_2")
 	interpreter.init(content)
 	return interpreter
@@ -103,7 +103,7 @@ func test_id_suffix_fallsback_to_id_without_prefix_when_not_found():
 
 
 func test_id_suffix_works_with_options():
-	var interpreter = BonnieInterpreter.new()
+	var interpreter = BonnieManagerInterpreter.new()
 	var content = _parse("""
 first topics $abc&suffix1
 	* option 1 $abc&suffix2
@@ -129,7 +129,7 @@ first topics $abc&suffix1
 func test_interpreter_option_id_lookup_suffix():
 	_initialize_dictionary()
 
-	var interpreter = BonnieInterpreter.new()
+	var interpreter = BonnieManagerInterpreter.new()
 	var content = _parse("This should be replaced $abc&suffix_1&suffix_2")
 	interpreter.init(content, { "id_suffix_lookup_separator": "__" })
 	interpreter.set_variable("suffix_1", "P");
@@ -138,7 +138,7 @@ func test_interpreter_option_id_lookup_suffix():
 
 
 func test_options():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('options')
 
 
@@ -170,7 +170,7 @@ func test_options():
 
 
 func test_fallback_options():
-	var interpreter = BonnieInterpreter.new()
+	var interpreter = BonnieManagerInterpreter.new()
 	var content = _parse("*= a\n>= b\nend")
 	interpreter.init(content)
 	var q = BonnieParser.new().to_JSON_object(interpreter.get_current_node())
@@ -185,7 +185,7 @@ func test_fallback_options():
 
 
 func test_blocks_and_diverts():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('diverts', 'initial_dialog')
 
 
@@ -273,7 +273,7 @@ func test_blocks_and_diverts():
 
 
 func test_variations():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('variations')
 
 	var sequence = ["Hello", "Hi", "Hey"]
@@ -314,7 +314,7 @@ func test_variations():
 
 
 func _test_variation_default_shuffle_is_cycle():
-	var interpreter = BonnieInterpreter.new()
+	var interpreter = BonnieManagerInterpreter.new()
 	var content = _parse("( shuffle \n- { a } A\n -  { b } B\n)\nend\n")
 	interpreter.init(content)
 
@@ -336,7 +336,7 @@ func _test_variation_default_shuffle_is_cycle():
 
 
 func test_all_variations_not_available():
-	var interpreter = BonnieInterpreter.new()
+	var interpreter = BonnieManagerInterpreter.new()
 	var content = _parse("(\n - { a } A\n -  { b } B\n)\nend\n")
 	interpreter.init(content)
 
@@ -344,7 +344,7 @@ func test_all_variations_not_available():
 
 
 func test_logic():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('logic')
 	assert_eq_deep(BonnieParser.new().to_JSON_object(dialogue.get_content()).value, "variable was initialized with 1")
 	assert_eq_deep(BonnieParser.new().to_JSON_object(dialogue.get_content()).value, "setting multiple variables")
@@ -359,7 +359,7 @@ func test_logic():
 
 
 func test_variables():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('variables')
 	var u = dialogue.get_content()
 	assert_eq_deep(BonnieParser.new().to_JSON_object(u).value, "not")
@@ -406,7 +406,7 @@ func test_variables():
 
 
 func test_set_variables():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('variables.bonnie')
 	dialogue.set_variable('first_time', true)
 	assert_eq_deep(BonnieParser.new().to_JSON_object(dialogue.get_content()).value, "what do you want to talk about?")
@@ -416,14 +416,14 @@ func test_set_variables():
 
 
 func test_data_control():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('variations')
 
 	assert_eq_deep(BonnieParser.new().to_JSON_object(dialogue.get_content()).value, "Hello")
 	dialogue.start()
 	assert_eq_deep(BonnieParser.new().to_JSON_object(dialogue.get_content()).value, "Hi")
 
-	var dialogue2 = Bonnie.new()
+	var dialogue2 = BonnieManager.new()
 	dialogue2.load_dialogue('variations')
 	dialogue2.load_data(dialogue.get_data())
 	assert_eq_deep(dialogue2.get_content().value, "Hey")
@@ -434,7 +434,7 @@ func test_data_control():
 
 
 func test_persisted_data_control_options():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('options')
 
 	var content = _get_next_options_content(dialogue)
@@ -452,7 +452,7 @@ func test_persisted_data_control_options():
 		"variables" : dialogue.get_data().variables,
 		"internal" : dialogue.get_data().internal })
 
-	var dialogue2 = Bonnie.new()
+	var dialogue2 = BonnieManager.new()
 	dialogue2.load_dialogue('options')
 	dialogue2.load_data(dialogue.get_data())
 
@@ -462,14 +462,14 @@ func test_persisted_data_control_options():
 
 
 func test_persisted_data_control_variations():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('variations')
 
 	assert_eq_deep(BonnieParser.new().to_JSON_object(dialogue.get_content()).value, "Hello")
 	dialogue.start()
 	assert_eq_deep(BonnieParser.new().to_JSON_object(dialogue.get_content()).value, "Hi")
 
-	var dialogue2 = Bonnie.new()
+	var dialogue2 = BonnieManager.new()
 	dialogue2.load_dialogue('variations')
 
 	var memory = dialogue.get_data()
@@ -480,8 +480,9 @@ func test_persisted_data_control_variations():
 
 var pending_events = []
 
+
 func test_events():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('variables')
 	dialogue.connect("event_triggered", Callable(self, "_on_event_triggered"))
 	dialogue.connect("variable_changed", Callable(self, "_on_variable_changed"))
@@ -529,7 +530,7 @@ func _on_event_triggered(event_name):
 
 
 func test_file_path_without_extension():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('simple_lines')
 
 	var lines = [
@@ -546,7 +547,7 @@ func test_file_path_without_extension():
 
 
 func test_uses_configured_dialogue_folder():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.dialogue_folder = 'res://dialogues'
 	dialogue.load_dialogue('simple_lines')
 
@@ -564,7 +565,7 @@ func test_uses_configured_dialogue_folder():
 
 
 func test_dependent_logic():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('dependent_logic')
 	var line_part = BonnieParser.new().to_JSON_object(dialogue.get_content())
 	assert_eq_deep(line_part.part.value, "variable was")
@@ -618,7 +619,7 @@ func test_dependent_logic():
 		
 
 func test_bb_code():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('bb_code')
 	var line_part = BonnieParser.new().to_JSON_object(dialogue.get_content())
 	assert_eq_deep(line_part.part.value, "variable was")
@@ -748,7 +749,7 @@ func test_bb_code():
 
 
 func test_block_reqs():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('block_reqs')
 	assert_eq_deep(null, dialogue.get_content())
 	assert_eq_deep(true, dialogue.start("block1", true))
@@ -764,7 +765,7 @@ func test_block_reqs():
 
 
 func test_random_block_reqs():
-	var dialogue = Bonnie.new()
+	var dialogue = BonnieManager.new()
 	dialogue.load_dialogue('random_block_reqs')
 	assert_eq_deep(null, dialogue.get_content())
 	assert_eq_deep(true, dialogue.set_random_block(true))
@@ -776,6 +777,7 @@ func test_random_block_reqs():
 	assert_eq_deep(true, dialogue.set_random_block(true))
 	assert_eq_deep(true, dialogue.set_random_block(true))
 	assert_eq_deep("everything works!", dialogue.get_content().value)
+
 
 func test_load_multiple_dialogues():
 	var dialogue = BonnieManager.new()
@@ -883,8 +885,8 @@ func test_load_multiple_files():
 	assert_eq_deep(30, dialogue.get_variable("@x"))
 	assert_eq_deep(54, dialogue.get_variable("other_file_divert.x"))
 	assert_eq_deep(7, dialogue.get_variable("divert_to_other_file.x"))
-	
-	
+
+
 func test_data_persistance():
 	var dialogue = BonnieManager.new()
 	dialogue.load_selected_dialogue_files(["other_file_divert", "divert_to_other_file"])

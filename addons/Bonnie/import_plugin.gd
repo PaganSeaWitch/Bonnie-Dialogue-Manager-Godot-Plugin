@@ -3,7 +3,7 @@ extends EditorImportPlugin
 
 
 func _get_importer_name():
-	return "clyde.dialogue"
+	return "bonnie.dialogue"
 
 
 func _get_visible_name():
