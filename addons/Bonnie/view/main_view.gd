@@ -207,7 +207,7 @@ func new_file(path: String, content: String = "") -> void:
 	if content == "":
 		if DialogueSettings.get_setting("new_with_template", true):
 			file.store_string("\n".join([
-				"== this is a basic block",
+				"== this_is_a_basic_block",
 				"",
 				"{ set variable = 5}",
 				"npc: Hey wanna know something cool?",
