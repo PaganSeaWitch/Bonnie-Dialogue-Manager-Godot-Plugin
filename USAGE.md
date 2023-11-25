@@ -16,11 +16,8 @@ signal event_triggered(event_name)
 
 # Load dialogue file
 # file_name: path to the dialogue file.
-<<<<<<< HEAD
 #            i.e 'my_dialogue', 'res://my_dialogue.bonnie', res://my_dialogue.json
-=======
-#            i.e 'my_dialogue', 'res://my_dialogue.superclyde', res://my_dialogue.json
->>>>>>> master
+
 # block: block name to run. This allows keeping
 #        multiple dialogues in the same file.
 # check_access: whether to use block requirements to check whether to set the block or not. 
@@ -64,22 +61,13 @@ var dialogue = Bonnie.new()
 
 ### Loading files
 
-<<<<<<< HEAD
 The interpreter supports loading parsed JSON files, as well as `.bonnie` files imported in the project.
-=======
-The interpreter supports loading parsed JSON files, as well as `.superclyde` files imported in the project.
->>>>>>> master
-
 When only the file name is provided, the interpreter will look into the default folder defined on `Project > Project Settings > Dialogue > Source Folder`.
 
 ``` gdscript
 dialogue.load_dialogue('my_dialogue')
 # or
-<<<<<<< HEAD
 dialogue.load_dialogue('res://dialogues/my_dialogue.bonnie')
-=======
-dialogue.load_dialogue('res://dialogues/my_dialogue.superclyde')
->>>>>>> master
 # or
 dialogue.load_dialogue('res://dialogues/my_dialogue.json')
 ```
@@ -285,11 +273,7 @@ Alternatively, you can use the full path when loading dialogues:
 ```gdscript
 var dialogue = Bonnie.new()
 
-<<<<<<< HEAD
 dialogue.load_dialogue("res://samples/banana.bonnie")
-=======
-dialogue.load_dialogue("res://samples/banana.superclyde")
->>>>>>> master
 
 ```
 

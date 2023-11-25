@@ -2,9 +2,6 @@
 extends EditorPlugin
 
 
-
-
-
 const DialogueSettings = preload("res://addons/Bonnie/components/settings.gd") 
 const MainView = preload("res://addons/Bonnie/view/main_view.tscn")
 const SETTING_SOURCE_FOLDER := "dialogue/source_folder"

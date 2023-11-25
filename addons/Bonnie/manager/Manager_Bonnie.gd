@@ -5,7 +5,6 @@ extends IBonnie
 var accessed_files : Array[String] = []
 
 func _init():
-	super()
 	_interpreter = BonnieManagerInterpreter.new()
 
 
@@ -20,11 +19,7 @@ func load_dialogue(file_name : String, block  : String= "", check_access :bool =
 	
 	if(!accessed_files.has(new_file_name)):
 		accessed_files.append(new_file_name)
-		super(file_name, block, check_access)
-	else:
-		if !block.is_empty():
-			_interpreter.select_block(block,check_access)
-		super(file_name,block,check_access)
+	super(file_name,block,check_access)
 
 
 func load_selected_dialogue_files(files : Array[String]) -> void:
