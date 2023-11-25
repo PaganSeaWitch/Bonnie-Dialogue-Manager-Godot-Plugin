@@ -58,7 +58,7 @@ func show_error() -> void:
 		show()
 		count_label.text = Syntax.translate("n_of_n").format({ index = error_index + 1, total = errors.size() })
 		var error = errors[error_index]
-		error_button.text = Syntax.translate("errors.line_and_message").format({ line = error.line_number + 1, column = error.column_number, message = Syntax.get_error_message(error.error) })
+		error_button.text = Syntax.translate("errors.line_and_message").format({ line = error.line_number + 1, column = error.column_number, message = ""}) #Syntax.get_error_message(error.error) })
 
 
 ### Signals

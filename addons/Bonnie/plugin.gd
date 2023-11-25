@@ -186,6 +186,7 @@ func _clear_project_settings():
 	ProjectSettings.clear(SETTING_ID_SUFFIX_LOOKUP_SEPARATOR)
 	ProjectSettings.save()
 
+
 func _edit(object) -> void:
 	if is_instance_valid(main_view) and is_instance_valid(object):
 		main_view.open_resource(object)

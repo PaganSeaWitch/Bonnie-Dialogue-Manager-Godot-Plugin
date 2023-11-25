@@ -207,7 +207,7 @@ func new_file(path: String, content: String = "") -> void:
 	if content == "":
 		if DialogueSettings.get_setting("new_with_template", true):
 			file.store_string("\n".join([
-				"== this is a basic block",
+				"== this_is_a_basic_block",
 				"",
 				"{ set variable = 5}",
 				"npc: Hey wanna know something cool?",
@@ -557,7 +557,7 @@ func export_translations_to_csv(path: String) -> void:
 	# Write our translations to file
 	var known_keys: PackedStringArray = []
 
-	var dialogue: Dictionary = BonnieParser.parse_string(code_edit.text, current_file_path).lines
+	var dialogue: Dictionary = Dictionary()#BonnieParser.parse_string(code_edit.text, current_file_path).lines
 
 	# Make a list of stuff that needs to go into the file
 	var lines_to_save = []
@@ -622,8 +622,8 @@ func export_character_names_to_csv(path: String) -> void:
 	# Write our translations to file
 	var known_keys: PackedStringArray = []
 
-	var character_names: PackedStringArray = BonnieParser.parse_string(code_edit.text, current_file_path).character_names
-
+	var character_names: PackedStringArray = PackedStringArray() #BonnieParser.parse_string(code_edit.text, current_file_path).character_names
+	
 	# Make a list of stuff that needs to go into the file
 	var lines_to_save = []
 	for character_name in character_names:
